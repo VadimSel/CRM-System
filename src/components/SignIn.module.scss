@@ -1,0 +1,27 @@
+.container,
+.loginAndPassword {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+.container {
+	height: 100vh;
+	justify-content: center;
+	align-items: center;
+}
+
+.loginAndPassword {
+	* {
+		border: 1px solid black;
+		border-radius: 2px;
+		height: 20px;
+	}
+}
+
+.button {
+	border: 1px solid black;
+	border-radius: 2px;
+	width: 70px;
+	height: 20px;
+}
