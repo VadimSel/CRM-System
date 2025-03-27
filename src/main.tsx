@@ -4,13 +4,15 @@ import App from "./App.tsx";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { SignIn } from "./components/SignIn.tsx";
 import { SignUp } from "./components/SignUp.tsx";
+import { Main } from "./components/Main.tsx";
 
 createRoot(document.getElementById("root")!).render(
 	<BrowserRouter>
 		<Routes>
 			<Route path="/" element={<App />} />
-			<Route path="/signIn" element={<SignIn />}/>
-			<Route path="/signUp" element={<SignUp/>}/>
+			<Route path="/signIn" element={<SignIn />} />
+			<Route path="/signUp" element={<SignUp />} />
+			<Route path="/main" element={<Main />} />
 		</Routes>
 	</BrowserRouter>
 );

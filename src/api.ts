@@ -24,7 +24,7 @@ export async function getUsers() {
 	}
 }
 
-export async function signIn(login?: string, password?: string) {
+export async function signIn(login: string, password: string) {
 	try {
 		const res = await fetch(`${BASE_URL}/auth/signin`, {
 			method: "POST",
@@ -61,7 +61,7 @@ export function signUp(
 	}
 }
 
-export async function getProfileWithToken(accessToken?: string) {
+export async function getProfile(accessToken?: string) {
 	try {
 		const res = await fetch(`${BASE_URL}/user/profile`, {
 			method: "GET",
@@ -72,6 +72,6 @@ export async function getProfileWithToken(accessToken?: string) {
 		});
 		console.log(await res.json());
 	} catch (error) {
-		console.log("Ошибка при запросе getProfileWithToken:", error);
+		console.log("Ошибка при запросе getProfile:", error);
 	}
 }
