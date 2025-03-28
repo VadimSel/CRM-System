@@ -11,6 +11,24 @@
 	align-items: center;
 }
 
+.loading {
+	position: fixed;
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: rgba(0, 0, 0, 0.2);
+	font-size: 20px;
+
+	* {
+		background: white;
+		border-radius: 2px;
+		width: 100px;
+		text-align: center;
+	}
+}
+
 .loginAndPassword {
 	* {
 		border: 1px solid black;

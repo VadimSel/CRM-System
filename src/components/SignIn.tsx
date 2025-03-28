@@ -1,23 +1,34 @@
 import { FormEvent, useState } from "react";
 import styles from "./SignIn.module.scss";
 import { signIn } from "../api";
+import { useNavigate } from "react-router";
 // import { signIn } from "../api";
 
 export const SignIn = () => {
 	const [loginValue, setLoginValue] = useState("");
 	const [passwordValue, setPasswordValue] = useState("");
 
-	function sendUserData(e: FormEvent) {
-		e.preventDefault();
-		// signIn(loginValue, passwordValue)
-		console.log(loginValue, passwordValue);
-		signIn(loginValue, passwordValue)
-	}
+	const [isLoading, setIsLoading] = useState(false);
 
-	// console.log(valueOne)
+	const navigate = useNavigate()
+
+	async function sendUserData(e: FormEvent) {
+		e.preventDefault();
+		setIsLoading(true)
+		const res = await signIn(loginValue, passwordValue);
+		if (res === true) {
+			navigate("/mainPage")
+		}
+		setIsLoading(false)
+	}
 
 	return (
 		<>
+			{isLoading === true && (
+				<div className={styles.loading}>
+					<p>Загрузка...</p>
+				</div>
+			)}
 			<form onSubmit={sendUserData} className={styles.container}>
 				<div className={styles.loginAndPassword}>
 					<input

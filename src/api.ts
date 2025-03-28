@@ -1,19 +1,6 @@
-import { SignUpTypes } from "./types";
+import { SignInTypes, SignUpTypes } from "./types";
 
 export const BASE_URL = "https://easydev.club/api/v1";
-
-// type SignUpTypes = Record<
-// 	"email" | "login" | "password" | "phoneNumber" | "username",
-// 	string
-// >;
-
-// interface SignUpTypes {
-// 	email: string,
-// 	login: string,
-// 	password: string,
-// 	phoneNumber: string,
-// 	username: string
-// }
 
 export async function getUsers() {
 	try {
@@ -22,11 +9,11 @@ export async function getUsers() {
 		});
 		console.log(await res.json());
 	} catch (error) {
-		console.log("Ошибка при запросе getUsers:", error);
+		window.alert("Ошибка: " + error);
 	}
 }
 
-export async function signIn(login: string, password: string) {
+export async function signIn(login: string, password: string): Promise<boolean> {
 	try {
 		const res = await fetch(`${BASE_URL}/auth/signin`, {
 			method: "POST",
@@ -35,11 +22,19 @@ export async function signIn(login: string, password: string) {
 				password,
 			}),
 		});
-		const data = await res.json();
-		console.log(data.accessToken);
-		return data.accessToken;
+
+		if (!res.ok) {
+			if (res.status === 401) {
+				window.alert("Не верные логин или пароль");
+			}
+			return false;
+		} else {
+			return true;
+		}
+		// const data = await res.json() as SignInTypes
 	} catch (error) {
-		console.log("Ошибка при запросе signIn:", error);
+		window.alert("Ошибка: " + error);
+		return false;
 	}
 }
 
@@ -49,7 +44,7 @@ export async function signUp(
 	password: string,
 	phoneNumber: string,
 	username: string
-) {
+): Promise<boolean> {
 	try {
 		const res = await fetch(`${BASE_URL}/auth/signup`, {
 			method: "POST",
@@ -70,13 +65,14 @@ export async function signUp(
 			if (err.status === 409) {
 				window.alert("Пользователь уже существует");
 			}
+			return false;
 		} else {
-			const data = (await res.json()) as SignUpTypes;
-			console.log(data);
-			return true
+			// const data = (await res.json()) as SignUpTypes;
+			return true;
 		}
 	} catch (error) {
-		console.log("Ошибка при запросе signUp:", error);
+		window.alert("Ошибка: " + error);
+		return false;
 	}
 }
 
@@ -91,6 +87,6 @@ export async function getProfile(accessToken?: string) {
 		});
 		console.log(await res.json());
 	} catch (error) {
-		console.log("Ошибка при запросе getProfile:", error);
+		window.alert("Ошибка: " + error);
 	}
 }

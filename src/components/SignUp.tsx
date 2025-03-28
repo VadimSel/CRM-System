@@ -29,9 +29,9 @@ export const SignUp = () => {
 			usernameValue
 		);
 		if (res === true) {
-			setisLoading(false);
 			navigate("/signIn");
 		}
+		setisLoading(false)
 	}
 
 	return (
