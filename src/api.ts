@@ -1,11 +1,13 @@
+import { SignUpTypes } from "./types";
+
 export const BASE_URL = "https://easydev.club/api/v1";
 
-// type answerType = Record<
+// type SignUpTypes = Record<
 // 	"email" | "login" | "password" | "phoneNumber" | "username",
 // 	string
 // >;
 
-// interface answerType {
+// interface SignUpTypes {
 // 	email: string,
 // 	login: string,
 // 	password: string,
@@ -29,8 +31,8 @@ export async function signIn(login: string, password: string) {
 		const res = await fetch(`${BASE_URL}/auth/signin`, {
 			method: "POST",
 			body: JSON.stringify({
-				login: login,
-				password: password,
+				login,
+				password,
 			}),
 		});
 		const data = await res.json();
@@ -41,7 +43,7 @@ export async function signIn(login: string, password: string) {
 	}
 }
 
-export function signUp(
+export async function signUp(
 	email: string,
 	login: string,
 	password: string,
@@ -49,13 +51,30 @@ export function signUp(
 	username: string
 ) {
 	try {
-		fetch(`${BASE_URL}/auth/signup`, {
+		const res = await fetch(`${BASE_URL}/auth/signup`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "Application/json",
 			},
-			body: JSON.stringify({ email, login, password, phoneNumber, username }),
+			body: JSON.stringify({
+				email,
+				login,
+				password,
+				phoneNumber: `+${phoneNumber}`,
+				username,
+			}),
 		});
+
+		if (!res.ok) {
+			const err = res;
+			if (err.status === 409) {
+				window.alert("Пользователь уже существует");
+			}
+		} else {
+			const data = (await res.json()) as SignUpTypes;
+			console.log(data);
+			return true
+		}
 	} catch (error) {
 		console.log("Ошибка при запросе signUp:", error);
 	}

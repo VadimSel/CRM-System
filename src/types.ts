@@ -1,27 +1,35 @@
-export interface TodoRequest { 
+export interface TodoRequest {
 	title?: string;
- 	isDone?: boolean;  // изменение статуса задачи происходит через этот флаг
- } 
-
-// или так type TodoRequest = Partial<Omit<Todo, "id" | "created">>;
-
-export interface Todo { 
-	id: number;
-	title: string;
-	created: string; // ISO date string 
-	isDone: boolean; 
+	isDone?: boolean; // изменение статуса задачи происходит через этот флаг
 }
 
-export interface TodoInfo { 
-	all: number
-	completed: number
-	inWork: number
+export interface Todo {
+	id: number;
+	title: string;
+	created: string;
+	isDone: boolean;
+}
+
+export interface TodoInfo {
+	all: number;
+	completed: number;
+	inWork: number;
 }
 
 export interface MetaResponse<T, N> {
-	data: T[]
-	info?: N
+	data: T[];
+	info?: N;
 	meta: {
-		totalAmount: number
-	}
+		totalAmount: number;
+	};
+}
+
+export interface SignUpTypes {
+	date: string;
+	email: string;
+	id: number;
+	isAdmin: boolean;
+	isBlocked: boolean;
+	phoneNumber: string;
+	username: string;
 }

@@ -1,14 +1,14 @@
 import { useEffect } from "react"
 import styles from './Main.module.scss'
 
-export const Main = () => {
+export const MainPage = () => {
   useEffect(() => {
-    console.log("Main загружен")
+    console.log("MainPage загружен")
   }, [])
 
   return (
     <div className={styles.container}>
-      Main
+      Main Page
     </div>
   )
 }
