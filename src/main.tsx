@@ -4,7 +4,7 @@ import App from "./App.tsx";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { SignIn } from "./components/SignIn.tsx";
 import { SignUp } from "./components/SignUp.tsx";
-import { MainPage } from "./components/Main.tsx";
+import { MainPage } from "./components/MainPage.tsx";
 
 createRoot(document.getElementById("root")!).render(
 	<BrowserRouter>

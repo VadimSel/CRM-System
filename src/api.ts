@@ -1,17 +1,17 @@
-import { SignInTypes, SignUpTypes } from "./types";
+import { MetaResponse, SignInTypes, SignUpTypes, Todo, TodoInfo } from "./types";
 
 export const BASE_URL = "https://easydev.club/api/v1";
 
-export async function getUsers() {
-	try {
-		const res = await fetch(`${BASE_URL}/todos`, {
-			method: "GET",
-		});
-		console.log(await res.json());
-	} catch (error) {
-		window.alert("Ошибка: " + error);
-	}
-}
+// export async function getUsers() {
+// 	try {
+// 		const res = await fetch(`${BASE_URL}/todos`, {
+// 			method: "GET",
+// 		});
+// 		console.log(await res.json());
+// 	} catch (error) {
+// 		window.alert("Ошибка: " + error);
+// 	}
+// }
 
 export async function signIn(login: string, password: string): Promise<boolean> {
 	try {
@@ -76,17 +76,32 @@ export async function signUp(
 	}
 }
 
-export async function getProfile(accessToken?: string) {
+// export async function getProfile(accessToken?: string) {
+// 	try {
+// 		const res = await fetch(`${BASE_URL}/user/profile`, {
+// 			method: "GET",
+// 			headers: {
+// 				"Content-Type": "application/json",
+// 				Authorization: `Bearer ${accessToken}`,
+// 			},
+// 		});
+// 		console.log(await res.json());
+// 	} catch (error) {
+// 		window.alert("Ошибка: " + error);
+// 	}
+// }
+
+export async function getTodos (): Promise<MetaResponse<Todo, TodoInfo> | undefined> {
 	try {
-		const res = await fetch(`${BASE_URL}/user/profile`, {
-			method: "GET",
+		const res = await fetch(`${BASE_URL}/todos`, {
 			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${accessToken}`,
+				"Content-Type": "application/json"
 			},
-		});
-		console.log(await res.json());
+			method: "GET"
+		})
+		const data = await res.json() as MetaResponse<Todo, TodoInfo>
+		return data
 	} catch (error) {
-		window.alert("Ошибка: " + error);
+		window.alert("Ошибка: " + error)
 	}
 }
