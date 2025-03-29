@@ -1,30 +1,64 @@
-import { useEffect, useState } from "react"
-import styles from './Main.module.scss'
-import { getTodos } from "../api"
-import { MetaResponse, Todo, TodoInfo } from "../types"
+import { useEffect, useState } from "react";
+import { createTask, getTasks } from "../api";
+import { MetaResponse, Todo, TodoInfo } from "../types";
+import styles from "./Main.module.scss";
 
 export const MainPage = () => {
-  const [data, setData] = useState<MetaResponse<Todo, TodoInfo>>()
+	const [tasks, setTasks] = useState<MetaResponse<Todo, TodoInfo>>();
+	const [taskName, setTaskName] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>("")
 
-  async function fetchData () {
-    const data = await getTodos()
-    if (data) {
-      setData(data)
-    }
-  }
+	async function fetchData() {
+		const data = await getTasks();
+		console.log(data);
+		if (data) {
+			setTasks(data);
+		}
+    // console.log(taskName)
+    // setInputValue("")
+    // setTaskName("")
+	}
 
-  useEffect(() => {
-    console.log("MainPage загружен")
-    fetchData()
-  }, [])
+	async function inputHandler() {
+    // setTaskName(inputValue)
+		await createTask(false, taskName);
+    setTaskName("")
+    console.log(" На момент inputHandler taskName равен: " + taskName)
+    await fetchData()
+	}
 
-  return (
-    <div className={styles.container}>
-      {data?.map((el) => {
-        return (
-          <div>{el}</div>
-        )
-      })}
-    </div>
-  )
-}
+	useEffect(() => {
+		// console.log("MainPage загружен или перерисован");
+		fetchData();
+    console.log(" На момент useEffect taskName равен: " + taskName)
+	}, []);
+
+	return (
+		<div className={styles.container}>
+			<div className={styles.newTask}>
+				<input
+					onChange={(e) => setTaskName(e.target.value)}
+          value={taskName}
+					onKeyDown={(e) => {
+						if (e.key === "Enter") {
+							inputHandler();
+						}
+					}}
+					className={styles.taskName}
+					type="text"
+					placeholder="Task To Be Done..."
+				/>
+				<button onClick={() => inputHandler()} className={styles.newTaskAddButton}>
+					Add
+				</button>
+			</div>
+			{tasks?.data.map((el) => {
+				return (
+					<div key={el.id}>
+						<p>{el.title}</p>
+					</div>
+				);
+			})}
+		</div>
+	);
+};

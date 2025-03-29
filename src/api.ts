@@ -91,7 +91,7 @@ export async function signUp(
 // 	}
 // }
 
-export async function getTodos (): Promise<MetaResponse<Todo, TodoInfo> | undefined> {
+export async function getTasks (): Promise<MetaResponse<Todo, TodoInfo> | undefined> {
 	try {
 		const res = await fetch(`${BASE_URL}/todos`, {
 			headers: {
@@ -103,5 +103,28 @@ export async function getTodos (): Promise<MetaResponse<Todo, TodoInfo> | undefi
 		return data
 	} catch (error) {
 		window.alert("Ошибка: " + error)
+	}
+}
+
+export async function createTask (isDone: boolean, title: string) {
+	try {
+		const res = await fetch(`${BASE_URL}/todos`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/type"
+			},
+			body: JSON.stringify({
+				isDone,
+				title
+			})
+		})
+
+		if (!res.ok) {
+			const errorStatus = res.status
+			const errorMessage = res.statusText
+			window.alert("Ошибка " + errorStatus + ", " + errorMessage)
+		}
+	} catch (error) {
+		window.alert("Ошибка при создании таски: " + error)
 	}
 }
