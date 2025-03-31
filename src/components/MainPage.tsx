@@ -3,34 +3,34 @@ import { createTask, getTasks } from "../api";
 import { MetaResponse, Todo, TodoInfo } from "../types";
 import styles from "./Main.module.scss";
 
+import checkIcon from "../assets/check-icon.svg";
+
 export const MainPage = () => {
 	const [tasks, setTasks] = useState<MetaResponse<Todo, TodoInfo>>();
 	const [taskName, setTaskName] = useState<string>("");
-  const [inputValue, setInputValue] = useState<string>("")
+	const [taskIsEdit, setTaskIsEdit] = useState<boolean>(false);
+	const [taskEditingId, setTaskEditingId] = useState<number>();
 
 	async function fetchData() {
 		const data = await getTasks();
-		console.log(data);
 		if (data) {
 			setTasks(data);
 		}
-    // console.log(taskName)
-    // setInputValue("")
-    // setTaskName("")
 	}
 
 	async function inputHandler() {
-    // setTaskName(inputValue)
 		await createTask(false, taskName);
-    setTaskName("")
-    console.log(" На момент inputHandler taskName равен: " + taskName)
-    await fetchData()
+		setTaskName("");
+		await fetchData();
+	}
+
+	function taskEdit(id: number) {
+		setTaskEditingId(id);
+		setTaskIsEdit(true);
 	}
 
 	useEffect(() => {
-		// console.log("MainPage загружен или перерисован");
 		fetchData();
-    console.log(" На момент useEffect taskName равен: " + taskName)
 	}, []);
 
 	return (
@@ -38,7 +38,7 @@ export const MainPage = () => {
 			<div className={styles.newTask}>
 				<input
 					onChange={(e) => setTaskName(e.target.value)}
-          value={taskName}
+					value={taskName}
 					onKeyDown={(e) => {
 						if (e.key === "Enter") {
 							inputHandler();
@@ -54,8 +54,28 @@ export const MainPage = () => {
 			</div>
 			{tasks?.data.map((el) => {
 				return (
-					<div key={el.id}>
-						<p>{el.title}</p>
+					<div key={el.id} className={styles.taskWrapper}>
+						<div className={styles.checkboxWrapper}>
+							<input className={styles.checkbox} type="checkbox" />
+							<img className={styles.checkIcon} src={checkIcon} alt="check" />
+						</div>
+						{taskIsEdit === true && taskEditingId === el.id ? (
+							<input
+								className={styles.taskNameEdit}
+								autoFocus={true}
+								onBlur={() => setTaskIsEdit(false)}
+							/>
+						) : (
+							<p className={styles.taskName} onClick={() => taskEdit(el.id)}>
+								{el.title}
+							</p>
+						)}
+						<button className={styles.taskEditButton}>
+							<img src="" alt="edit" />
+						</button>
+						<button className={styles.taskDeleteButton}>
+							<img src="" alt="delete" />
+						</button>
 					</div>
 				);
 			})}

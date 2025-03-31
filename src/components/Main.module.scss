@@ -1,10 +1,16 @@
+:root {
+  --color-light-gray: #DEE1E6;
+  --color-blue: #5191FD;
+  --color-danger: #FA6855;
+}
+
 .container {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
 }
 
 .newTask {
@@ -12,15 +18,78 @@
   gap: 10px;
 
   .taskName {
-    border-bottom: 1px solid #DEE1E6;
+    border-bottom: 1px solid var(--color-light-gray);
   }
 
   .newTaskAddButton {
     border: none;
-    background: #5191FD;
+    background: var(--color-blue);
     border-radius: 5px;
     width: 85px;
     height: 30px;
     color: white;
+  }
+}
+
+.taskWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 225px;
+  border: 1px solid var(--color-light-gray);
+  height: 35px;
+  border-radius: 5px;
+
+  .checkboxWrapper {
+    position: relative;
+    border: 1px solid blue;
+
+    .checkbox {
+      appearance: none;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      border: 1px solid var(--color-light-gray);
+      position: absolute;
+      transform: translate(-50%, -50%);
+      top: 0;
+      left: 0;
+  
+      &:checked {
+        background: var(--color-blue);
+      }
+  
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  
+    .checkIcon {
+      width: 7px;
+      height: 7px;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      top: 0;
+      left: 0;
+    }
+  }
+
+  .taskName,
+  .taskNameEdit {
+    width: 100px;
+    overflow: hidden;
+  }
+
+  .taskEditButton,
+  .taskDeleteButton {
+    height: 25px;
+    width: 30px;
+    border-radius: 3px;
+    background: var(--color-blue);
+  }
+
+  .taskDeleteButton {
+    background: var(--color-danger);
   }
 }
