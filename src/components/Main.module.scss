@@ -43,7 +43,6 @@
 
   .checkboxWrapper {
     position: relative;
-    border: 1px solid blue;
 
     .checkbox {
       appearance: none;
@@ -55,9 +54,13 @@
       transform: translate(-50%, -50%);
       top: 0;
       left: 0;
-  
+      
       &:checked {
-        background: var(--color-blue);
+        background-color: var(--color-blue);
+        background-image: url('../assets/check-icon.svg');
+        background-size: 70%;
+        background-position: 50%;
+        background-repeat: no-repeat;
       }
   
       &:hover {
@@ -79,6 +82,7 @@
   .taskNameEdit {
     width: 100px;
     overflow: hidden;
+    margin-left: 4px;
   }
 
   .taskEditButton,

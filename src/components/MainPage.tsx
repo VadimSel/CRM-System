@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createTask, getTasks } from "../api";
 import { MetaResponse, Todo, TodoInfo } from "../types";
 import styles from "./Main.module.scss";
-
-import checkIcon from "../assets/check-icon.svg";
 
 export const MainPage = () => {
 	const [tasks, setTasks] = useState<MetaResponse<Todo, TodoInfo>>();
 	const [taskName, setTaskName] = useState<string>("");
 	const [taskIsEdit, setTaskIsEdit] = useState<boolean>(false);
 	const [taskEditingId, setTaskEditingId] = useState<number>();
+
+	const checkboxInputRef = useRef<HTMLInputElement | null>(null)
 
 	async function fetchData() {
 		const data = await getTasks();
@@ -56,8 +56,7 @@ export const MainPage = () => {
 				return (
 					<div key={el.id} className={styles.taskWrapper}>
 						<div className={styles.checkboxWrapper}>
-							<input className={styles.checkbox} type="checkbox" />
-							<img className={styles.checkIcon} src={checkIcon} alt="check" />
+							<input className={styles.checkbox} type="checkbox"/>
 						</div>
 						{taskIsEdit === true && taskEditingId === el.id ? (
 							<input
