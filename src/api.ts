@@ -128,3 +128,24 @@ export async function createTask (isDone: boolean, title: string) {
 		window.alert("Ошибка при создании таски: " + error)
 	}
 }
+
+export async function updateTask (id: string, isDone?: boolean, title?: string) {
+	try {
+		const res = await  fetch(`${BASE_URL}/todos/${id}`, {
+			headers: {
+				"Content-type": "application/json"
+			},
+			method: "PUT",
+			body: JSON.stringify({
+				isDone,
+				title
+			})
+		})
+
+		if (!res.ok) {
+			window.alert("Ошибка: " + res.status + ", " + res.statusText)
+		}
+	} catch (error) {
+		window.alert(error)
+	}
+}

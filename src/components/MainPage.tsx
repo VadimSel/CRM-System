@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createTask, getTasks } from "../api";
 import { MetaResponse, Todo, TodoInfo } from "../types";
 import styles from "./Main.module.scss";
@@ -8,8 +8,6 @@ export const MainPage = () => {
 	const [taskName, setTaskName] = useState<string>("");
 	const [taskIsEdit, setTaskIsEdit] = useState<boolean>(false);
 	const [taskEditingId, setTaskEditingId] = useState<number>();
-
-	const checkboxInputRef = useRef<HTMLInputElement | null>(null)
 
 	async function fetchData() {
 		const data = await getTasks();
@@ -27,6 +25,11 @@ export const MainPage = () => {
 	function taskEdit(id: number) {
 		setTaskEditingId(id);
 		setTaskIsEdit(true);
+	}
+
+	function taskEditName (id: number) {
+		setTaskEditingId(id)
+		console.log(`id: ${taskEditingId}, newName: ${taskName}`)
 	}
 
 	useEffect(() => {
@@ -63,6 +66,12 @@ export const MainPage = () => {
 								className={styles.taskNameEdit}
 								autoFocus={true}
 								onBlur={() => setTaskIsEdit(false)}
+								onChange={(e) => setTaskName(e.target.value)}
+								onKeyDown={(e) => {
+									if (e.key === "Enter") {
+										taskEditName(el.id)
+									}
+								}}
 							/>
 						) : (
 							<p className={styles.taskName} onClick={() => taskEdit(el.id)}>
