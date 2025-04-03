@@ -35,14 +35,14 @@ export const MainPage = () => {
 		// 	task[0].title = newTitle;
 		// 	task[0].isDone = isDone;
 		// }
-
-		const newTask = tasks?.data.map((task) =>
-			task.id === id ? { ...task, title: newTitle, isDone } : task
+		if (tasks) {			
+			const newTask = tasks?.data.map((task) =>
+				task.id === id ? { ...task, title: newTitle, isDone } : task
 		);
 		setTasks({ ...tasks, data: newTask });
 		// console.log(task);
-		// console.log(`id: ${taskEditingId}, newName: ${newTitle}, isDone: ${isDone}`);
-
+		// console.log(`id: ${taskEditingId}, newName: ${newTitle}, isDone: ${isDone}`);	
+	}
 		setTaskIsEdit(false);
 		updateTask(id, isDone, newTitle);
 		// await fetchData();
