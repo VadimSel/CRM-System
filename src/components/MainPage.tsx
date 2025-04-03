@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { createTask, getTasks, updateTask } from "../api";
+import { createTask, deleteTask, getTasks, updateTask } from "../api";
 import { MetaResponse, Todo, TodoInfo } from "../types";
+import editIcon from '../assets/edit-icon.svg'
+import deleteIcon from '../assets/trash-icon.svg'
 import styles from "./Main.module.scss";
 
 export const MainPage = () => {
 	const [tasks, setTasks] = useState<MetaResponse<Todo, TodoInfo>>();
 	const [taskName, setTaskName] = useState<string>("");
-	const [taskNewName, setTaskNewName] = useState("");
+	const [taskNewName, setTaskNewName] = useState<string>("");
 	const [taskIsEdit, setTaskIsEdit] = useState<boolean>(false);
 	const [taskEditingId, setTaskEditingId] = useState<number>();
 
@@ -29,23 +31,22 @@ export const MainPage = () => {
 	}
 
 	function taskEditName(id: number, newTitle: string, isDone: boolean) {
-		setTaskEditingId(id);
-		// const task = tasks?.data.filter((el) => el.id === id);
-		// if (task) {
-		// 	task[0].title = newTitle;
-		// 	task[0].isDone = isDone;
-		// }
-		if (tasks) {			
+		if (tasks) {
 			const newTask = tasks?.data.map((task) =>
 				task.id === id ? { ...task, title: newTitle, isDone } : task
-		);
-		setTasks({ ...tasks, data: newTask });
-		// console.log(task);
-		// console.log(`id: ${taskEditingId}, newName: ${newTitle}, isDone: ${isDone}`);	
-	}
+			);
+			setTasks({ ...tasks, data: newTask });
+		}
 		setTaskIsEdit(false);
 		updateTask(id, isDone, newTitle);
-		// await fetchData();
+	}
+
+	function removeTask(id: number) {
+		if (tasks) {
+			const leftTasks = tasks.data.filter((task) => task.id !== id);
+			setTasks({ ...tasks, data: leftTasks });
+		}
+		deleteTask(id);
 	}
 
 	useEffect(() => {
@@ -99,11 +100,11 @@ export const MainPage = () => {
 								{el.title}
 							</p>
 						)}
-						<button className={styles.taskEditButton}>
-							<img src="" alt="edit" />
+						<button onClick={() => taskEdit(el.id)} className={styles.taskEditButton}>
+							<img src={editIcon} alt="edit" />
 						</button>
-						<button className={styles.taskDeleteButton}>
-							<img src="" alt="delete" />
+						<button onClick={() => removeTask(el.id)} className={styles.taskDeleteButton}>
+							<img src={deleteIcon} alt="delete" />
 						</button>
 					</div>
 				);

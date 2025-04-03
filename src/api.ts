@@ -122,7 +122,7 @@ export async function createTask (isDone: boolean, title: string) {
 		if (!res.ok) {
 			const errorStatus = res.status
 			const errorMessage = res.statusText
-			window.alert("Ошибка " + errorStatus + ", " + errorMessage)
+			window.alert("Ошибка " + errorStatus + ": " + errorMessage)
 		}
 	} catch (error) {
 		window.alert("Ошибка при создании таски: " + error)
@@ -131,7 +131,7 @@ export async function createTask (isDone: boolean, title: string) {
 
 export async function updateTask (id: number, isDone: boolean, title: string) {
 	try {
-		const res = await  fetch(`${BASE_URL}/todos/${id}`, {
+		const res = await fetch(`${BASE_URL}/todos/${id}`, {
 			headers: {
 				"Content-type": "application/json"
 			},
@@ -143,9 +143,27 @@ export async function updateTask (id: number, isDone: boolean, title: string) {
 		})
 
 		if (!res.ok) {
-			window.alert("Ошибка: " + res.status + ", " + res.statusText)
+			window.alert("Ошибка " + res.status + ", " + res.statusText)
 		}
 	} catch (error) {
 		window.alert(error)
+	}
+}
+
+export async function deleteTask (id: number) {
+	try {
+		const res = await fetch(`${BASE_URL}/todos/${id}`, {
+			headers: {
+				"Content-Type": "application/json"
+			},
+			method: "DELETE"
+		})
+
+		if (!res.ok) {
+			window.alert("Ошибка " + res.status + ": " + res.statusText)
+		}
+		
+	} catch (error) {
+		window.alert("Ошибка: " + error)
 	}
 }
