@@ -1,28 +1,58 @@
 import { useEffect, useState } from "react";
 import { createTask, deleteTask, getTasks, updateTask } from "../api";
 import { MetaResponse, Todo, TodoInfo } from "../types";
-import editIcon from '../assets/edit-icon.svg'
-import deleteIcon from '../assets/trash-icon.svg'
+import editIcon from "../assets/edit-icon.svg";
+import deleteIcon from "../assets/trash-icon.svg";
 import styles from "./Main.module.scss";
 
 export const MainPage = () => {
+	type StatusTypes = 1 | 2 | 3;
+
 	const [tasks, setTasks] = useState<MetaResponse<Todo, TodoInfo>>();
 	const [taskName, setTaskName] = useState<string>("");
 	const [taskNewName, setTaskNewName] = useState<string>("");
 	const [taskIsEdit, setTaskIsEdit] = useState<boolean>(false);
 	const [taskEditingId, setTaskEditingId] = useState<number>();
+	const [status, setStatus] = useState<StatusTypes>(1);
+
+	const filters: { id: number; value: keyof TodoInfo; status: string }[] = [
+		{
+			id: 1,
+			value: "all",
+			status: "Все",
+		},
+		{
+			id: 2,
+			value: "inWork",
+			status: "в работе",
+		},
+		{
+			id: 3,
+			value: "completed",
+			status: "сделано",
+		},
+	];
 
 	async function fetchData() {
 		const data = await getTasks();
 		if (data) {
-			setTasks(data);
+			if (status === 2 && tasks) {
+				setTasks({ ...tasks, data: data.data.filter((task) => task.isDone === false) });
+				console.log("inWork");
+			} else if (status === 3 && tasks) {
+				setTasks({ ...tasks, data: data.data.filter((task) => task.isDone === true) });
+				console.log("completed");
+			} else {
+				setTasks(data);
+				console.log("All");
+			}
 		}
 	}
 
 	async function inputHandler() {
 		await createTask(false, taskName);
 		setTaskName("");
-		await fetchData();
+		fetchData();
 	}
 
 	function taskEdit(id: number) {
@@ -49,9 +79,23 @@ export const MainPage = () => {
 		deleteTask(id);
 	}
 
+	// function changeStatus(statusId: StatusTypes) {
+	// 	setStatus(statusId);
+	// 	// if (tasks)
+	// 	if (status === 2) {
+	// 		const tasksInWork = tasks?.data.filter((task) => task.isDone === false);
+	// 		setTasks({ ...tasks, data: tasksInWork });
+	// 	} else if (status === 3) {
+	// 		const tasksCompleted = tasks?.data.filter((task) => task.isDone === true);
+	// 		setTasks({ ...tasks, data: tasksCompleted });
+	// 	} else {
+	// 		fetchData();
+	// 	}
+	// }
+
 	useEffect(() => {
 		fetchData();
-	}, []);
+	}, [status]);
 
 	return (
 		<div className={styles.container}>
@@ -72,6 +116,22 @@ export const MainPage = () => {
 					Add
 				</button>
 			</div>
+
+			<div className={styles.filters}>
+				{filters.map((el) => (
+					<button
+						key={el.id}
+						className={el.id === status ? styles.active : ""}
+						onClick={() => {
+							setStatus(el.id as StatusTypes);
+							// fetchData()
+						}}
+					>
+						{el.status} ({tasks?.info && tasks.info[el.value]})
+					</button>
+				))}
+			</div>
+
 			{tasks?.data.map((el) => {
 				return (
 					<div key={el.id} className={styles.taskWrapper}>

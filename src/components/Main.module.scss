@@ -31,6 +31,21 @@
   }
 }
 
+.filters {
+  border: 1px solid red;
+  display: flex;
+  gap: 10px;
+  
+  * {
+    background: none;
+    color: var(--color-light-gray);
+  }
+
+  .active {
+    color: blue;
+  }
+}
+
 .taskWrapper {
   display: flex;
   align-items: center;
