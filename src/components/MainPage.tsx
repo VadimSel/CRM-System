@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { createTask, getTasks } from "../api";
+import { createTask, getTasks, updateTask } from "../api";
 import { MetaResponse, Todo, TodoInfo } from "../types";
 import styles from "./Main.module.scss";
 
 export const MainPage = () => {
 	const [tasks, setTasks] = useState<MetaResponse<Todo, TodoInfo>>();
 	const [taskName, setTaskName] = useState<string>("");
+	const [taskNewName, setTaskNewName] = useState("");
 	const [taskIsEdit, setTaskIsEdit] = useState<boolean>(false);
 	const [taskEditingId, setTaskEditingId] = useState<number>();
 
@@ -27,9 +28,24 @@ export const MainPage = () => {
 		setTaskIsEdit(true);
 	}
 
-	function taskEditName (id: number) {
-		setTaskEditingId(id)
-		console.log(`id: ${taskEditingId}, newName: ${taskName}`)
+	function taskEditName(id: number, newTitle: string, isDone: boolean) {
+		setTaskEditingId(id);
+		// const task = tasks?.data.filter((el) => el.id === id);
+		// if (task) {
+		// 	task[0].title = newTitle;
+		// 	task[0].isDone = isDone;
+		// }
+
+		const newTask = tasks?.data.map((task) =>
+			task.id === id ? { ...task, title: newTitle, isDone } : task
+		);
+		setTasks({ ...tasks, data: newTask });
+		// console.log(task);
+		// console.log(`id: ${taskEditingId}, newName: ${newTitle}, isDone: ${isDone}`);
+
+		setTaskIsEdit(false);
+		updateTask(id, isDone, newTitle);
+		// await fetchData();
 	}
 
 	useEffect(() => {
@@ -59,17 +75,22 @@ export const MainPage = () => {
 				return (
 					<div key={el.id} className={styles.taskWrapper}>
 						<div className={styles.checkboxWrapper}>
-							<input className={styles.checkbox} type="checkbox"/>
+							<input
+								className={styles.checkbox}
+								type="checkbox"
+								onChange={(e) => taskEditName(el.id, el.title, e.target.checked)}
+								checked={el.isDone}
+							/>
 						</div>
 						{taskIsEdit === true && taskEditingId === el.id ? (
 							<input
 								className={styles.taskNameEdit}
 								autoFocus={true}
 								onBlur={() => setTaskIsEdit(false)}
-								onChange={(e) => setTaskName(e.target.value)}
+								onChange={(e) => setTaskNewName(e.target.value)}
 								onKeyDown={(e) => {
 									if (e.key === "Enter") {
-										taskEditName(el.id)
+										taskEditName(el.id, taskNewName, el.isDone);
 									}
 								}}
 							/>

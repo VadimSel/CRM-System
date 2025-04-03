@@ -129,7 +129,7 @@ export async function createTask (isDone: boolean, title: string) {
 	}
 }
 
-export async function updateTask (id: string, isDone?: boolean, title?: string) {
+export async function updateTask (id: number, isDone: boolean, title: string) {
 	try {
 		const res = await  fetch(`${BASE_URL}/todos/${id}`, {
 			headers: {
