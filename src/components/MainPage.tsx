@@ -38,13 +38,10 @@ export const MainPage = () => {
 		if (data) {
 			if (status === 2 && tasks) {
 				setTasks({ ...tasks, data: data.data.filter((task) => task.isDone === false) });
-				console.log("inWork");
 			} else if (status === 3 && tasks) {
 				setTasks({ ...tasks, data: data.data.filter((task) => task.isDone === true) });
-				console.log("completed");
 			} else {
 				setTasks(data);
-				console.log("All");
 			}
 		}
 	}
@@ -60,15 +57,20 @@ export const MainPage = () => {
 		setTaskIsEdit(true);
 	}
 
-	function taskEditName(id: number, newTitle: string, isDone: boolean) {
-		if (tasks) {
-			const newTask = tasks?.data.map((task) =>
-				task.id === id ? { ...task, title: newTitle, isDone } : task
-			);
-			setTasks({ ...tasks, data: newTask });
-		}
+	async function taskEditData(id: number, newTitle: string, isDone: boolean) {
+		// if (tasks) {
+		// 	const newTask = tasks?.data.map((task) =>
+		// 		task.id === id ? { ...task, title: newTitle, isDone } : task
+		// 	);
+		// 	setTasks({ ...tasks, data: newTask });
+		// }
 		setTaskIsEdit(false);
-		updateTask(id, isDone, newTitle);
+		await updateTask(id, isDone, newTitle);
+		// const data = await getTasks()
+		// if (data && tasks) {
+		// 	setTasks({ ...tasks, info: data.info});
+		// }
+		fetchData()
 	}
 
 	function removeTask(id: number) {
@@ -124,7 +126,6 @@ export const MainPage = () => {
 						className={el.id === status ? styles.active : ""}
 						onClick={() => {
 							setStatus(el.id as StatusTypes);
-							// fetchData()
 						}}
 					>
 						{el.status} ({tasks?.info && tasks.info[el.value]})
@@ -139,7 +140,7 @@ export const MainPage = () => {
 							<input
 								className={styles.checkbox}
 								type="checkbox"
-								onChange={(e) => taskEditName(el.id, el.title, e.target.checked)}
+								onChange={(e) => taskEditData(el.id, el.title, e.target.checked)}
 								checked={el.isDone}
 							/>
 						</div>
@@ -151,7 +152,7 @@ export const MainPage = () => {
 								onChange={(e) => setTaskNewName(e.target.value)}
 								onKeyDown={(e) => {
 									if (e.key === "Enter") {
-										taskEditName(el.id, taskNewName, el.isDone);
+										taskEditData(el.id, taskNewName, el.isDone);
 									}
 								}}
 							/>
