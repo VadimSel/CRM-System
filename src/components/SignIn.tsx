@@ -1,25 +1,27 @@
 import { FormEvent, useState } from "react";
-import styles from "./SignIn.module.scss";
-import { signIn } from "../api";
 import { useNavigate } from "react-router";
-// import { signIn } from "../api";
+import { signIn } from "../api";
+import styles from "./SignIn.module.scss";
 
 export const SignIn = () => {
 	const [loginValue, setLoginValue] = useState("");
 	const [passwordValue, setPasswordValue] = useState("");
 
 	const [isLoading, setIsLoading] = useState(false);
+	// const [isLoginSuccess, setIsLoginSuccess] = useState(false)
 
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 
 	async function sendUserData(e: FormEvent) {
 		e.preventDefault();
-		setIsLoading(true)
+		setIsLoading(true);
 		const res = await signIn(loginValue, passwordValue);
 		if (res === true) {
-			navigate("/mainPage")
+			// isLogin(true)
+			navigate("/mainPage");
+			localStorage.setItem("isLogin", String(res))
 		}
-		setIsLoading(false)
+		setIsLoading(false);
 	}
 
 	return (

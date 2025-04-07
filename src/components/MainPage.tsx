@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { createTask, deleteTask, getTasks, updateTask } from "../api";
-import { MetaResponse, Todo, TodoInfo } from "../types";
 import editIcon from "../assets/edit-icon.svg";
 import deleteIcon from "../assets/trash-icon.svg";
+import { MetaResponse, Todo, TodoInfo } from "../types";
 import styles from "./Main.module.scss";
+import { useNavigate } from "react-router";
 
 export const MainPage = () => {
 	type StatusTypes = 1 | 2 | 3;
@@ -14,6 +15,8 @@ export const MainPage = () => {
 	const [taskIsEdit, setTaskIsEdit] = useState<boolean>(false);
 	const [taskEditingId, setTaskEditingId] = useState<number>();
 	const [status, setStatus] = useState<StatusTypes>(1);
+
+	const navigate = useNavigate()
 
 	const filters: { id: number; value: keyof TodoInfo; status: string }[] = [
 		{
@@ -72,6 +75,9 @@ export const MainPage = () => {
 	}
 
 	useEffect(() => {
+		if (!localStorage.getItem("isLogin")) {
+			navigate("/")
+		}
 		fetchData();
 	}, [status]);
 

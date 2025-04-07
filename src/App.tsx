@@ -1,29 +1,11 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-import { getProfile, getUsers, signIn, signUp } from "./api";
+import { useEffect } from "react";
 import { Link } from "react-router";
+import "./App.css";
 import styles from "./App.module.scss";
 
 function App() {
-	// const [users, setUsers] = useState([]);
-	// const [token, setToken] = useState("");
-
-	// async function getToken() {
-	// 	const token = await signIn();
-	// 	setToken(token);
-	// 	if (token) {
-	// 		getProfile(token);
-	// 	}
-	// }
 
 	useEffect(() => {
-		// getUsers()
-		// login()
-		// loginFun()
-		// getProfile(token)
-		// token === "" ? getToken() : console.log("empty");
-		// signUp("email", "login", "password", "phoneNumber", "username")
-		// signUp(token, "login", password: "", phoneNumber: "", username: "")
 	}, []);
 
 	return (
