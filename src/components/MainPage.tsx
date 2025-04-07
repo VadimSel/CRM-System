@@ -3,7 +3,7 @@ import { createTask, deleteTask, getTasks, updateTask } from "../api";
 import editIcon from "../assets/edit-icon.svg";
 import deleteIcon from "../assets/trash-icon.svg";
 import { MetaResponse, Todo, TodoInfo } from "../types";
-import styles from "./Main.module.scss";
+import styles from "./MainPage.module.scss";
 import { useNavigate } from "react-router";
 
 export const MainPage = () => {
@@ -16,7 +16,7 @@ export const MainPage = () => {
 	const [taskEditingId, setTaskEditingId] = useState<number>();
 	const [status, setStatus] = useState<StatusTypes>(1);
 
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 
 	const filters: { id: number; value: keyof TodoInfo; status: string }[] = [
 		{
@@ -50,9 +50,13 @@ export const MainPage = () => {
 	}
 
 	async function inputHandler() {
-		await createTask(false, taskName);
-		setTaskName("");
-		fetchData();
+		if (taskName.length >= 2 || taskName.length > 64) {
+			await createTask(false, taskName);
+			setTaskName("");
+			fetchData();
+		} else {
+			window.alert("Название должно быть больше 2 и меньше 64 символов")
+		}
 	}
 
 	function taskEdit(id: number) {
@@ -61,9 +65,13 @@ export const MainPage = () => {
 	}
 
 	async function taskEditData(id: number, newTitle: string, isDone: boolean) {
-		setTaskIsEdit(false);
-		await updateTask(id, isDone, newTitle);
-		fetchData()
+		if (newTitle.length >= 2 || newTitle.length > 64) {
+			setTaskIsEdit(false);
+			await updateTask(id, isDone, newTitle);
+			fetchData();
+		} else {
+			window.alert("Название должно быть больше 2 и меньше 64 символов")
+		}
 	}
 
 	function removeTask(id: number) {
@@ -76,7 +84,7 @@ export const MainPage = () => {
 
 	useEffect(() => {
 		if (!localStorage.getItem("isLogin")) {
-			navigate("/")
+			navigate("/");
 		}
 		fetchData();
 	}, [status]);
@@ -95,12 +103,13 @@ export const MainPage = () => {
 					className={styles.taskName}
 					type="text"
 					placeholder="Task To Be Done..."
+					minLength={2}
+					maxLength={64}
 				/>
 				<button onClick={() => inputHandler()} className={styles.newTaskAddButton}>
 					Add
 				</button>
 			</div>
-
 			<div className={styles.filters}>
 				{filters.map((el) => (
 					<button
@@ -114,7 +123,6 @@ export const MainPage = () => {
 					</button>
 				))}
 			</div>
-
 			{tasks?.data.map((el) => {
 				return (
 					<div key={el.id} className={styles.taskWrapper}>
@@ -137,9 +145,14 @@ export const MainPage = () => {
 										taskEditData(el.id, taskNewName, el.isDone);
 									}
 								}}
+								minLength={2}
+								maxLength={64}
 							/>
 						) : (
-							<p className={el.isDone === false ? styles.taskName : styles.taskIsDone} onClick={() => taskEdit(el.id)}>
+							<p
+								className={el.isDone === false ? styles.taskName : styles.taskIsDone}
+								onClick={() => taskEdit(el.id)}
+							>
 								{el.title}
 							</p>
 						)}

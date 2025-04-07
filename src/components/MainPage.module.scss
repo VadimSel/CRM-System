@@ -21,8 +21,17 @@
   .taskName {
     border-bottom: 1px solid var(--color-light-gray);
     background: inherit;
-    font-size: 10px;
+    // font-size: 10px;
     width: 140px;
+    padding-left: 5px;
+
+    &::placeholder {
+      font-size: 10px;
+    }
+  }
+
+  .taskName:invalid {
+    border-bottom: 1px solid var(--color-danger);
   }
 
   .newTaskAddButton {
@@ -105,6 +114,11 @@
     width: 100px;
     overflow: hidden;
     margin-left: 4px;
+  }
+
+  .taskNameEdit:invalid {
+    border: 1px solid red;
+    border-radius: 2px;
   }
 
   .taskIsDone {
