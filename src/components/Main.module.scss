@@ -1,5 +1,6 @@
 :root {
   --color-light-gray: #DEE1E6;
+  --color-dark-gray: #8D8E92;
   --color-blue: #5191FD;
   --color-danger: #FA6855;
 }
@@ -19,30 +20,35 @@
 
   .taskName {
     border-bottom: 1px solid var(--color-light-gray);
+    background: inherit;
+    font-size: 10px;
+    width: 140px;
   }
 
   .newTaskAddButton {
     border: none;
     background: var(--color-blue);
     border-radius: 5px;
-    width: 85px;
+    min-width: 85px;
     height: 30px;
     color: white;
   }
 }
 
 .filters {
-  border: 1px solid red;
   display: flex;
   gap: 10px;
   
   * {
     background: none;
-    color: var(--color-light-gray);
+    color: var(--color-dark-gray);
+    font-size: 15px;
   }
 
   .active {
-    color: blue;
+    color: var(--color-blue);
+    font-weight: bold;
+    border-bottom: 2px solid var(--color-blue);
   }
 }
 
@@ -52,9 +58,9 @@
   justify-content: center;
   gap: 10px;
   width: 225px;
-  border: 1px solid var(--color-light-gray);
   height: 35px;
   border-radius: 5px;
+  background: white;
 
   .checkboxWrapper {
     position: relative;
@@ -94,10 +100,16 @@
   }
 
   .taskName,
-  .taskNameEdit {
+  .taskNameEdit,
+  .taskIsDone {
     width: 100px;
     overflow: hidden;
     margin-left: 4px;
+  }
+
+  .taskIsDone {
+    color: var(--color-dark-gray);
+    text-decoration: line-through;
   }
 
   .taskEditButton,

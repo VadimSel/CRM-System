@@ -58,18 +58,8 @@ export const MainPage = () => {
 	}
 
 	async function taskEditData(id: number, newTitle: string, isDone: boolean) {
-		// if (tasks) {
-		// 	const newTask = tasks?.data.map((task) =>
-		// 		task.id === id ? { ...task, title: newTitle, isDone } : task
-		// 	);
-		// 	setTasks({ ...tasks, data: newTask });
-		// }
 		setTaskIsEdit(false);
 		await updateTask(id, isDone, newTitle);
-		// const data = await getTasks()
-		// if (data && tasks) {
-		// 	setTasks({ ...tasks, info: data.info});
-		// }
 		fetchData()
 	}
 
@@ -80,20 +70,6 @@ export const MainPage = () => {
 		}
 		deleteTask(id);
 	}
-
-	// function changeStatus(statusId: StatusTypes) {
-	// 	setStatus(statusId);
-	// 	// if (tasks)
-	// 	if (status === 2) {
-	// 		const tasksInWork = tasks?.data.filter((task) => task.isDone === false);
-	// 		setTasks({ ...tasks, data: tasksInWork });
-	// 	} else if (status === 3) {
-	// 		const tasksCompleted = tasks?.data.filter((task) => task.isDone === true);
-	// 		setTasks({ ...tasks, data: tasksCompleted });
-	// 	} else {
-	// 		fetchData();
-	// 	}
-	// }
 
 	useEffect(() => {
 		fetchData();
@@ -157,7 +133,7 @@ export const MainPage = () => {
 								}}
 							/>
 						) : (
-							<p className={styles.taskName} onClick={() => taskEdit(el.id)}>
+							<p className={el.isDone === false ? styles.taskName : styles.taskIsDone} onClick={() => taskEdit(el.id)}>
 								{el.title}
 							</p>
 						)}
