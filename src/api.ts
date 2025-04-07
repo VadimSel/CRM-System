@@ -1,17 +1,6 @@
-import { MetaResponse, SignInTypes, SignUpTypes, Todo, TodoInfo } from "./types";
+import { MetaResponse, Todo, TodoInfo } from "./types";
 
 export const BASE_URL = "https://easydev.club/api/v1";
-
-// export async function getUsers() {
-// 	try {
-// 		const res = await fetch(`${BASE_URL}/todos`, {
-// 			method: "GET",
-// 		});
-// 		console.log(await res.json());
-// 	} catch (error) {
-// 		window.alert("Ошибка: " + error);
-// 	}
-// }
 
 export async function signIn(login: string, password: string): Promise<boolean> {
 	try {
@@ -31,7 +20,6 @@ export async function signIn(login: string, password: string): Promise<boolean> 
 		} else {
 			return true;
 		}
-		// const data = await res.json() as SignInTypes
 	} catch (error) {
 		window.alert("Ошибка: " + error);
 		return false;
@@ -67,7 +55,6 @@ export async function signUp(
 			}
 			return false;
 		} else {
-			// const data = (await res.json()) as SignUpTypes;
 			return true;
 		}
 	} catch (error) {
@@ -75,21 +62,6 @@ export async function signUp(
 		return false;
 	}
 }
-
-// export async function getProfile(accessToken?: string) {
-// 	try {
-// 		const res = await fetch(`${BASE_URL}/user/profile`, {
-// 			method: "GET",
-// 			headers: {
-// 				"Content-Type": "application/json",
-// 				Authorization: `Bearer ${accessToken}`,
-// 			},
-// 		});
-// 		console.log(await res.json());
-// 	} catch (error) {
-// 		window.alert("Ошибка: " + error);
-// 	}
-// }
 
 export async function getTasks (): Promise<MetaResponse<Todo, TodoInfo> | undefined> {
 	try {

@@ -8,7 +8,6 @@ export const SignIn = () => {
 	const [passwordValue, setPasswordValue] = useState("");
 
 	const [isLoading, setIsLoading] = useState(false);
-	// const [isLoginSuccess, setIsLoginSuccess] = useState(false)
 
 	const navigate = useNavigate();
 
@@ -17,7 +16,6 @@ export const SignIn = () => {
 		setIsLoading(true);
 		const res = await signIn(loginValue, passwordValue);
 		if (res === true) {
-			// isLogin(true)
 			navigate("/mainPage");
 			localStorage.setItem("isLogin", String(res))
 		}

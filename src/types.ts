@@ -34,9 +34,4 @@ export interface SignUpTypes {
 	username: string;
 }
 
-// export interface SignInTypes {
-// 	login: string;
-// 	password: string;
-// }
-
 export type SignInTypes = Record<"accessToken" | "refreshToken", string>
