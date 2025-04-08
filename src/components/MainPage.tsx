@@ -37,12 +37,15 @@ export const MainPage = () => {
 	];
 
 	async function fetchData() {
+		const statusValue = status === 2 ? false : status === 3 && true;
 		const data = await getTasks();
 		if (data) {
-			if (status === 2 && tasks) {
-				setTasks({ ...tasks, data: data.data.filter((task) => task.isDone === false) });
-			} else if (status === 3 && tasks) {
-				setTasks({ ...tasks, data: data.data.filter((task) => task.isDone === true) });
+			if ((status === 2 || status === 3) && tasks) {
+				setTasks({
+					...tasks,
+					data: data.data.filter((task) => task.isDone === statusValue),
+					info: data.info,
+				});
 			} else {
 				setTasks(data);
 			}
@@ -55,7 +58,7 @@ export const MainPage = () => {
 			setTaskName("");
 			fetchData();
 		} else {
-			window.alert("Название должно быть больше 2 и меньше 64 символов")
+			window.alert("Название должно быть больше 2 и меньше 64 символов");
 		}
 	}
 
@@ -68,18 +71,19 @@ export const MainPage = () => {
 		if (newTitle.length >= 2 || newTitle.length > 64) {
 			setTaskIsEdit(false);
 			await updateTask(id, isDone, newTitle);
-			fetchData();
 		} else {
-			window.alert("Название должно быть больше 2 и меньше 64 символов")
+			window.alert("Название должно быть больше 2 и меньше 64 символов");
 		}
+		fetchData();
 	}
 
-	function removeTask(id: number) {
+	async function removeTask(id: number) {
 		if (tasks) {
 			const leftTasks = tasks.data.filter((task) => task.id !== id);
 			setTasks({ ...tasks, data: leftTasks });
 		}
-		deleteTask(id);
+		await deleteTask(id);
+		fetchData();
 	}
 
 	useEffect(() => {
