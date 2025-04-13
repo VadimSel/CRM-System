@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { createTask, deleteTask, getTasks, updateTask } from "../api";
+import cancelIcon from "../assets/cancel-icon.svg";
 import editIcon from "../assets/edit-icon.svg";
+import saveIcon from "../assets/save-icon.svg";
 import deleteIcon from "../assets/trash-icon.svg";
 import { MetaResponse, Todo, TodoInfo } from "../types";
 import styles from "./MainPage.module.scss";
-import { useNavigate } from "react-router";
 
 export const MainPage = () => {
 	type StatusTypes = 1 | 2 | 3;
@@ -15,8 +16,6 @@ export const MainPage = () => {
 	const [taskIsEdit, setTaskIsEdit] = useState<boolean>(false);
 	const [taskEditingId, setTaskEditingId] = useState<number>();
 	const [status, setStatus] = useState<StatusTypes>(1);
-
-	const navigate = useNavigate();
 
 	const filters: { id: number; value: keyof TodoInfo; status: string }[] = [
 		{
@@ -71,6 +70,7 @@ export const MainPage = () => {
 		if (newTitle.length >= 2 || newTitle.length > 64) {
 			setTaskIsEdit(false);
 			await updateTask(id, isDone, newTitle);
+			setTaskNewName("")
 		} else {
 			window.alert("Название должно быть больше 2 и меньше 64 символов");
 		}
@@ -87,9 +87,6 @@ export const MainPage = () => {
 	}
 
 	useEffect(() => {
-		if (!localStorage.getItem("isLogin")) {
-			navigate("/");
-		}
 		fetchData();
 	}, [status]);
 
@@ -99,11 +96,6 @@ export const MainPage = () => {
 				<input
 					onChange={(e) => setTaskName(e.target.value)}
 					value={taskName}
-					onKeyDown={(e) => {
-						if (e.key === "Enter") {
-							inputHandler();
-						}
-					}}
 					className={styles.taskName}
 					type="text"
 					placeholder="Task To Be Done..."
@@ -142,30 +134,43 @@ export const MainPage = () => {
 							<input
 								className={styles.taskNameEdit}
 								autoFocus={true}
-								onBlur={() => setTaskIsEdit(false)}
 								onChange={(e) => setTaskNewName(e.target.value)}
-								onKeyDown={(e) => {
-									if (e.key === "Enter") {
-										taskEditData(el.id, taskNewName, el.isDone);
-									}
-								}}
 								minLength={2}
 								maxLength={64}
 							/>
 						) : (
-							<p
-								className={el.isDone === false ? styles.taskName : styles.taskIsDone}
-								onClick={() => taskEdit(el.id)}
-							>
+							<p className={el.isDone === false ? styles.taskName : styles.taskIsDone}>
 								{el.title}
 							</p>
 						)}
-						<button onClick={() => taskEdit(el.id)} className={styles.taskEditButton}>
-							<img src={editIcon} alt="edit" />
-						</button>
-						<button onClick={() => removeTask(el.id)} className={styles.taskDeleteButton}>
-							<img src={deleteIcon} alt="delete" />
-						</button>
+						{taskIsEdit === true && taskEditingId === el.id ? (
+							<>
+								<button
+									onClick={() => taskEditData(el.id, taskNewName, el.isDone)}
+									className={styles.taskEditButton}
+								>
+									<img src={saveIcon} alt="save" />
+								</button>
+								<button
+									onClick={() => setTaskIsEdit(false)}
+									className={styles.taskDeleteButton}
+								>
+									<img src={cancelIcon} alt="cancel" />
+								</button>
+							</>
+						) : (
+							<>
+								<button onClick={() => taskEdit(el.id)} className={styles.taskEditButton}>
+									<img src={editIcon} alt="edit" />
+								</button>
+								<button
+									onClick={() => removeTask(el.id)}
+									className={styles.taskDeleteButton}
+								>
+									<img src={deleteIcon} alt="delete" />
+								</button>
+							</>
+						)}
 					</div>
 				);
 			})}

@@ -1,17 +1,19 @@
 import { useEffect } from "react";
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
 import "./App.css";
 import styles from "./App.module.scss";
 
 function App() {
 
+	const navigate = useNavigate()
+
 	useEffect(() => {
+		navigate("/mainPage")
 	}, []);
 
 	return (
 		<div className={styles.container}>
-			<Link to={"/signIn"}>Войти</Link>
-			<Link to={"/signUp"}>Зарегистрироваться</Link>
+			<p>Loading...</p>
 		</div>
 	);
 }
