@@ -70,7 +70,7 @@ export const MainPage = () => {
 		if (newTitle.length >= 2 || newTitle.length > 64) {
 			setTaskIsEdit(false);
 			await updateTask(id, isDone, newTitle);
-			setTaskNewName("")
+			setTaskNewName("");
 		} else {
 			window.alert("Название должно быть больше 2 и меньше 64 символов");
 		}
@@ -137,6 +137,7 @@ export const MainPage = () => {
 								onChange={(e) => setTaskNewName(e.target.value)}
 								minLength={2}
 								maxLength={64}
+								value={taskNewName}
 							/>
 						) : (
 							<p className={el.isDone === false ? styles.taskName : styles.taskIsDone}>
@@ -160,7 +161,13 @@ export const MainPage = () => {
 							</>
 						) : (
 							<>
-								<button onClick={() => taskEdit(el.id)} className={styles.taskEditButton}>
+								<button
+									onClick={() => {
+										setTaskNewName(el.title);
+										taskEdit(el.id);
+									}}
+									className={styles.taskEditButton}
+								>
 									<img src={editIcon} alt="edit" />
 								</button>
 								<button
