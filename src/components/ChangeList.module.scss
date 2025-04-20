@@ -1,0 +1,16 @@
+.filters {
+  display: flex;
+  gap: 10px;
+  
+  * {
+    background: none;
+    color: var(--color-dark-gray);
+    font-size: 15px;
+  }
+
+  .active {
+    color: var(--color-blue);
+    font-weight: bold;
+    border-bottom: 2px solid var(--color-blue);
+  }
+}

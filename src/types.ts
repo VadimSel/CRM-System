@@ -35,3 +35,5 @@ export interface SignUpTypes {
 }
 
 export type SignInTypes = Record<"accessToken" | "refreshToken", string>
+
+export type StatusTypes = 1 | 2 | 3;
