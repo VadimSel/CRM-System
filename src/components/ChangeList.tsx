@@ -1,10 +1,10 @@
-import { MetaResponse, StatusTypes, Todo, TodoInfo } from "../types";
-import styles from './ChangeList.module.scss'
+import { TodoInfo, TodoStatusTypes } from "../types";
+import styles from './ChangeList.module.scss';
 
 interface ChangeListTypes {
-	status: StatusTypes
-	setStatus: (value: StatusTypes) => void;
-	tasks?: MetaResponse<Todo, TodoInfo>
+	status: TodoStatusTypes
+	setStatus: (value: TodoStatusTypes) => void;
+	tasks?: TodoInfo
 };
 
 export const ChangeList = ({ tasks, status, setStatus }: ChangeListTypes) => {
@@ -31,12 +31,12 @@ export const ChangeList = ({ tasks, status, setStatus }: ChangeListTypes) => {
 			{filters.map((el) => (
 				<button
 					key={el.id}
-					className={el.id === status ? styles.active : ""}
+					className={el.value === status ? styles.active : ""}
 					onClick={() => {
-						setStatus(el.id as StatusTypes);
+						setStatus(el.value as TodoStatusTypes);
 					}}
 				>
-					{el.status} ({tasks?.info && tasks.info[el.value]})
+					{el.status} ({tasks && tasks[el.value]})
 				</button>
 			))}
 		</div>

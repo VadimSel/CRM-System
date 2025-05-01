@@ -1,29 +1,21 @@
 import { useEffect, useState } from "react";
 import { getTasks } from "../api";
-import { MetaResponse, StatusTypes, Todo, TodoInfo } from "../types";
+import { Todo, TodoInfo, TodoStatusTypes } from "../types";
 import { AddTask } from "./AddTask";
 import { ChangeList } from "./ChangeList";
 import styles from "./MainPage.module.scss";
-import { TodoItem } from "./TodoItem";
+import { TodoItems } from "./TodoItems";
 
 export const MainPage = () => {
-
-	const [tasks, setTasks] = useState<MetaResponse<Todo, TodoInfo>>();
-	const [status, setStatus] = useState<StatusTypes>(1);
+	const [tasksData, setTasksData] = useState<Todo[]>();
+	const [tasksInfo, setTasksInfo] = useState<TodoInfo>();
+	const [status, setStatus] = useState<TodoStatusTypes>("all");
 
 	async function fetchData() {
-		const statusValue = status === 2 ? false : status === 3 && true;
-		const data = await getTasks();
+		const data = await getTasks(status);
 		if (data) {
-			if ((status === 2 || status === 3) && tasks) {
-				setTasks({
-					...tasks,
-					data: data.data.filter((task) => task.isDone === statusValue),
-					info: data.info,
-				});
-			} else {
-				setTasks(data);
-			}
+			setTasksData(data.data);
+			setTasksInfo(data.info);
 		}
 	}
 
@@ -33,9 +25,9 @@ export const MainPage = () => {
 
 	return (
 		<div className={styles.container}>
-			<AddTask fetchData={fetchData}/>
-			<ChangeList tasks={tasks} status={status} setStatus={setStatus}/>
-			<TodoItem tasks={tasks} fetchData={fetchData} setTasks={setTasks}/>
+			<AddTask fetchData={fetchData} />
+			<ChangeList tasks={tasksInfo} status={status} setStatus={setStatus} />
+			<TodoItems tasks={tasksData} fetchData={fetchData} />
 		</div>
 	);
 };

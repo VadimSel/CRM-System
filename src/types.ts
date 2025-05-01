@@ -24,16 +24,4 @@ export interface MetaResponse<T, N> {
 	};
 }
 
-export interface SignUpTypes {
-	date: string;
-	email: string;
-	id: number;
-	isAdmin: boolean;
-	isBlocked: boolean;
-	phoneNumber: string;
-	username: string;
-}
-
-export type SignInTypes = Record<"accessToken" | "refreshToken", string>
-
-export type StatusTypes = 1 | 2 | 3;
+export type TodoStatusTypes = "all" | "inWork" | "completed";

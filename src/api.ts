@@ -1,71 +1,11 @@
-import { MetaResponse, Todo, TodoInfo } from "./types";
+/* eslint-disable no-useless-catch */
+import { MetaResponse, Todo, TodoInfo, TodoRequest, TodoStatusTypes } from "./types";
 
 export const BASE_URL = "https://easydev.club/api/v1";
 
-export async function signIn(login: string, password: string): Promise<boolean> {
+export async function getTasks (tasksStatus: TodoStatusTypes): Promise<MetaResponse<Todo, TodoInfo> | undefined> {
 	try {
-		const res = await fetch(`${BASE_URL}/auth/signin`, {
-			method: "POST",
-			body: JSON.stringify({
-				login,
-				password,
-			}),
-		});
-
-		if (!res.ok) {
-			if (res.status === 401) {
-				window.alert("Не верные логин или пароль");
-			}
-			return false;
-		} else {
-			return true;
-		}
-	} catch (error) {
-		window.alert("Ошибка: " + error);
-		return false;
-	}
-}
-
-export async function signUp(
-	email: string,
-	login: string,
-	password: string,
-	phoneNumber: string,
-	username: string
-): Promise<boolean> {
-	try {
-		const res = await fetch(`${BASE_URL}/auth/signup`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "Application/json",
-			},
-			body: JSON.stringify({
-				email,
-				login,
-				password,
-				phoneNumber: `+${phoneNumber}`,
-				username,
-			}),
-		});
-
-		if (!res.ok) {
-			const err = res;
-			if (err.status === 409) {
-				window.alert("Пользователь уже существует");
-			}
-			return false;
-		} else {
-			return true;
-		}
-	} catch (error) {
-		window.alert("Ошибка: " + error);
-		return false;
-	}
-}
-
-export async function getTasks (): Promise<MetaResponse<Todo, TodoInfo> | undefined> {
-	try {
-		const res = await fetch(`${BASE_URL}/todos`, {
+		const res = await fetch(`${BASE_URL}/todos?filter=${tasksStatus}`, {
 			headers: {
 				"Content-Type": "application/json"
 			},
@@ -78,40 +18,32 @@ export async function getTasks (): Promise<MetaResponse<Todo, TodoInfo> | undefi
 	}
 }
 
-export async function createTask (isDone: boolean, title: string) {
-	try {
-		const res = await fetch(`${BASE_URL}/todos`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/type"
-			},
-			body: JSON.stringify({
-				isDone,
-				title
-			})
-		})
+export async function createTask(task: TodoRequest) {
+    try {
+        const res = await fetch(`${BASE_URL}/todos`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(task),
+        });
 
-		if (!res.ok) {
-			const errorStatus = res.status
-			const errorMessage = res.statusText
-			window.alert("Ошибка " + errorStatus + ": " + errorMessage)
-		}
-	} catch (error) {
-		window.alert("Ошибка при создании таски: " + error)
-	}
+        if (!res.ok) {
+            throw new Error(`${res.status}, ${res.statusText}`);
+        }
+    } catch (error) {
+        throw error;
+    }
 }
 
-export async function updateTask (id: number, isDone: boolean, title: string) {
+export async function updateTask (id: number, task: TodoRequest) {
 	try {
 		const res = await fetch(`${BASE_URL}/todos/${id}`, {
 			headers: {
 				"Content-type": "application/json"
 			},
 			method: "PUT",
-			body: JSON.stringify({
-				isDone,
-				title
-			})
+			body: JSON.stringify(task)
 		})
 
 		if (!res.ok) {
