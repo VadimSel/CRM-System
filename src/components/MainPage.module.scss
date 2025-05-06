@@ -1,0 +1,15 @@
+:root {
+  --color-light-gray: #DEE1E6;
+  --color-dark-gray: #8D8E92;
+  --color-blue: #5191FD;
+  --color-danger: #FA6855;
+}
+
+.container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
