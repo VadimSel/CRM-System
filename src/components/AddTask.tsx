@@ -31,10 +31,6 @@ export const AddTask = ({ fetchData }: AddTaskTypes) => {
 
 	return (
 		<form
-			// onSubmit={(e) => {
-			// 	e.preventDefault();
-			// 	handleAddTask();
-			// }}
 			onSubmit={(e) => handleAddTask(e)}
 			className={styles.newTask}
 		>
