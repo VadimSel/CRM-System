@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { createTask } from "../api";
 import styles from "./AddTask.module.scss";
 import { TodoRequest } from "../types";
@@ -10,7 +10,8 @@ interface AddTaskTypes {
 export const AddTask = ({ fetchData }: AddTaskTypes) => {
 	const [taskName, setTaskName] = useState<string>("");
 
-	async function taskValidation() {
+	const handleAddTask = async (e: FormEvent) => {
+		e.preventDefault()
 		if (taskName.length <= 1 && taskName.length >= 64) {
 			window.alert("Название должно быть больше 2 и меньше 64 символов");
 			return;
@@ -26,14 +27,15 @@ export const AddTask = ({ fetchData }: AddTaskTypes) => {
 		} catch (error) {
 			window.alert(error);
 		}
-	}
+	};
 
 	return (
 		<form
-			onSubmit={(e) => {
-				e.preventDefault();
-				taskValidation();
-			}}
+			// onSubmit={(e) => {
+			// 	e.preventDefault();
+			// 	handleAddTask();
+			// }}
+			onSubmit={(e) => handleAddTask(e)}
 			className={styles.newTask}
 		>
 			<input

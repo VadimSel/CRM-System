@@ -11,7 +11,7 @@ export const TodoItems = ({ tasks, fetchData }: TodoItemsTypes) => {
 	return (
 		<>
 			{tasks?.map((el) => {
-				return <TodoItem key={el.id} el={el} fetchData={fetchData} />;
+				return <TodoItem key={el.id} todo={el} fetchData={fetchData} />;
 			})}
 		</>
 	);

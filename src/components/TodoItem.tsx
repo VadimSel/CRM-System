@@ -9,17 +9,16 @@ import { useState } from "react";
 import { deleteTask, updateTask } from "../api";
 
 interface TodoItemTypes {
-	el: Todo;
+	todo: Todo;
 	fetchData: () => void;
 }
 
-export const TodoItem = ({ el, fetchData }: TodoItemTypes) => {
-	const [taskEditingId, setTaskEditingId] = useState<number>();
+export const TodoItem = ({ todo, fetchData }: TodoItemTypes) => {
 	const [taskIsEdit, setTaskIsEdit] = useState<boolean>(false);
 	const [taskNewName, setTaskNewName] = useState<string>("");
 
-	function taskEdit(id: number) {
-		setTaskEditingId(id);
+	function taskEdit(newTitle: string) {
+		setTaskNewName(newTitle);
 		setTaskIsEdit(true);
 	}
 
@@ -32,30 +31,28 @@ export const TodoItem = ({ el, fetchData }: TodoItemTypes) => {
 			setTaskIsEdit(false);
 			await updateTask(id, task);
 			setTaskNewName("");
+			fetchData();
 		} else {
 			window.alert("Название должно быть больше 2 и меньше 64 символов");
 		}
-		fetchData();
 	}
 
 	async function removeTask(id: number) {
-		if (id) {
-			await deleteTask(id);
-		}
+		await deleteTask(id);
 		fetchData();
 	}
 
 	return (
-		<div key={el.id} className={styles.taskWrapper}>
+		<div key={todo.id} className={styles.taskWrapper}>
 			<div className={styles.checkboxWrapper}>
 				<input
 					className={styles.checkbox}
 					type="checkbox"
-					onChange={(e) => taskEditData(el.id, el.title, e.target.checked)}
-					checked={el.isDone}
+					onChange={(e) => taskEditData(todo.id, todo.title, e.target.checked)}
+					checked={todo.isDone}
 				/>
 			</div>
-			{taskIsEdit === true && taskEditingId === el.id ? (
+			{taskIsEdit === true ? (
 				<input
 					className={styles.taskNameEdit}
 					autoFocus={true}
@@ -65,14 +62,14 @@ export const TodoItem = ({ el, fetchData }: TodoItemTypes) => {
 					value={taskNewName}
 				/>
 			) : (
-				<p className={el.isDone === false ? styles.taskName : styles.taskIsDone}>
-					{el.title}
+				<p className={todo.isDone === false ? styles.taskName : styles.taskIsDone}>
+					{todo.title}
 				</p>
 			)}
-			{taskIsEdit === true && taskEditingId === el.id ? (
+			{taskIsEdit === true ? (
 				<>
 					<button
-						onClick={() => taskEditData(el.id, taskNewName, el.isDone)}
+						onClick={() => taskEditData(todo.id, taskNewName, todo.isDone)}
 						className={styles.taskEditButton}
 					>
 						<img src={saveIcon} alt="save" />
@@ -86,16 +83,10 @@ export const TodoItem = ({ el, fetchData }: TodoItemTypes) => {
 				</>
 			) : (
 				<>
-					<button
-						onClick={() => {
-							setTaskNewName(el.title);
-							taskEdit(el.id);
-						}}
-						className={styles.taskEditButton}
-					>
+					<button onClick={() => taskEdit(todo.title)} className={styles.taskEditButton}>
 						<img src={editIcon} alt="edit" />
 					</button>
-					<button onClick={() => removeTask(el.id)} className={styles.taskDeleteButton}>
+					<button onClick={() => removeTask(todo.id)} className={styles.taskDeleteButton}>
 						<img src={deleteIcon} alt="delete" />
 					</button>
 				</>
