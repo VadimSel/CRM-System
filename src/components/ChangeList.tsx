@@ -1,11 +1,12 @@
+import { Button } from "antd";
 import { TodoInfo, TodoStatusTypes } from "../types";
-import styles from './ChangeList.module.scss';
+import styles from "./ChangeList.module.scss";
 
 interface ChangeListTypes {
-	status: TodoStatusTypes
+	status: TodoStatusTypes;
 	setStatus: (value: TodoStatusTypes) => void;
-	tasks?: TodoInfo
-};
+	tasks?: TodoInfo;
+}
 
 export const ChangeList = ({ tasks, status, setStatus }: ChangeListTypes) => {
 	const filters: { id: number; value: keyof TodoInfo; status: string }[] = [
@@ -29,15 +30,15 @@ export const ChangeList = ({ tasks, status, setStatus }: ChangeListTypes) => {
 	return (
 		<div className={styles.filters}>
 			{filters.map((el) => (
-				<button
+				<Button
 					key={el.id}
-					className={el.value === status ? styles.active : ""}
+					type={el.value === status ? "default" : "text"}
 					onClick={() => {
 						setStatus(el.value as TodoStatusTypes);
 					}}
 				>
 					{el.status} ({tasks && tasks[el.value]})
-				</button>
+				</Button>
 			))}
 		</div>
 	);

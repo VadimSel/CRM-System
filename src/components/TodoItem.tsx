@@ -7,6 +7,7 @@ import saveIcon from "../assets/save-icon.svg";
 import deleteIcon from "../assets/trash-icon.svg";
 import { useState } from "react";
 import { deleteTask, updateTask } from "../api";
+import { Button, Checkbox, Input } from "antd";
 
 interface TodoItemTypes {
 	todo: Todo;
@@ -45,16 +46,13 @@ export const TodoItem = ({ todo, fetchData }: TodoItemTypes) => {
 	return (
 		<div key={todo.id} className={styles.taskWrapper}>
 			<div className={styles.checkboxWrapper}>
-				<input
-					className={styles.checkbox}
-					type="checkbox"
+				<Checkbox
 					onChange={(e) => taskEditData(todo.id, todo.title, e.target.checked)}
 					checked={todo.isDone}
 				/>
 			</div>
 			{taskIsEdit === true ? (
-				<input
-					className={styles.taskNameEdit}
+				<Input
 					autoFocus={true}
 					onChange={(e) => setTaskNewName(e.target.value)}
 					minLength={2}
@@ -68,27 +66,25 @@ export const TodoItem = ({ todo, fetchData }: TodoItemTypes) => {
 			)}
 			{taskIsEdit === true ? (
 				<>
-					<button
+					<Button
 						onClick={() => taskEditData(todo.id, taskNewName, todo.isDone)}
 						className={styles.taskEditButton}
 					>
 						<img src={saveIcon} alt="save" />
-					</button>
-					<button
+					</Button>
+					<Button
 						onClick={() => setTaskIsEdit(false)}
 						className={styles.taskDeleteButton}
 					>
 						<img src={cancelIcon} alt="cancel" />
-					</button>
+					</Button>
 				</>
 			) : (
 				<>
-					<button onClick={() => taskEdit(todo.title)} className={styles.taskEditButton}>
-						<img src={editIcon} alt="edit" />
-					</button>
-					<button onClick={() => removeTask(todo.id)} className={styles.taskDeleteButton}>
+					<Button onClick={() => taskEdit(todo.title)} className={styles.taskEditButton}><img src={editIcon} alt="edit" /></Button>
+					<Button onClick={() => removeTask(todo.id)} className={styles.taskDeleteButton}>
 						<img src={deleteIcon} alt="delete" />
-					</button>
+					</Button>
 				</>
 			)}
 		</div>
