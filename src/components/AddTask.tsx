@@ -1,28 +1,27 @@
-import { FormEvent, useState } from "react";
-import { createTask } from "../api";
-import styles from "./AddTask.module.scss";
-import { TodoRequest } from "../types";
 import { Button, Form, Input } from "antd";
+import { createTask } from "../api";
+import { TodoRequest } from "../types";
+import styles from "./AddTask.module.scss";
 
 interface AddTaskTypes {
 	fetchData: () => void;
 }
 
 export const AddTask = ({ fetchData }: AddTaskTypes) => {
-	const [taskName, setTaskName] = useState<string>("");
+	const [form] = Form.useForm();
 
-	const handleAddTask = async () => {
-		if (taskName.length <= 1 && taskName.length >= 64) {
+	const handleAddTask = async (values: { taskName: string }) => {
+		if (values.taskName.length <= 1 && values.taskName.length >= 64) {
 			window.alert("Название должно быть больше 2 и меньше 64 символов");
 			return;
 		}
 		const task: TodoRequest = {
-			title: taskName,
+			title: values.taskName,
 			isDone: false,
 		};
 		try {
 			await createTask(task);
-			setTaskName("");
+			form.resetFields();
 			fetchData();
 		} catch (error) {
 			window.alert(error);
@@ -30,21 +29,16 @@ export const AddTask = ({ fetchData }: AddTaskTypes) => {
 	};
 
 	return (
-		<Form onFinish={handleAddTask} className={styles.newTask}>
+		<Form form={form} onFinish={handleAddTask} className={styles.newTask}>
 			<Form.Item
-				name="taskNamess"
+				name="taskName"
 				rules={[
 					{ required: true, message: "Введите название" },
 					{ min: 2, message: "Минимум 2 символа" },
 					{ max: 64, message: "Максимум 64 символа" },
 				]}
 			>
-				<Input
-					onChange={(e) => setTaskName(e.target.value)}
-					value={taskName}
-					placeholder="Task To Be Done..."
-					maxLength={64}
-				/>
+				<Input placeholder="Task To Be Done..." maxLength={64} />
 			</Form.Item>
 			<Button htmlType="submit">Add</Button>
 		</Form>
