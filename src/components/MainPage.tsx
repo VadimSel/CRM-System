@@ -12,10 +12,14 @@ export const MainPage = () => {
 	const [status, setStatus] = useState<TodoStatusTypes>("all");
 
 	async function fetchData() {
-		const data = await getTasks(status);
-		if (data) {
-			setTasksData(data.data);
-			setTasksInfo(data.info);
+		try {
+			const data = await getTasks(status);
+			if (data) {
+				setTasksData(data.data);
+				setTasksInfo(data.info);
+			}
+		} catch (error) {
+			window.alert(error)
 		}
 	}
 

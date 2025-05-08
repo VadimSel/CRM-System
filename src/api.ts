@@ -1,73 +1,56 @@
 /* eslint-disable no-useless-catch */
+import axios from "axios";
 import { MetaResponse, Todo, TodoInfo, TodoRequest, TodoStatusTypes } from "./types";
 
-export const BASE_URL = "https://easydev.club/api/v1";
+const BASE_URL = "https://easydev.club/api/v1";
 
 export async function getTasks (tasksStatus: TodoStatusTypes): Promise<MetaResponse<Todo, TodoInfo> | undefined> {
 	try {
-		const res = await fetch(`${BASE_URL}/todos?filter=${tasksStatus}`, {
+		const res = await axios.get(`${BASE_URL}/todos`, {
+			params: {filter: tasksStatus},
 			headers: {
 				"Content-Type": "application/json"
-			},
-			method: "GET"
+			}
 		})
-		const data = await res.json() as MetaResponse<Todo, TodoInfo>
-		return data
+
+		return res.data
 	} catch (error) {
-		window.alert("Ошибка: " + error)
+		throw error
 	}
 }
 
-export async function createTask(task: TodoRequest) {
-    try {
-        const res = await fetch(`${BASE_URL}/todos`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(task),
-        });
-
-        if (!res.ok) {
-            throw new Error(`${res.status}, ${res.statusText}`);
-        }
-    } catch (error) {
-        throw error;
-    }
+export async function createTask (task: TodoRequest) {
+	try {
+		await axios.post(`${BASE_URL}/todos`, task, {
+			headers: {
+				"Content-Type": "application/json"
+			}
+		})
+	} catch (error) {
+		throw error
+	}
 }
 
 export async function updateTask (id: number, task: TodoRequest) {
 	try {
-		const res = await fetch(`${BASE_URL}/todos/${id}`, {
+		await axios.put(`${BASE_URL}/todos/${id}`, task, {
 			headers: {
-				"Content-type": "application/json"
-			},
-			method: "PUT",
-			body: JSON.stringify(task)
+				"Content-Type": "application/json"
+			}
 		})
-
-		if (!res.ok) {
-			window.alert("Ошибка " + res.status + ", " + res.statusText)
-		}
 	} catch (error) {
-		window.alert(error)
+		throw error
 	}
 }
 
 export async function deleteTask (id: number) {
 	try {
-		const res = await fetch(`${BASE_URL}/todos/${id}`, {
+		await axios.delete(`${BASE_URL}/todos/${id}`, {
 			headers: {
 				"Content-Type": "application/json"
-			},
-			method: "DELETE"
+			}
 		})
-
-		if (!res.ok) {
-			window.alert("Ошибка " + res.status + ": " + res.statusText)
-		}
-		
 	} catch (error) {
-		window.alert("Ошибка: " + error)
+		throw error
 	}
 }

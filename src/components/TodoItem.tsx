@@ -30,17 +30,25 @@ export const TodoItem = ({ todo, fetchData }: TodoItemTypes) => {
 				isDone,
 			};
 			setTaskIsEdit(false);
-			await updateTask(id, task);
-			setTaskNewName("");
-			fetchData();
+			try {
+				await updateTask(id, task);
+				setTaskNewName("");
+				fetchData();
+			} catch (error) {
+				window.alert(error);
+			}
 		} else {
 			window.alert("Название должно быть больше 2 и меньше 64 символов");
 		}
 	}
 
 	async function removeTask(id: number) {
-		await deleteTask(id);
-		fetchData();
+		try {
+			await deleteTask(id);
+			fetchData();
+		} catch (error) {
+			window.alert(error)
+		}
 	}
 
 	return (
@@ -81,7 +89,9 @@ export const TodoItem = ({ todo, fetchData }: TodoItemTypes) => {
 				</>
 			) : (
 				<>
-					<Button onClick={() => taskEdit(todo.title)} className={styles.taskEditButton}><img src={editIcon} alt="edit" /></Button>
+					<Button onClick={() => taskEdit(todo.title)} className={styles.taskEditButton}>
+						<img src={editIcon} alt="edit" />
+					</Button>
 					<Button onClick={() => removeTask(todo.id)} className={styles.taskDeleteButton}>
 						<img src={deleteIcon} alt="delete" />
 					</Button>
