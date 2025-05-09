@@ -1,0 +1,19 @@
+.container {
+  border-right: 1px solid gray;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 150px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.profile:hover,
+.mainPage:hover {
+	cursor: pointer;
+  color: gray;
+}

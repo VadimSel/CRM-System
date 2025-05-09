@@ -5,6 +5,7 @@ import { AddTask } from "./AddTask";
 import { ChangeList } from "./ChangeList";
 import styles from "./MainPage.module.scss";
 import { TodoItems } from "./TodoItems";
+import { SideBar } from "./SideBar";
 
 export const MainPage = () => {
 	const [tasksData, setTasksData] = useState<Todo[]>();
@@ -25,10 +26,13 @@ export const MainPage = () => {
 
 	useEffect(() => {
 		fetchData();
+		const getData = setInterval(() => fetchData(), 5000)
+		return () => clearInterval(getData)
 	}, [status]);
 
 	return (
 		<div className={styles.container}>
+			<SideBar/>
 			<AddTask fetchData={fetchData} />
 			<ChangeList tasks={tasksInfo} status={status} setStatus={setStatus} />
 			<TodoItems tasks={tasksData} fetchData={fetchData} />
