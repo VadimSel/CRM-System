@@ -2,55 +2,47 @@
 import axios from "axios";
 import { MetaResponse, Todo, TodoInfo, TodoRequest, TodoStatusTypes } from "./types";
 
-const BASE_URL = "https://easydev.club/api/v1";
+export const instance = axios.create({
+	baseURL: "https://easydev.club/api/v1",
+	headers: {
+		"Content-Type": "application/json",
+	},
+});
 
-export async function getTasks (tasksStatus: TodoStatusTypes): Promise<MetaResponse<Todo, TodoInfo> | undefined> {
+export async function getTasks(
+	tasksStatus: TodoStatusTypes
+): Promise<MetaResponse<Todo, TodoInfo> | undefined> {
 	try {
-		const res = await axios.get(`${BASE_URL}/todos`, {
-			params: {filter: tasksStatus},
-			headers: {
-				"Content-Type": "application/json"
-			}
-		})
+		const res = await instance.get("/todos", {
+			params: { filter: tasksStatus },
+		});
 
-		return res.data
+		return res.data;
 	} catch (error) {
-		throw error
+		throw error;
 	}
 }
 
-export async function createTask (task: TodoRequest) {
+export async function createTask(task: TodoRequest) {
 	try {
-		await axios.post(`${BASE_URL}/todos`, task, {
-			headers: {
-				"Content-Type": "application/json"
-			}
-		})
+		await instance.post("/todos", task);
 	} catch (error) {
-		throw error
+		throw error;
 	}
 }
 
-export async function updateTask (id: number, task: TodoRequest) {
+export async function updateTask(id: number, task: TodoRequest) {
 	try {
-		await axios.put(`${BASE_URL}/todos/${id}`, task, {
-			headers: {
-				"Content-Type": "application/json"
-			}
-		})
+		await instance.put(`/todos/${id}`, task);
 	} catch (error) {
-		throw error
+		throw error;
 	}
 }
 
-export async function deleteTask (id: number) {
+export async function deleteTask(id: number) {
 	try {
-		await axios.delete(`${BASE_URL}/todos/${id}`, {
-			headers: {
-				"Content-Type": "application/json"
-			}
-		})
+		await instance.delete(`/todos/${id}`);
 	} catch (error) {
-		throw error
+		throw error;
 	}
 }
