@@ -4,6 +4,7 @@ import App from "./App.tsx";
 import "./index.css";
 import { Profile } from "./pages/Profile.tsx";
 import { Layout } from "./components/Layout.tsx";
+import '@ant-design/v5-patch-for-react-19';
 
 createRoot(document.getElementById("root")!).render(
 	<BrowserRouter>

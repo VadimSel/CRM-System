@@ -1,20 +1,24 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, notification } from "antd";
 import { createTask } from "../api";
 import { TodoRequest } from "../types";
 import styles from "./AddTask.module.scss";
+import { maxTaskNameChar, minTaskNameChar } from "../constants/constants";
 
 interface AddTaskTypes {
 	fetchData: () => void;
+}
+
+const errorNotification = (error: unknown) => {
+	notification.error({
+		message: String(error),
+		placement: "top"
+	})
 }
 
 export const AddTask = ({ fetchData }: AddTaskTypes) => {
 	const [form] = Form.useForm();
 
 	const handleAddTask = async (values: { taskName: string }) => {
-		if (values.taskName.length <= 1 && values.taskName.length >= 64) {
-			window.alert("Название должно быть больше 2 и меньше 64 символов");
-			return;
-		}
 		const task: TodoRequest = {
 			title: values.taskName,
 			isDone: false,
@@ -24,7 +28,7 @@ export const AddTask = ({ fetchData }: AddTaskTypes) => {
 			form.resetFields();
 			fetchData();
 		} catch (error) {
-			window.alert(error);
+			errorNotification(error)
 		}
 	};
 
@@ -34,8 +38,8 @@ export const AddTask = ({ fetchData }: AddTaskTypes) => {
 				name="taskName"
 				rules={[
 					{ required: true, message: "Введите название" },
-					{ min: 2, message: "Минимум 2 символа" },
-					{ max: 64, message: "Максимум 64 символа" },
+					{ min: 2, message: `Минимум ${minTaskNameChar} символа` },
+					{ max: 64, message: `Максимум ${maxTaskNameChar} символа` },
 				]}
 			>
 				<Input placeholder="Task To Be Done..." maxLength={64} />

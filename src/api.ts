@@ -23,7 +23,7 @@ export async function getTasks(
 	}
 }
 
-export async function createTask(task: TodoRequest) {
+export async function createTask(task: TodoRequest): Promise<void> {
 	try {
 		await instance.post("/todos", task);
 	} catch (error) {
@@ -31,7 +31,7 @@ export async function createTask(task: TodoRequest) {
 	}
 }
 
-export async function updateTask(id: number, task: TodoRequest) {
+export async function updateTask(id: number, task: TodoRequest): Promise<void> {
 	try {
 		await instance.put(`/todos/${id}`, task);
 	} catch (error) {
@@ -39,7 +39,7 @@ export async function updateTask(id: number, task: TodoRequest) {
 	}
 }
 
-export async function deleteTask(id: number) {
+export async function deleteTask(id: number): Promise<void> {
 	try {
 		await instance.delete(`/todos/${id}`);
 	} catch (error) {
