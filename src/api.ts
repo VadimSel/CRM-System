@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-catch */
 import axios from "axios";
-import { MetaResponse, Todo, TodoInfo, TodoRequest, TodoStatusTypes } from "./types";
+import { MetaResponse, Todo, TodoFilterEnum, TodoInfo, TodoRequest } from "./types";
 
 export const instance = axios.create({
 	baseURL: "https://easydev.club/api/v1",
@@ -10,7 +10,7 @@ export const instance = axios.create({
 });
 
 export async function getTasks(
-	tasksStatus: TodoStatusTypes
+	tasksStatus: TodoFilterEnum
 ): Promise<MetaResponse<Todo, TodoInfo> | undefined> {
 	try {
 		const res = await instance.get("/todos", {

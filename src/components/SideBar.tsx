@@ -1,13 +1,16 @@
-import { useNavigate } from "react-router"
-import styles from './SideBar.module.scss'
+import { Menu } from "antd";
+import { Link } from "react-router";
+import styles from "./SideBar.module.scss";
 
-export const  SideBar = () => {
-  const navigate = useNavigate()
+export const SideBar = () => {
+	const menuItems = [
+		{ key: "1", label: <Link to={"/profile"}>Профиль</Link> },
+		{ key: "2", label: <Link to={"/"}>Список Задач</Link> },
+	];
 
-  return (
-    <div className={styles.container}>
-      <p className={styles.profile} onClick={() => navigate("/profile")}>Профиль</p>
-      <p className={styles.mainPage} onClick={() => navigate("/")}>Список Задач</p>
-    </div>
-  )
-}
+	return (
+		<div className={styles.container}>
+			<Menu className={styles.menu} items={menuItems} />
+		</div>
+	);
+};

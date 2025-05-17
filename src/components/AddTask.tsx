@@ -1,18 +1,12 @@
-import { Button, Form, Input, notification } from "antd";
+import { Button, Form, Input } from "antd";
 import { createTask } from "../api";
-import { TodoRequest } from "../types";
-import styles from "./AddTask.module.scss";
 import { maxTaskNameChar, minTaskNameChar } from "../constants/constants";
+import { TodoRequest } from "../types";
+import { ErrorNotification } from "../utils/ErrorNotification";
+import styles from "./AddTask.module.scss";
 
 interface AddTaskTypes {
 	fetchData: () => void;
-}
-
-const errorNotification = (error: unknown) => {
-	notification.error({
-		message: String(error),
-		placement: "top"
-	})
 }
 
 export const AddTask = ({ fetchData }: AddTaskTypes) => {
@@ -28,7 +22,7 @@ export const AddTask = ({ fetchData }: AddTaskTypes) => {
 			form.resetFields();
 			fetchData();
 		} catch (error) {
-			errorNotification(error)
+			ErrorNotification(error)
 		}
 	};
 
@@ -38,8 +32,8 @@ export const AddTask = ({ fetchData }: AddTaskTypes) => {
 				name="taskName"
 				rules={[
 					{ required: true, message: "Введите название" },
-					{ min: 2, message: `Минимум ${minTaskNameChar} символа` },
-					{ max: 64, message: `Максимум ${maxTaskNameChar} символа` },
+					{ min: minTaskNameChar, message: `Минимум ${minTaskNameChar} символа` },
+					{ max: maxTaskNameChar, message: `Максимум ${maxTaskNameChar} символа` },
 				]}
 			>
 				<Input placeholder="Task To Be Done..." maxLength={64} />
