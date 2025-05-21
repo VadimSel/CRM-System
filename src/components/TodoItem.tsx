@@ -1,12 +1,12 @@
 import { Todo, TodoRequest } from "../types";
 import styles from "./TodoItem.module.scss";
 
-import cancelIcon from "../assets/cancel-icon.svg";
-import editIcon from "../assets/edit-icon.svg";
-import saveIcon from "../assets/save-icon.svg";
-import deleteIcon from "../assets/trash-icon.svg";
+import { DeleteOutlined, EditOutlined, RollbackOutlined, SaveOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Form, Input } from "antd";
 import { useState } from "react";
 import { deleteTask, updateTask } from "../api";
+import { maxTaskNameChar, minTaskNameChar } from "../constants/constants";
+import { ErrorNotification } from "../utils/ErrorNotification";
 
 interface TodoItemTypes {
 	todo: Todo;
@@ -16,6 +16,7 @@ interface TodoItemTypes {
 export const TodoItem = ({ todo, fetchData }: TodoItemTypes) => {
 	const [taskIsEdit, setTaskIsEdit] = useState<boolean>(false);
 	const [taskNewName, setTaskNewName] = useState<string>("");
+	const [form] = Form.useForm();
 
 	function taskEdit(newTitle: string) {
 		setTaskNewName(newTitle);
@@ -23,72 +24,86 @@ export const TodoItem = ({ todo, fetchData }: TodoItemTypes) => {
 	}
 
 	async function taskEditData(id: number, newTitle: string, isDone: boolean) {
-		if (newTitle.length >= 2 || newTitle.length > 64) {
-			const task: TodoRequest = {
-				title: newTitle,
-				isDone,
-			};
-			setTaskIsEdit(false);
+		const task: TodoRequest = {
+			title: newTitle,
+			isDone,
+		};
+		setTaskIsEdit(false);
+		try {
 			await updateTask(id, task);
-			setTaskNewName("");
 			fetchData();
-		} else {
-			window.alert("Название должно быть больше 2 и меньше 64 символов");
+		} catch (error) {
+			ErrorNotification(error);
 		}
 	}
 
+	function cancelEdit() {
+		setTaskIsEdit(false);
+		form.resetFields();
+	}
+
 	async function removeTask(id: number) {
-		await deleteTask(id);
-		fetchData();
+		try {
+			await deleteTask(id);
+			fetchData();
+		} catch (error) {
+			window.alert(error);
+		}
 	}
 
 	return (
 		<div key={todo.id} className={styles.taskWrapper}>
 			<div className={styles.checkboxWrapper}>
-				<input
-					className={styles.checkbox}
-					type="checkbox"
+				<Checkbox
 					onChange={(e) => taskEditData(todo.id, todo.title, e.target.checked)}
 					checked={todo.isDone}
 				/>
 			</div>
-			{taskIsEdit === true ? (
-				<input
-					className={styles.taskNameEdit}
-					autoFocus={true}
-					onChange={(e) => setTaskNewName(e.target.value)}
-					minLength={2}
-					maxLength={64}
-					value={taskNewName}
-				/>
-			) : (
-				<p className={todo.isDone === false ? styles.taskName : styles.taskIsDone}>
-					{todo.title}
-				</p>
-			)}
-			{taskIsEdit === true ? (
+			<Form
+				form={form}
+				onFinish={(value) => taskEditData(todo.id, value.title, todo.isDone)}
+				className={styles.form}
+			>
+				<Form.Item
+					className={styles.formItem}
+					name="title"
+					initialValue={taskNewName}
+					rules={[
+						{ required: true, message: "Введите название" },
+						{ min: minTaskNameChar, message: `Минимум ${minTaskNameChar} символа` },
+						{ max: maxTaskNameChar, message: `Максимум ${maxTaskNameChar} символа` },
+					]}
+				>
+					{taskIsEdit === true ? (
+						<Input autoFocus={true} maxLength={64} />
+					) : (
+						<p className={todo.isDone === false ? styles.taskName : styles.taskIsDone}>
+							{todo.title}
+						</p>
+					)}
+				</Form.Item>
+				{taskIsEdit === true && (
+					<>
+						<Button htmlType="submit" className={styles.taskEditButton}>
+							<SaveOutlined className={styles.icon}/>
+						</Button>
+						<Button
+							onClick={() => cancelEdit()}
+							className={styles.taskDeleteButton}
+						>
+							<RollbackOutlined className={styles.icon}/>
+						</Button>
+					</>
+				)}
+			</Form>
+			{taskIsEdit === false && (
 				<>
-					<button
-						onClick={() => taskEditData(todo.id, taskNewName, todo.isDone)}
-						className={styles.taskEditButton}
-					>
-						<img src={saveIcon} alt="save" />
-					</button>
-					<button
-						onClick={() => setTaskIsEdit(false)}
-						className={styles.taskDeleteButton}
-					>
-						<img src={cancelIcon} alt="cancel" />
-					</button>
-				</>
-			) : (
-				<>
-					<button onClick={() => taskEdit(todo.title)} className={styles.taskEditButton}>
-						<img src={editIcon} alt="edit" />
-					</button>
-					<button onClick={() => removeTask(todo.id)} className={styles.taskDeleteButton}>
-						<img src={deleteIcon} alt="delete" />
-					</button>
+					<Button onClick={() => taskEdit(todo.title)} className={styles.taskEditButton}>
+						<EditOutlined className={styles.icon}/>
+					</Button>
+					<Button onClick={() => removeTask(todo.id)} className={styles.taskDeleteButton}>
+						<DeleteOutlined className={styles.icon}/>
+					</Button>
 				</>
 			)}
 		</div>

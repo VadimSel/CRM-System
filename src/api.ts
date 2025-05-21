@@ -1,73 +1,48 @@
 /* eslint-disable no-useless-catch */
-import { MetaResponse, Todo, TodoInfo, TodoRequest, TodoStatusTypes } from "./types";
+import axios from "axios";
+import { MetaResponse, Todo, TodoFilterEnum, TodoInfo, TodoRequest } from "./types";
 
-export const BASE_URL = "https://easydev.club/api/v1";
+export const instance = axios.create({
+	baseURL: "https://easydev.club/api/v1",
+	headers: {
+		"Content-Type": "application/json",
+	},
+});
 
-export async function getTasks (tasksStatus: TodoStatusTypes): Promise<MetaResponse<Todo, TodoInfo> | undefined> {
+export async function getTasks(
+	tasksStatus: TodoFilterEnum
+): Promise<MetaResponse<Todo, TodoInfo> | undefined> {
 	try {
-		const res = await fetch(`${BASE_URL}/todos?filter=${tasksStatus}`, {
-			headers: {
-				"Content-Type": "application/json"
-			},
-			method: "GET"
-		})
-		const data = await res.json() as MetaResponse<Todo, TodoInfo>
-		return data
+		const res = await instance.get("/todos", {
+			params: { filter: tasksStatus },
+		});
+
+		return res.data;
 	} catch (error) {
-		window.alert("Ошибка: " + error)
+		throw error;
 	}
 }
 
-export async function createTask(task: TodoRequest) {
-    try {
-        const res = await fetch(`${BASE_URL}/todos`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(task),
-        });
-
-        if (!res.ok) {
-            throw new Error(`${res.status}, ${res.statusText}`);
-        }
-    } catch (error) {
-        throw error;
-    }
-}
-
-export async function updateTask (id: number, task: TodoRequest) {
+export async function createTask(task: TodoRequest): Promise<void> {
 	try {
-		const res = await fetch(`${BASE_URL}/todos/${id}`, {
-			headers: {
-				"Content-type": "application/json"
-			},
-			method: "PUT",
-			body: JSON.stringify(task)
-		})
-
-		if (!res.ok) {
-			window.alert("Ошибка " + res.status + ", " + res.statusText)
-		}
+		await instance.post("/todos", task);
 	} catch (error) {
-		window.alert(error)
+		throw error;
 	}
 }
 
-export async function deleteTask (id: number) {
+export async function updateTask(id: number, task: TodoRequest): Promise<void> {
 	try {
-		const res = await fetch(`${BASE_URL}/todos/${id}`, {
-			headers: {
-				"Content-Type": "application/json"
-			},
-			method: "DELETE"
-		})
-
-		if (!res.ok) {
-			window.alert("Ошибка " + res.status + ": " + res.statusText)
-		}
-		
+		await instance.put(`/todos/${id}`, task);
 	} catch (error) {
-		window.alert("Ошибка: " + error)
+		throw error;
+	}
+}
+
+export async function deleteTask(id: number): Promise<void> {
+	try {
+		await instance.delete(`/todos/${id}`);
+	} catch (error) {
+		throw error;
 	}
 }

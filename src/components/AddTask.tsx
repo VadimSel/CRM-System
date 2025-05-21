@@ -1,51 +1,44 @@
-import { FormEvent, useState } from "react";
+import { Button, Form, Input } from "antd";
 import { createTask } from "../api";
-import styles from "./AddTask.module.scss";
+import { maxTaskNameChar, minTaskNameChar } from "../constants/constants";
 import { TodoRequest } from "../types";
+import { ErrorNotification } from "../utils/ErrorNotification";
+import styles from "./AddTask.module.scss";
 
 interface AddTaskTypes {
 	fetchData: () => void;
 }
 
 export const AddTask = ({ fetchData }: AddTaskTypes) => {
-	const [taskName, setTaskName] = useState<string>("");
+	const [form] = Form.useForm();
 
-	const handleAddTask = async (e: FormEvent) => {
-		e.preventDefault()
-		if (taskName.length <= 1 && taskName.length >= 64) {
-			window.alert("Название должно быть больше 2 и меньше 64 символов");
-			return;
-		}
+	const handleAddTask = async (values: { taskName: string }) => {
 		const task: TodoRequest = {
-			title: taskName,
+			title: values.taskName,
 			isDone: false,
 		};
 		try {
 			await createTask(task);
-			setTaskName("");
+			form.resetFields();
 			fetchData();
 		} catch (error) {
-			window.alert(error);
+			ErrorNotification(error)
 		}
 	};
 
 	return (
-		<form
-			onSubmit={(e) => handleAddTask(e)}
-			className={styles.newTask}
-		>
-			<input
-				onChange={(e) => setTaskName(e.target.value)}
-				value={taskName}
-				className={styles.taskName}
-				type="text"
-				placeholder="Task To Be Done..."
-				minLength={2}
-				maxLength={64}
-			/>
-			<button type="submit" className={styles.newTaskAddButton}>
-				Add
-			</button>
-		</form>
+		<Form form={form} onFinish={handleAddTask} className={styles.newTask}>
+			<Form.Item
+				name="taskName"
+				rules={[
+					{ required: true, message: "Введите название" },
+					{ min: minTaskNameChar, message: `Минимум ${minTaskNameChar} символа` },
+					{ max: maxTaskNameChar, message: `Максимум ${maxTaskNameChar} символа` },
+				]}
+			>
+				<Input placeholder="Task To Be Done..." maxLength={64} />
+			</Form.Item>
+			<Button htmlType="submit">Add</Button>
+		</Form>
 	);
 };
