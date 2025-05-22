@@ -1,6 +1,10 @@
+import { Button } from "antd"
 
 export const Profile = () => {
   return (
-    <div>Привет</div>
+    <div>
+      Данные от аккаунта
+      <Button>Logout</Button>
+    </div>
   )
 }

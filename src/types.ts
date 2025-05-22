@@ -29,3 +29,7 @@ export enum TodoFilterEnum {
 	inWork = "inWork",
 	completed = "completed",
 }
+
+export interface isLoggedIn {
+	isLogged: boolean
+}

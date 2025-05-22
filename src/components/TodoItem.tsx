@@ -5,7 +5,7 @@ import { DeleteOutlined, EditOutlined, RollbackOutlined, SaveOutlined } from '@a
 import { Button, Checkbox, Form, Input } from "antd";
 import { useState } from "react";
 import { deleteTask, updateTask } from "../api";
-import { maxTaskNameChar, minTaskNameChar } from "../constants/constants";
+import { maxTaskNameLength, minTaskNameLength } from "../constants/constants";
 import { ErrorNotification } from "../utils/ErrorNotification";
 
 interface TodoItemTypes {
@@ -70,8 +70,8 @@ export const TodoItem = ({ todo, fetchData }: TodoItemTypes) => {
 					initialValue={taskNewName}
 					rules={[
 						{ required: true, message: "Введите название" },
-						{ min: minTaskNameChar, message: `Минимум ${minTaskNameChar} символа` },
-						{ max: maxTaskNameChar, message: `Максимум ${maxTaskNameChar} символа` },
+						{ min: minTaskNameLength, message: `Минимум ${minTaskNameLength} символа` },
+						{ max: maxTaskNameLength, message: `Максимум ${maxTaskNameLength} символа` },
 					]}
 				>
 					{taskIsEdit === true ? (

@@ -4,7 +4,7 @@ import styles from "./SideBar.module.scss";
 
 export const SideBar = () => {
 	const menuItems = [
-		{ key: "1", label: <Link to={"/profile"}>Профиль</Link> },
+		{ key: "1", label: <Link to={"/profile"}>Личный кабинет</Link> },
 		{ key: "2", label: <Link to={"/"}>Список Задач</Link> },
 	];
 
