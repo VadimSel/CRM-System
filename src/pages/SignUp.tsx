@@ -15,7 +15,6 @@ export const SignUp = () => {
 	const [form] = Form.useForm();
 
 	const PhoneNumberHandler = (e: string) => {
-		// const onlyNums = e.replace(/\D/g, "");
 		form.setFieldValue("phone", e.replace(/\D/, ""));
 	};
 
