@@ -1,4 +1,4 @@
-import { Button, Form, Input, message } from "antd";
+import { Button, Form, Input, message, Modal } from "antd";
 import styles from "./SignUp.module.scss";
 import {
 	maxLoginLength,
@@ -14,10 +14,13 @@ import { SignUpTypes } from "../types";
 import { signUp } from "../api";
 import { ErrorNotification } from "../utils/ErrorNotification";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 export const SignUp = () => {
 	const [form] = Form.useForm();
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+
+	const navigate = useNavigate();
 
 	const phoneNumberHandler = (e: string) => {
 		form.setFieldValue("phone", e.replace(/\D/, ""));
@@ -27,18 +30,24 @@ export const SignUp = () => {
 		console.log(userData);
 		try {
 			setIsLoading(true);
-			message.loading("Идёт регистрация");
+			message.loading({ content: "Идёт регистрация", key: "reg" });
 			await signUp(userData);
-			message.destroy();
-			message.success("Успешно");
+			message.success({ content: "Успешно", key: "reg" });
+			Modal.success({
+				title: "Регистрация успешна",
+				content: "Аккаунт создан. Перейти на страницу входа?",
+				okText: "Перейти",
+				onOk() {
+					navigate("/signIn");
+				},
+			});
 		} catch (error) {
 			message.destroy();
 			if (axios.isAxiosError(error) && error.response) {
 				ErrorNotification(error.response.data);
 			}
-		}
-		finally {
-			setIsLoading(false)
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
