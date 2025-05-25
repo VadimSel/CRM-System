@@ -4,15 +4,34 @@ import styles from "./App.module.scss";
 import { MainPage } from "./components/MainPage";
 import { Profile } from "./pages/Profile";
 import { PersonalLayout } from "./layouts/PersonalLayout";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./store/store";
 import { PublicLayout } from "./layouts/PublicLayout";
 import { Authorization } from "./pages/Authorization";
 import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
+import { useEffect } from "react";
+import { getTasks, refreshToken } from "./api";
+import { logged, logout } from "./store/loginSlice";
+import { TodoFilterEnum } from "./types";
 
 function App() {
 	const isLoggedIn = useSelector((state: RootState) => state.isLoggedIn.isLogged);
+	const dispatch = useDispatch()
+
+	const checkTokens = async () => {
+		try {
+			await refreshToken(String(localStorage.getItem("refreshToken")))
+			dispatch(logged())
+		} catch (error) {
+			console.log(error.response.statusText)
+			dispatch(logout())
+		}
+	};
+
+	useEffect(() => {
+		checkTokens();
+	}, []);
 
 	return (
 		<div className={styles.container}>

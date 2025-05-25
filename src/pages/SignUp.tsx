@@ -11,9 +11,8 @@ import {
 } from "../constants/constants";
 import { ChangeEvent, useState } from "react";
 import { SignUpTypes } from "../types";
-import { signUp } from "../api";
-import { ErrorNotification } from "../utils/ErrorNotification";
-import axios from "axios";
+import { signUpApi } from "../api";
+import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import { useNavigate } from "react-router";
 
 export const SignUp = () => {
@@ -27,26 +26,22 @@ export const SignUp = () => {
 	};
 
 	const formSubmitHandler = async (userData: SignUpTypes) => {
-		console.log(userData);
 		try {
 			setIsLoading(true);
-			message.loading({ content: "Идёт регистрация", key: "reg" });
-			await signUp(userData);
-			message.success({ content: "Успешно", key: "reg" });
+			message.loading("Идёт регистрация");
+			await signUpApi(userData);
 			Modal.success({
 				title: "Регистрация успешна",
-				content: "Аккаунт создан. Перейти на страницу входа?",
+				content: "Перейти на страницу авторизации для входа в систему?",
 				okText: "Перейти",
 				onOk() {
 					navigate("/signIn");
 				},
 			});
 		} catch (error) {
-			message.destroy();
-			if (axios.isAxiosError(error) && error.response) {
-				ErrorNotification(error.response.data);
-			}
+			ApiErrorHandler(error);
 		} finally {
+			message.destroy();
 			setIsLoading(false);
 		}
 	};
@@ -131,7 +126,6 @@ export const SignUp = () => {
 					onChange={(e: ChangeEvent<HTMLInputElement>) =>
 						phoneNumberHandler(e.currentTarget.value)
 					}
-					value={form.getFieldError("phone")}
 				/>
 			</Form.Item>
 			<Button htmlType="submit" loading={isLoading}>

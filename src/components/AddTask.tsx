@@ -2,7 +2,7 @@ import { Button, Form, Input } from "antd";
 import { createTask } from "../api";
 import { maxTaskNameLength, minTaskNameLength } from "../constants/constants";
 import { TodoRequest } from "../types";
-import { ErrorNotification } from "../utils/ErrorNotification";
+import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import styles from "./AddTask.module.scss";
 
 interface AddTaskTypes {
@@ -22,7 +22,7 @@ export const AddTask = ({ fetchData }: AddTaskTypes) => {
 			form.resetFields();
 			fetchData();
 		} catch (error) {
-			ErrorNotification(error)
+			ApiErrorHandler(error);
 		}
 	};
 

@@ -6,7 +6,7 @@ import { Button, Checkbox, Form, Input } from "antd";
 import { useState } from "react";
 import { deleteTask, updateTask } from "../api";
 import { maxTaskNameLength, minTaskNameLength } from "../constants/constants";
-import { ErrorNotification } from "../utils/ErrorNotification";
+import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 
 interface TodoItemTypes {
 	todo: Todo;
@@ -33,7 +33,7 @@ export const TodoItem = ({ todo, fetchData }: TodoItemTypes) => {
 			await updateTask(id, task);
 			fetchData();
 		} catch (error) {
-			ErrorNotification(error);
+			ApiErrorHandler(error);
 		}
 	}
 
