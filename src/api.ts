@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-catch */
 import axios from "axios";
-import { MetaResponse, Todo, TodoFilterEnum, TodoInfo, TodoRequest } from "./types";
+import { MetaResponse, SignUpTypes, Todo, TodoFilterEnum, TodoInfo, TodoRequest } from "./types";
 
 export const instance = axios.create({
 	baseURL: "https://easydev.club/api/v1",
@@ -44,5 +44,13 @@ export async function deleteTask(id: number): Promise<void> {
 		await instance.delete(`/todos/${id}`);
 	} catch (error) {
 		throw error;
+	}
+}
+
+export async function signUp (userData: SignUpTypes): Promise<void> {
+	try {
+		await instance.post("/auth/signup", userData)
+	} catch (error) {
+		throw error
 	}
 }

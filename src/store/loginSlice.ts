@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { isLoggedIn } from "../types";
+import { IsLoggedIn } from "../types";
 
-const initialState: isLoggedIn = {
+const initialState: IsLoggedIn = {
 	isLogged: false,
 };
 

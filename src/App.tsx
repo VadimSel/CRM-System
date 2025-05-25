@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
 import { PublicLayout } from "./layouts/PublicLayout";
 import { Authorization } from "./pages/Authorization";
-import { LogIn } from "./pages/Login";
+import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
 
 function App() {
@@ -26,7 +26,7 @@ function App() {
 					) : (
 						<Route path="/" element={<PublicLayout />}>
 							<Route index element={<Authorization />} />
-							<Route path="logIn" element={<LogIn />} />
+							<Route path="SignIn" element={<SignIn />} />
 							<Route path="SignUp" element={<SignUp />} />
 						</Route>
 					)}

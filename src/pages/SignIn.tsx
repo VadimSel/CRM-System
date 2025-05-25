@@ -1,7 +1,7 @@
 import { Button, Form, Input } from "antd";
-import styles from "./Login.module.scss";
+import styles from "./SignIn.module.scss";
 
-export const LogIn = () => {
+export const SignIn = () => {
 	const [form] = Form.useForm();
 
 	return (
@@ -10,13 +10,13 @@ export const LogIn = () => {
 				name="login"
 				rules={[{ required: true, message: "Введите логин", whitespace: true }]}
 			>
-				<Input />
+				<Input placeholder="Login" />
 			</Form.Item>
 			<Form.Item
 				name="password"
 				rules={[{ required: true, message: "Введите пароль", whitespace: true }]}
 			>
-				<Input.Password />
+				<Input.Password placeholder="Password" />
 			</Form.Item>
 			<Button>Войти</Button>
 		</Form>

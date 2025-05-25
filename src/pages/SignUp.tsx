@@ -1,4 +1,4 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import styles from "./SignUp.module.scss";
 import {
 	maxLoginLength,
@@ -9,17 +9,41 @@ import {
 	minUserNameLength,
 	phoneLength,
 } from "../constants/constants";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
+import { SignUpTypes } from "../types";
+import { signUp } from "../api";
+import { ErrorNotification } from "../utils/ErrorNotification";
+import axios from "axios";
 
 export const SignUp = () => {
 	const [form] = Form.useForm();
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
-	const PhoneNumberHandler = (e: string) => {
+	const phoneNumberHandler = (e: string) => {
 		form.setFieldValue("phone", e.replace(/\D/, ""));
 	};
 
+	const formSubmitHandler = async (userData: SignUpTypes) => {
+		console.log(userData);
+		try {
+			setIsLoading(true);
+			message.loading("Идёт регистрация");
+			await signUp(userData);
+			message.destroy();
+			message.success("Успешно");
+		} catch (error) {
+			message.destroy();
+			if (axios.isAxiosError(error) && error.response) {
+				ErrorNotification(error.response.data);
+			}
+		}
+		finally {
+			setIsLoading(false)
+		}
+	};
+
 	return (
-		<Form form={form}>
+		<Form form={form} onFinish={formSubmitHandler}>
 			<Form.Item
 				name="userName"
 				rules={[
@@ -96,12 +120,14 @@ export const SignUp = () => {
 					placeholder="Phone number"
 					maxLength={phoneLength}
 					onChange={(e: ChangeEvent<HTMLInputElement>) =>
-						PhoneNumberHandler(e.currentTarget.value)
+						phoneNumberHandler(e.currentTarget.value)
 					}
 					value={form.getFieldError("phone")}
 				/>
 			</Form.Item>
-			<Button htmlType="submit">Отправить</Button>
+			<Button htmlType="submit" loading={isLoading}>
+				Отправить
+			</Button>
 		</Form>
 	);
 };
