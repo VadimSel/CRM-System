@@ -82,3 +82,15 @@ export async function refreshToken(refreshToken: string): Promise<SignInResponse
 		throw error;
 	}
 }
+
+export async function resetPassword(newPassword: string): Promise<void> {
+	try {
+		const res = await instance.put("/user/profile/reset-password", {
+			password: newPassword,
+		});
+		console.log(res);
+	} catch (error) {
+		console.log(error);
+		// throw error
+	}
+}

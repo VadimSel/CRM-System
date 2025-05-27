@@ -61,3 +61,5 @@ export interface SignUpResponse {
 	phoneNumber: string;
 	username: string;
 }
+
+export type PersonalOrPublic = "personal" | "public";

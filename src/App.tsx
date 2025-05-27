@@ -1,31 +1,29 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import { refreshToken } from "./api";
 import "./App.css";
 import styles from "./App.module.scss";
 import { MainPage } from "./components/MainPage";
-import { Profile } from "./pages/Profile";
 import { PersonalLayout } from "./layouts/PersonalLayout";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "./store/store";
 import { PublicLayout } from "./layouts/PublicLayout";
 import { Authorization } from "./pages/Authorization";
+import { Profile } from "./pages/Profile";
 import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
-import { useEffect } from "react";
-import { getTasks, refreshToken } from "./api";
 import { logged, logout } from "./store/loginSlice";
-import { TodoFilterEnum } from "./types";
+import { RootState } from "./store/store";
 
 function App() {
 	const isLoggedIn = useSelector((state: RootState) => state.isLoggedIn.isLogged);
-	const dispatch = useDispatch()
+	const dispatch = useDispatch();
 
 	const checkTokens = async () => {
 		try {
-			await refreshToken(String(localStorage.getItem("refreshToken")))
-			dispatch(logged())
+			await refreshToken(String(localStorage.getItem("refreshToken")));
+			dispatch(logged());
 		} catch (error) {
-			console.log(error.response.statusText)
-			dispatch(logout())
+			if (error) dispatch(logout());
 		}
 	};
 

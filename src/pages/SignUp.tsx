@@ -1,5 +1,7 @@
 import { Button, Form, Input, message, Modal } from "antd";
-import styles from "./SignUp.module.scss";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { resetPassword, signUpApi } from "../api";
 import {
 	maxLoginLength,
 	maxPasswordLength,
@@ -9,11 +11,8 @@ import {
 	minUserNameLength,
 	phoneLength,
 } from "../constants/constants";
-import { ChangeEvent, useState } from "react";
 import { SignUpTypes } from "../types";
-import { signUpApi } from "../api";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
-import { useNavigate } from "react-router";
 
 export const SignUp = () => {
 	const [form] = Form.useForm();
@@ -45,6 +44,10 @@ export const SignUp = () => {
 			setIsLoading(false);
 		}
 	};
+
+	useEffect(() => {
+		resetPassword("ncvioasnfv");
+	}, []);
 
 	return (
 		<Form form={form} onFinish={formSubmitHandler}>
