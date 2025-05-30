@@ -1,4 +1,9 @@
-const minTaskNameChar = 2
-const maxTaskNameChar = 64
-
-export {minTaskNameChar, maxTaskNameChar}
+export const minTaskNameLength = 2;
+export const maxTaskNameLength = 64;
+export const minUserNameLength = 1;
+export const maxUserNameLength = 60;
+export const minLoginLength = 2;
+export const maxLoginLength = 60;
+export const minPasswordLength = 6;
+export const maxPasswordLength = 60;
+export const phoneLength = 12
