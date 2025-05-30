@@ -6,4 +6,4 @@ export const minLoginLength = 2;
 export const maxLoginLength = 60;
 export const minPasswordLength = 6;
 export const maxPasswordLength = 60;
-export const phoneLength = 11
+export const phoneLength = 12

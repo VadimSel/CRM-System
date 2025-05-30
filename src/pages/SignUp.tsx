@@ -21,7 +21,7 @@ export const SignUp = () => {
 	const navigate = useNavigate();
 
 	const phoneNumberHandler = (e: string) => {
-		form.setFieldValue("phone", e.replace(/\D/, ""));
+		form.setFieldValue("phone", "+" + e.replace(/\D/, ""));
 	};
 
 	const formSubmitHandler = async (userData: SignUpTypes) => {
