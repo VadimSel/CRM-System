@@ -24,6 +24,13 @@ export interface MetaResponse<T, N> {
 	};
 }
 
+export interface Task {
+	created: string;
+	id: number;
+	isDone: boolean;
+	title: string;
+}
+
 export enum TodoFilterEnum {
 	all = "all",
 	inWork = "inWork",
@@ -42,6 +49,16 @@ export interface SignInTypes {
 export interface SignInResponse {
 	accessToken: string;
 	refreshToken: string;
+}
+
+export interface ProfileType {
+	date: string;
+	email: string;
+	id: number;
+	isAdmin: boolean;
+	isBlocked: boolean;
+	phoneNumber: string;
+	username: string;
 }
 
 export interface SignUpTypes {

@@ -1,7 +1,7 @@
 import { Button, Form, Input, message, Modal } from "antd";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router";
-import { resetPassword, signUpApi } from "../api";
+import { signUpApi } from "../api";
 import {
 	maxLoginLength,
 	maxPasswordLength,
@@ -34,7 +34,7 @@ export const SignUp = () => {
 				content: "Перейти на страницу авторизации для входа в систему?",
 				okText: "Перейти",
 				onOk() {
-					navigate("/signIn");
+					navigate("/");
 				},
 			});
 		} catch (error) {
@@ -44,10 +44,6 @@ export const SignUp = () => {
 			setIsLoading(false);
 		}
 	};
-
-	useEffect(() => {
-		resetPassword("ncvioasnfv");
-	}, []);
 
 	return (
 		<Form form={form} onFinish={formSubmitHandler}>

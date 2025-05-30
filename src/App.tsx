@@ -7,7 +7,6 @@ import styles from "./App.module.scss";
 import { MainPage } from "./components/MainPage";
 import { PersonalLayout } from "./layouts/PersonalLayout";
 import { PublicLayout } from "./layouts/PublicLayout";
-import { Authorization } from "./pages/Authorization";
 import { Profile } from "./pages/Profile";
 import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
@@ -19,6 +18,9 @@ function App() {
 	const dispatch = useDispatch();
 
 	const checkTokens = async () => {
+		if (!isLoggedIn) {
+			return;
+		}
 		try {
 			await refreshToken(String(localStorage.getItem("refreshToken")));
 			dispatch(logged());
@@ -42,9 +44,8 @@ function App() {
 						</Route>
 					) : (
 						<Route path="/" element={<PublicLayout />}>
-							<Route index element={<Authorization />} />
-							<Route path="SignIn" element={<SignIn />} />
-							<Route path="SignUp" element={<SignUp />} />
+							<Route index element={<SignIn />} />
+							<Route path="signUp" element={<SignUp />} />
 						</Route>
 					)}
 					<Route path="*" element={<Navigate to="/" replace />} />

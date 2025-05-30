@@ -2,9 +2,11 @@
 import axios from "axios";
 import {
 	MetaResponse,
+	ProfileType,
 	SignInResponse,
 	SignInTypes,
 	SignUpTypes,
+	Task,
 	Todo,
 	TodoFilterEnum,
 	TodoInfo,
@@ -14,9 +16,16 @@ import {
 export const instance = axios.create({
 	baseURL: "https://easydev.club/api/v1",
 	headers: {
-		Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
 		"Content-Type": "application/json",
 	},
+});
+
+instance.interceptors.request.use((config) => {
+	const token = localStorage.getItem("accessToken");
+	if (token) {
+		config.headers.Authorization = `Bearer ${token}`;
+	}
+	return config;
 });
 
 export async function getTasks(
@@ -32,17 +41,19 @@ export async function getTasks(
 	}
 }
 
-export async function createTask(task: TodoRequest): Promise<void> {
+export async function createTask(task: TodoRequest): Promise<Task> {
 	try {
-		await instance.post("/todos", task);
+		const res = await instance.post("/todos", task);
+		return res.data;
 	} catch (error) {
 		throw error;
 	}
 }
 
-export async function updateTask(id: number, task: TodoRequest): Promise<void> {
+export async function updateTask(id: number, task: TodoRequest): Promise<Task> {
 	try {
-		await instance.put(`/todos/${id}`, task);
+		const res = await instance.put(`/todos/${id}`, task);
+		return res.data;
 	} catch (error) {
 		throw error;
 	}
@@ -56,9 +67,10 @@ export async function deleteTask(id: number): Promise<void> {
 	}
 }
 
-export async function signUpApi(userData: SignUpTypes): Promise<void> {
+export async function signUpApi(userData: SignUpTypes): Promise<ProfileType> {
 	try {
-		await instance.post("/auth/signup", userData);
+		const res = await instance.post("/auth/signup", userData);
+		return res.data;
 	} catch (error) {
 		throw error;
 	}
@@ -76,7 +88,6 @@ export async function signInApi(userData: SignInTypes): Promise<SignInResponse> 
 export async function refreshToken(refreshToken: string): Promise<SignInResponse> {
 	try {
 		const res = await instance.post("/auth/refresh", { refreshToken });
-		console.log(res);
 		return res.data;
 	} catch (error) {
 		throw error;
@@ -85,12 +96,27 @@ export async function refreshToken(refreshToken: string): Promise<SignInResponse
 
 export async function resetPassword(newPassword: string): Promise<void> {
 	try {
-		const res = await instance.put("/user/profile/reset-password", {
+		await instance.put("/user/profile/reset-password", {
 			password: newPassword,
 		});
-		console.log(res);
 	} catch (error) {
-		console.log(error);
-		// throw error
+		throw error;
+	}
+}
+
+export async function GetProfile(): Promise<ProfileType> {
+	try {
+		const res = await instance.get("/user/profile");
+		return res.data;
+	} catch (error) {
+		throw error;
+	}
+}
+
+export async function Logout(): Promise<void> {
+	try {
+		await instance.post("/user/logout");
+	} catch (error) {
+		throw error;
 	}
 }

@@ -17,7 +17,6 @@ export const SignIn = () => {
 		try {
 			setIsLoading(true);
 			const tokens = await signInApi(userData);
-			console.log(tokens);
 			localStorage.setItem("accessToken", tokens.accessToken);
 			localStorage.setItem("refreshToken", tokens.refreshToken);
 			dispatch(logged());
