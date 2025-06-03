@@ -10,6 +10,8 @@ import {
 	minPasswordLength,
 	minUserNameLength,
 	phoneLength,
+	userLoginValidation,
+	userNameValidation,
 } from "../constants/constants";
 import { SignUpTypes } from "../types";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
@@ -56,6 +58,7 @@ export const SignUp = () => {
 						message: `Минимум ${minUserNameLength} символ`,
 						whitespace: true,
 					},
+					{ pattern: new RegExp(userNameValidation), message: "Только русские/латинские символы" },
 				]}
 			>
 				<Input placeholder="User name" maxLength={maxUserNameLength} />
@@ -69,6 +72,7 @@ export const SignUp = () => {
 						message: `Минимум ${minLoginLength} символа`,
 						whitespace: true,
 					},
+					{pattern: new RegExp(userLoginValidation), message: "Только латинские символы"}
 				]}
 			>
 				<Input placeholder="Login" maxLength={maxLoginLength} />

@@ -6,6 +6,7 @@ import { signInApi } from "../api";
 import { logged } from "../store/loginSlice";
 import { SignInTypes } from "../types";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
+import { userLoginValidation } from "../constants/constants";
 
 export const SignIn = () => {
 	const [form] = Form.useForm();
@@ -32,7 +33,13 @@ export const SignIn = () => {
 		<Form form={form} onFinish={formSignInHandler}>
 			<Form.Item
 				name="login"
-				rules={[{ required: true, message: "Введите логин", whitespace: true }]}
+				rules={[
+					{ required: true, message: "Введите логин", whitespace: true },
+					{
+						pattern: userLoginValidation,
+						message: "Только латинские символы",
+					},
+				]}
 			>
 				<Input placeholder="Login" />
 			</Form.Item>
