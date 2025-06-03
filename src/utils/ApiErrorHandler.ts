@@ -1,25 +1,17 @@
 import { notification } from "antd";
 import axios from "axios";
-import { refreshToken } from "../api";
+import { logout } from "../store/loginSlice";
+import { store } from "../store/store";
 
 export const ApiErrorHandler = async (error: unknown) => {
 	if (axios.isAxiosError(error) && error.response) {
 		if (
 			error.response.data.trim() ===
-			"Invalid credentials: token is expired - must auth again"
+				"Invalid credentials: token is expired - must auth again" ||
+			error.response.data.trim() === "Invalid token"
 		) {
-			try {
-				const refreshTokenRes = await refreshToken(
-					String(localStorage.getItem("refreshToken"))
-				);
-				localStorage.setItem("accessToken", refreshTokenRes.accessToken);
-				localStorage.setItem("refreshToken", refreshTokenRes.refreshToken);
-			} catch (error) {
-				notification.error({
-					message: `Ошибка при получении нового токена: ${error}`,
-					placement: "top",
-				});
-			}
+			store.dispatch(logout());
+			return;
 		} else if (error.response.data.trim() === "user already exist") {
 			notification.error({
 				message: "Пользователь уже существует",
@@ -30,11 +22,6 @@ export const ApiErrorHandler = async (error: unknown) => {
 				message: "Неверный логин или пароль",
 				placement: "top",
 			});
-		} else {
-			notification.error({
-				message: error.response.data,
-				placement: "top"
-			})
 		}
 	}
 };

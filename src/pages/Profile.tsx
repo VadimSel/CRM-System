@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { GetProfile } from "../api";
+import { getProfile } from "../api";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import { ProfileType } from "../types";
 
@@ -8,7 +8,7 @@ export const Profile = () => {
 
 	const getProfileInfo = async () => {
 		try {
-			setProfile(await GetProfile());
+			setProfile(await getProfile());
 		} catch (error) {
 			ApiErrorHandler(error);
 		}

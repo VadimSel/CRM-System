@@ -13,6 +13,8 @@ import {
 	TodoRequest,
 } from "./types";
 import { ApiErrorHandler } from "./utils/ApiErrorHandler";
+import { store } from "./store/store";
+import { logout } from "./store/loginSlice";
 
 const baseURL = "https://easydev.club/api/v1"
 
@@ -23,7 +25,7 @@ const instance = axios.create({
 	},
 });
 
-const refreshTokenInstance = axios.create({
+const tokensInstance = axios.create({
 	baseURL,
 	headers: {
 		"Content-Type": "application/json",
@@ -32,10 +34,10 @@ const refreshTokenInstance = axios.create({
 
 instance.interceptors.request.use(async (config) => {
 	const accessToken = localStorage.getItem("accessToken");
+	const refresh = localStorage.getItem("refreshToken");
 	if (accessToken) {
 		config.headers.Authorization = `Bearer ${accessToken}`;
 	} else {
-		const refresh = localStorage.getItem("refreshToken");
 		if (refresh) {
 			try {
 				const res = await refreshToken(refresh);
@@ -44,8 +46,11 @@ instance.interceptors.request.use(async (config) => {
 				config.headers.Authorization = `Bearer ${res.accessToken}`;
 			} catch (error) {
 				ApiErrorHandler(error);
+				console.log()
 			}
 		}
+	} if (!refresh) {
+		store.dispatch(logout())
 	}
 	return config;
 });
@@ -100,7 +105,7 @@ export async function signUpApi(userData: SignUpTypes): Promise<ProfileType> {
 
 export async function signInApi(userData: SignInTypes): Promise<SignInResponse> {
 	try {
-		const res = await instance.post("/auth/signin", userData);
+		const res = await tokensInstance.post("/auth/signin", userData);
 		return res.data;
 	} catch (error) {
 		throw error;
@@ -109,7 +114,7 @@ export async function signInApi(userData: SignInTypes): Promise<SignInResponse> 
 
 export async function refreshToken(refreshToken: string): Promise<SignInResponse> {
 	try {
-		const res = await refreshTokenInstance.post("/auth/refresh", { refreshToken });
+		const res = await tokensInstance.post("/auth/refresh", { refreshToken });
 		return res.data;
 	} catch (error) {
 		throw error;
@@ -126,7 +131,7 @@ export async function resetPassword(newPassword: string): Promise<void> {
 	}
 }
 
-export async function GetProfile(): Promise<ProfileType> {
+export async function getProfile(): Promise<ProfileType> {
 	try {
 		const res = await instance.get("/user/profile");
 		return res.data;
@@ -135,7 +140,7 @@ export async function GetProfile(): Promise<ProfileType> {
 	}
 }
 
-export async function Logout(): Promise<void> {
+export async function logoutApi(): Promise<void> {
 	try {
 		await instance.post("/user/logout");
 	} catch (error) {

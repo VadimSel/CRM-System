@@ -1,7 +1,7 @@
 import { Menu } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
-import { Logout } from "../api";
+import { logoutApi } from "../api";
 import { logout } from "../store/loginSlice";
 import { RootState } from "../store/store";
 import styles from "./SideBar.module.scss";
@@ -11,7 +11,7 @@ export const SideBar = () => {
 	const dispatch = useDispatch();
 
 	const logoutAcc = async () => {
-		await Logout();
+		await logoutApi();
 		localStorage.removeItem("accessToken");
 		localStorage.removeItem("refreshToken");
 		dispatch(logout());
