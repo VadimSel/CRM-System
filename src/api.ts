@@ -12,18 +12,40 @@ import {
 	TodoInfo,
 	TodoRequest,
 } from "./types";
+import { ApiErrorHandler } from "./utils/ApiErrorHandler";
 
-export const instance = axios.create({
-	baseURL: "https://easydev.club/api/v1",
+const baseURL = "https://easydev.club/api/v1"
+
+const instance = axios.create({
+	baseURL,
 	headers: {
 		"Content-Type": "application/json",
 	},
 });
 
-instance.interceptors.request.use((config) => {
-	const token = localStorage.getItem("accessToken");
-	if (token) {
-		config.headers.Authorization = `Bearer ${token}`;
+const refreshTokenInstance = axios.create({
+	baseURL,
+	headers: {
+		"Content-Type": "application/json",
+	},
+});
+
+instance.interceptors.request.use(async (config) => {
+	const accessToken = localStorage.getItem("accessToken");
+	if (accessToken) {
+		config.headers.Authorization = `Bearer ${accessToken}`;
+	} else {
+		const refresh = localStorage.getItem("refreshToken");
+		if (refresh) {
+			try {
+				const res = await refreshToken(refresh);
+				localStorage.setItem("accessToken", res.accessToken);
+				localStorage.setItem("refreshToken", res.refreshToken);
+				config.headers.Authorization = `Bearer ${res.accessToken}`;
+			} catch (error) {
+				ApiErrorHandler(error);
+			}
+		}
 	}
 	return config;
 });
@@ -87,7 +109,7 @@ export async function signInApi(userData: SignInTypes): Promise<SignInResponse> 
 
 export async function refreshToken(refreshToken: string): Promise<SignInResponse> {
 	try {
-		const res = await instance.post("/auth/refresh", { refreshToken });
+		const res = await refreshTokenInstance.post("/auth/refresh", { refreshToken });
 		return res.data;
 	} catch (error) {
 		throw error;

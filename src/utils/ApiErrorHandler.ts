@@ -5,7 +5,8 @@ import { refreshToken } from "../api";
 export const ApiErrorHandler = async (error: unknown) => {
 	if (axios.isAxiosError(error) && error.response) {
 		if (
-			error.response.data === "Invalid credentials: token is expired - must auth again"
+			error.response.data.trim() ===
+			"Invalid credentials: token is expired - must auth again"
 		) {
 			try {
 				const refreshTokenRes = await refreshToken(
@@ -19,16 +20,21 @@ export const ApiErrorHandler = async (error: unknown) => {
 					placement: "top",
 				});
 			}
-		} else if (error.response.data === "user already exist") {
+		} else if (error.response.data.trim() === "user already exist") {
 			notification.error({
-				message: String("Пользователь уже существует"),
+				message: "Пользователь уже существует",
+				placement: "top",
+			});
+		} else if (error.response.data.trim() === "Invalid credentials") {
+			notification.error({
+				message: "Неверный логин или пароль",
 				placement: "top",
 			});
 		} else {
 			notification.error({
-				message: String(error.response.data),
-				placement: "top",
-			});
+				message: error.response.data,
+				placement: "top"
+			})
 		}
 	}
 };
