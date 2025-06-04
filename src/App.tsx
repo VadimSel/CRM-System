@@ -18,9 +18,9 @@ function App() {
 	const dispatch = useDispatch();
 
 	const checkTokens = async () => {
-		if (!isLoggedIn) {
-			return;
-		}
+		// if (!isLoggedIn) {
+		// 	return;
+		// }
 		try {
 			await refreshToken(String(localStorage.getItem("refreshToken")));
 			dispatch(logged());
