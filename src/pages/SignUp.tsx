@@ -23,7 +23,7 @@ export const SignUp = () => {
 	const navigate = useNavigate();
 
 	const phoneNumberHandler = (e: string) => {
-		form.setFieldValue("phone", "+" + e.replace(/\D/, ""));
+		form.setFieldValue("phone", "+" + e.replace(/\D/g, ""));
 	};
 
 	const formSubmitHandler = async (userData: SignUpTypes) => {
@@ -126,6 +126,7 @@ export const SignUp = () => {
 				<Input
 					placeholder="Phone number"
 					maxLength={phoneLength}
+					value={form.getFieldValue("phone")}
 					onChange={(e: ChangeEvent<HTMLInputElement>) =>
 						phoneNumberHandler(e.currentTarget.value)
 					}
