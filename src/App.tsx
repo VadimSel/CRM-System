@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { refreshToken } from "./api";
@@ -14,15 +14,20 @@ import { logged, logout } from "./store/loginSlice";
 import { RootState } from "./store/store";
 
 function App() {
+	const [isChecking, setIsChecking] = useState<boolean>(true);
 	const isLoggedIn = useSelector((state: RootState) => state.isLoggedIn.isLogged);
 	const dispatch = useDispatch();
 
 	const checkTokens = async () => {
 		try {
-			await refreshToken(String(localStorage.getItem("refreshToken")));
+			const res = await refreshToken(String(localStorage.getItem("refreshToken")));
+			localStorage.setItem("accessToken", res.accessToken);
+			localStorage.setItem("refreshToken", res.refreshToken);
 			dispatch(logged());
 		} catch (error) {
 			if (error) dispatch(logout());
+		} finally {
+			setIsChecking(false);
 		}
 	};
 
@@ -30,13 +35,15 @@ function App() {
 		checkTokens();
 	}, []);
 
+	if (isChecking) return null;
+
 	return (
 		<div className={styles.container}>
 			<BrowserRouter>
 				<Routes>
 					{isLoggedIn ? (
 						<Route path="/" element={<PersonalLayout />}>
-							<Route index element={<MainPage />} />
+							<Route index path="tasks" element={<MainPage />} />
 							<Route path="profile" element={<Profile />} />
 						</Route>
 					) : (

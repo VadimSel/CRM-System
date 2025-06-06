@@ -21,7 +21,7 @@ export const SignIn = () => {
 			localStorage.setItem("accessToken", tokens.accessToken);
 			localStorage.setItem("refreshToken", tokens.refreshToken);
 			dispatch(logged());
-			navigate("/");
+			navigate("tasks");
 		} catch (error) {
 			ApiErrorHandler(error);
 		} finally {
