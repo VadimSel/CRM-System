@@ -43,7 +43,8 @@ function App() {
 				<Routes>
 					{isLoggedIn ? (
 						<Route path="/" element={<PersonalLayout />}>
-							<Route index path="tasks" element={<MainPage />} />
+							<Route index element={<Navigate to="tasks" />} />
+							<Route path="tasks" element={<MainPage />} />
 							<Route path="profile" element={<Profile />} />
 						</Route>
 					) : (
