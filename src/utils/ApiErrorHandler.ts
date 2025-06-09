@@ -7,8 +7,7 @@ export const ApiErrorHandler = async (error: unknown) => {
 	if (axios.isAxiosError(error) && error.response) {
 		if (
 			error.response.data.trim() ===
-				"Invalid credentials: token is expired - must auth again" ||
-			error.response.data.trim() === "Invalid token"
+			"Invalid credentials: token is expired - must auth again"
 		) {
 			store.dispatch(logout());
 			return;
@@ -25,8 +24,8 @@ export const ApiErrorHandler = async (error: unknown) => {
 		} else {
 			notification.error({
 				message: error.response.data.trim(),
-				placement: "top"
-			})
+				placement: "top",
+			});
 		}
 	}
 };

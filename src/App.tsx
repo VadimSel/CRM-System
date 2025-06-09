@@ -12,6 +12,7 @@ import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
 import { logged, logout } from "./store/loginSlice";
 import { RootState } from "./store/store";
+import { accessTokenManager } from "./utils/accessTokenManager";
 
 function App() {
 	const [isChecking, setIsChecking] = useState<boolean>(true);
@@ -21,18 +22,19 @@ function App() {
 	const checkTokens = async () => {
 		try {
 			const res = await refreshToken(String(localStorage.getItem("refreshToken")));
-			localStorage.setItem("accessToken", res.accessToken);
+			accessTokenManager.setToken(res.accessToken);
 			localStorage.setItem("refreshToken", res.refreshToken);
 			dispatch(logged());
-		} catch (error) {
-			if (error) dispatch(logout());
+		} catch {
+			dispatch(logout());
 		} finally {
 			setIsChecking(false);
 		}
 	};
 
 	useEffect(() => {
-		checkTokens();
+		if (localStorage.getItem("refreshToken")) checkTokens();
+		setIsChecking(false);
 	}, []);
 
 	if (isChecking) return null;

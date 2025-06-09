@@ -1,5 +1,7 @@
 /* eslint-disable no-useless-catch */
 import axios from "axios";
+import { logout } from "./store/loginSlice";
+import { store } from "./store/store";
 import {
 	MetaResponse,
 	ProfileType,
@@ -12,11 +14,10 @@ import {
 	TodoInfo,
 	TodoRequest,
 } from "./types";
+import { accessTokenManager } from "./utils/accessTokenManager";
 import { ApiErrorHandler } from "./utils/ApiErrorHandler";
-import { store } from "./store/store";
-import { logout } from "./store/loginSlice";
 
-const baseURL = "https://easydev.club/api/v1"
+const baseURL = "https://easydev.club/api/v1";
 
 const instance = axios.create({
 	baseURL,
@@ -33,27 +34,33 @@ const tokensInstance = axios.create({
 });
 
 instance.interceptors.request.use(async (config) => {
-	const accessToken = localStorage.getItem("accessToken");
+	const accessToken = accessTokenManager.getToken();
 	const refresh = localStorage.getItem("refreshToken");
-	if (accessToken) {
+	try {
 		config.headers.Authorization = `Bearer ${accessToken}`;
-	} else {
-		if (refresh) {
-			try {
-				const res = await refreshToken(refresh);
-				localStorage.setItem("accessToken", res.accessToken);
-				localStorage.setItem("refreshToken", res.refreshToken);
-				config.headers.Authorization = `Bearer ${res.accessToken}`;
-			} catch (error) {
-				ApiErrorHandler(error);
-				console.log()
-			}
-		}
-	} if (!refresh) {
-		store.dispatch(logout())
+	} catch (error) {
+		ApiErrorHandler(error);
+	}
+	if (!refresh) {
+		store.dispatch(logout());
 	}
 	return config;
 });
+
+instance.interceptors.response.use(
+	(res) => res,
+	async (error) => {
+		if (error.response.data.trim() === "Invalid token") {
+			const res = await refreshToken(String(accessTokenManager.getToken()));
+			accessTokenManager.setToken(res.accessToken)
+			localStorage.setItem("refreshToken", res.refreshToken);
+			error.config.headers.Authorization = `Bearer ${res.accessToken}`;
+			return instance(error.config);
+		} else {
+			ApiErrorHandler(error);
+		}
+	}
+);
 
 export async function getTasks(
 	tasksStatus: TodoFilterEnum

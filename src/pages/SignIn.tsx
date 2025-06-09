@@ -7,6 +7,7 @@ import { logged } from "../store/loginSlice";
 import { SignInTypes } from "../types";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import { userLoginValidation } from "../constants/constants";
+import { accessTokenManager } from "../utils/accessTokenManager";
 
 export const SignIn = () => {
 	const [form] = Form.useForm();
@@ -18,7 +19,7 @@ export const SignIn = () => {
 		try {
 			setIsLoading(true);
 			const tokens = await signInApi(userData);
-			localStorage.setItem("accessToken", tokens.accessToken);
+			accessTokenManager.setToken(tokens.accessToken)
 			localStorage.setItem("refreshToken", tokens.refreshToken);
 			dispatch(logged());
 			navigate("tasks");

@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { IsLoggedIn } from "../types";
+import { accessTokenManager } from "../utils/accessTokenManager";
 
 const initialState: IsLoggedIn = {
 	isLogged: false,
@@ -14,7 +15,7 @@ export const loginSlice = createSlice({
     },
     logout: (state) => {
       state.isLogged = false
-      localStorage.removeItem("accessToken")
+      accessTokenManager.clearToken()
       localStorage.removeItem("refreshToken")
     }
   }

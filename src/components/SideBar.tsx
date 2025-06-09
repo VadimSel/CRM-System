@@ -5,6 +5,7 @@ import { logoutApi } from "../api";
 import { logout } from "../store/loginSlice";
 import { RootState } from "../store/store";
 import styles from "./SideBar.module.scss";
+import { accessTokenManager } from "../utils/accessTokenManager";
 
 export const SideBar = () => {
 	const isLogged = useSelector((state: RootState) => state.isLoggedIn.isLogged);
@@ -25,7 +26,7 @@ export const SideBar = () => {
 
 	const logoutAcc = async () => {
 		await logoutApi();
-		localStorage.removeItem("accessToken");
+		accessTokenManager.clearToken()
 		localStorage.removeItem("refreshToken");
 		dispatch(logout());
 	};
