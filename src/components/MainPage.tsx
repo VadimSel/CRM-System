@@ -5,6 +5,7 @@ import { AddTask } from "./AddTask";
 import { ChangeList } from "./ChangeList";
 import styles from "./MainPage.module.scss";
 import { TodoItems } from "./TodoItems";
+import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 
 export const MainPage = () => {
 	const [tasksData, setTasksData] = useState<Todo[]>();
@@ -19,7 +20,7 @@ export const MainPage = () => {
 				setFiltersInfo(data.info);
 			}
 		} catch (error) {
-			window.alert(error)
+			ApiErrorHandler(error)
 		}
 	}
 
