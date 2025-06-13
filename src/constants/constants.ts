@@ -1,0 +1,11 @@
+export const minTaskNameLength = 2;
+export const maxTaskNameLength = 64;
+export const minUserNameLength = 1;
+export const maxUserNameLength = 60;
+export const minLoginLength = 2;
+export const maxLoginLength = 60;
+export const minPasswordLength = 6;
+export const maxPasswordLength = 60;
+export const phoneLength = 12;
+export const userNameValidation = /^[A-Za-zА-Яа-яЁё]+$/;
+export const userLoginValidation = /^[A-Za-z]+$/;

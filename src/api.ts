@@ -1,141 +1,156 @@
-import { MetaResponse, Todo, TodoInfo } from "./types";
+/* eslint-disable no-useless-catch */
+import axios from "axios";
+import { logout } from "./store/loginSlice";
+import { store } from "./store/store";
+import {
+	MetaResponse,
+	ProfileType,
+	SignInResponse,
+	SignInTypes,
+	SignUpTypes,
+	Task,
+	Todo,
+	TodoFilterEnum,
+	TodoInfo,
+	TodoRequest,
+} from "./types";
+import { accessTokenManager } from "./utils/accessTokenManager";
+import { ApiErrorHandler } from "./utils/ApiErrorHandler";
 
-export const BASE_URL = "https://easydev.club/api/v1";
+const baseURL = "https://easydev.club/api/v1";
 
-export async function signIn(login: string, password: string): Promise<boolean> {
+const instance = axios.create({
+	baseURL,
+	headers: {
+		"Content-Type": "application/json",
+	},
+});
+
+const tokensInstance = axios.create({
+	baseURL,
+	headers: {
+		"Content-Type": "application/json",
+	},
+});
+
+instance.interceptors.request.use(async (config) => {
+	const accessToken = accessTokenManager.getToken();
+	const refresh = localStorage.getItem("refreshToken");
 	try {
-		const res = await fetch(`${BASE_URL}/auth/signin`, {
-			method: "POST",
-			body: JSON.stringify({
-				login,
-				password,
-			}),
-		});
+		config.headers.Authorization = `Bearer ${accessToken}`;
+	} catch (error) {
+		ApiErrorHandler(error);
+	}
+	if (!refresh) {
+		store.dispatch(logout());
+	}
+	return config;
+});
 
-		if (!res.ok) {
-			if (res.status === 401) {
-				window.alert("Не верные логин или пароль");
-			}
-			return false;
+instance.interceptors.response.use(
+	(res) => res,
+	async (error) => {
+		if (error.response.data.trim() === "Invalid token") {
+			const res = await refreshToken(String(accessTokenManager.getToken()));
+			accessTokenManager.setToken(res.accessToken)
+			localStorage.setItem("refreshToken", res.refreshToken);
+			error.config.headers.Authorization = `Bearer ${res.accessToken}`;
+			return instance(error.config);
 		} else {
-			return true;
+			ApiErrorHandler(error);
 		}
-	} catch (error) {
-		window.alert("Ошибка: " + error);
-		return false;
 	}
-}
+);
 
-export async function signUp(
-	email: string,
-	login: string,
-	password: string,
-	phoneNumber: string,
-	username: string
-): Promise<boolean> {
+export async function getTasks(
+	tasksStatus: TodoFilterEnum
+): Promise<MetaResponse<Todo, TodoInfo> | undefined> {
 	try {
-		const res = await fetch(`${BASE_URL}/auth/signup`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "Application/json",
-			},
-			body: JSON.stringify({
-				email,
-				login,
-				password,
-				phoneNumber: `+${phoneNumber}`,
-				username,
-			}),
+		const res = await instance.get("/todos", {
+			params: { filter: tasksStatus },
 		});
-
-		if (!res.ok) {
-			const err = res;
-			if (err.status === 409) {
-				window.alert("Пользователь уже существует");
-			}
-			return false;
-		} else {
-			return true;
-		}
+		return res.data;
 	} catch (error) {
-		window.alert("Ошибка: " + error);
-		return false;
+		throw error;
 	}
 }
 
-export async function getTasks (): Promise<MetaResponse<Todo, TodoInfo> | undefined> {
+export async function createTask(task: TodoRequest): Promise<Task> {
 	try {
-		const res = await fetch(`${BASE_URL}/todos`, {
-			headers: {
-				"Content-Type": "application/json"
-			},
-			method: "GET"
-		})
-		const data = await res.json() as MetaResponse<Todo, TodoInfo>
-		return data
+		const res = await instance.post("/todos", task);
+		return res.data;
 	} catch (error) {
-		window.alert("Ошибка: " + error)
+		throw error;
 	}
 }
 
-export async function createTask (isDone: boolean, title: string) {
+export async function updateTask(id: number, task: TodoRequest): Promise<Task> {
 	try {
-		const res = await fetch(`${BASE_URL}/todos`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/type"
-			},
-			body: JSON.stringify({
-				isDone,
-				title
-			})
-		})
-
-		if (!res.ok) {
-			const errorStatus = res.status
-			const errorMessage = res.statusText
-			window.alert("Ошибка " + errorStatus + ": " + errorMessage)
-		}
+		const res = await instance.put(`/todos/${id}`, task);
+		return res.data;
 	} catch (error) {
-		window.alert("Ошибка при создании таски: " + error)
+		throw error;
 	}
 }
 
-export async function updateTask (id: number, isDone: boolean, title: string) {
+export async function deleteTask(id: number): Promise<void> {
 	try {
-		const res = await fetch(`${BASE_URL}/todos/${id}`, {
-			headers: {
-				"Content-type": "application/json"
-			},
-			method: "PUT",
-			body: JSON.stringify({
-				isDone,
-				title
-			})
-		})
-
-		if (!res.ok) {
-			window.alert("Ошибка " + res.status + ", " + res.statusText)
-		}
+		await instance.delete(`/todos/${id}`);
 	} catch (error) {
-		window.alert(error)
+		throw error;
 	}
 }
 
-export async function deleteTask (id: number) {
+export async function signUpApi(userData: SignUpTypes): Promise<ProfileType> {
 	try {
-		const res = await fetch(`${BASE_URL}/todos/${id}`, {
-			headers: {
-				"Content-Type": "application/json"
-			},
-			method: "DELETE"
-		})
-
-		if (!res.ok) {
-			window.alert("Ошибка " + res.status + ": " + res.statusText)
-		}
-		
+		const res = await instance.post("/auth/signup", userData);
+		return res.data;
 	} catch (error) {
-		window.alert("Ошибка: " + error)
+		throw error;
+	}
+}
+
+export async function signInApi(userData: SignInTypes): Promise<SignInResponse> {
+	try {
+		const res = await tokensInstance.post("/auth/signin", userData);
+		return res.data;
+	} catch (error) {
+		throw error;
+	}
+}
+
+export async function refreshToken(refreshToken: string): Promise<SignInResponse> {
+	try {
+		const res = await tokensInstance.post("/auth/refresh", { refreshToken });
+		return res.data;
+	} catch (error) {
+		throw error;
+	}
+}
+
+export async function resetPassword(newPassword: string): Promise<void> {
+	try {
+		await instance.put("/user/profile/reset-password", {
+			password: newPassword,
+		});
+	} catch (error) {
+		throw error;
+	}
+}
+
+export async function getProfile(): Promise<ProfileType> {
+	try {
+		const res = await instance.get("/user/profile");
+		return res.data;
+	} catch (error) {
+		throw error;
+	}
+}
+
+export async function logoutApi(): Promise<void> {
+	try {
+		await instance.post("/user/logout");
+	} catch (error) {
+		throw error;
 	}
 }
