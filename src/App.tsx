@@ -33,8 +33,11 @@ function App() {
 	};
 
 	useEffect(() => {
-		if (localStorage.getItem("refreshToken")) checkTokens();
-		setIsChecking(false);
+		if (localStorage.getItem("refreshToken")) {
+			checkTokens();
+		} else {
+			setIsChecking(false);
+		}
 	}, []);
 
 	if (isChecking) return null;
