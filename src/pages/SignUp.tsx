@@ -58,7 +58,10 @@ export const SignUp = () => {
 						message: `Минимум ${minUserNameLength} символ`,
 						whitespace: true,
 					},
-					{ pattern: new RegExp(userNameValidation), message: "Только русские/латинские символы" },
+					{
+						pattern: new RegExp(userNameValidation),
+						message: "Только русские/латинские символы",
+					},
 				]}
 			>
 				<Input placeholder="User name" maxLength={maxUserNameLength} />
@@ -72,7 +75,10 @@ export const SignUp = () => {
 						message: `Минимум ${minLoginLength} символа`,
 						whitespace: true,
 					},
-					{pattern: new RegExp(userLoginValidation), message: "Только латинские символы"}
+					{
+						pattern: new RegExp(userLoginValidation),
+						message: "Только латинские символы",
+					},
 				]}
 			>
 				<Input placeholder="Login" maxLength={maxLoginLength} />
@@ -134,6 +140,9 @@ export const SignUp = () => {
 			</Form.Item>
 			<Button htmlType="submit" loading={isLoading}>
 				Отправить
+			</Button>
+			<Button type="link" variant="link" onClick={() => navigate("/")}>
+				Войти в аккаунт
 			</Button>
 		</Form>
 	);

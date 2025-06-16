@@ -6,7 +6,7 @@ import "./App.css";
 import styles from "./App.module.scss";
 import { MainPage } from "./components/MainPage";
 import { PersonalLayout } from "./layouts/PersonalLayout";
-import { PublicLayout } from "./layouts/PublicLayout";
+import { AuthLayout } from "./layouts/AuthLayout";
 import { Profile } from "./pages/Profile";
 import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
@@ -44,7 +44,7 @@ function App() {
 		<div className={styles.container}>
 			<BrowserRouter>
 				<Routes>
-					<Route element={<PublicLayout />}>
+					<Route element={<AuthLayout />}>
 						<Route path="/" element={<SignIn />} />
 						<Route path="signUp" element={<SignUp />} />
 					</Route>

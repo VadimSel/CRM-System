@@ -19,7 +19,7 @@ export const SignIn = () => {
 		try {
 			setIsLoading(true);
 			const tokens = await signInApi(userData);
-			accessTokenManager.setToken(tokens.accessToken)
+			accessTokenManager.setToken(tokens.accessToken);
 			localStorage.setItem("refreshToken", tokens.refreshToken);
 			dispatch(logged());
 			navigate("tasks");
@@ -52,6 +52,9 @@ export const SignIn = () => {
 			</Form.Item>
 			<Button htmlType="submit" loading={isLoading}>
 				Войти
+			</Button>
+			<Button type="link" variant="link" onClick={() => navigate("signUp")}>
+				Создать аккаунт
 			</Button>
 		</Form>
 	);

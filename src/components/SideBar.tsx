@@ -1,14 +1,12 @@
 import { Menu } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router";
-import { logout } from "../store/loginSlice";
-import { RootState } from "../store/store";
-import styles from "./SideBar.module.scss";
-import { accessTokenManager } from "../utils/accessTokenManager";
 import { logoutApi } from "../api/authApi";
+import { logout } from "../store/loginSlice";
+import { accessTokenManager } from "../utils/accessTokenManager";
+import styles from "./SideBar.module.scss";
 
 export const SideBar = () => {
-	const isLogged = useSelector((state: RootState) => state.isLoggedIn.isLogged);
 	const dispatch = useDispatch();
 
 	const location = useLocation();
@@ -16,8 +14,6 @@ export const SideBar = () => {
 	const pages: Record<string, string> = {
 		"/profile": "1",
 		"/tasks": "2",
-		"/": "4",
-		"/signUp": "5",
 	};
 
 	const currentPage = pages[location.pathname];
@@ -29,16 +25,11 @@ export const SideBar = () => {
 		dispatch(logout());
 	};
 
-	const menuItems = isLogged
-		? [
-				{ key: "1", label: <Link to={"profile"}>Личный кабинет</Link> },
-				{ key: "2", label: <Link to={"tasks"}>Список Задач</Link> },
-				{ key: "3", label: <p onClick={() => logoutAcc()}>Выход</p> },
-		  ]
-		: [
-				{ key: "4", label: <Link to={"/"}>Авторизация</Link> },
-				{ key: "5", label: <Link to={"signUp"}>Регистрация</Link> },
-		  ];
+	const menuItems = [
+		{ key: "1", label: <Link to={"profile"}>Личный кабинет</Link> },
+		{ key: "2", label: <Link to={"tasks"}>Список Задач</Link> },
+		{ key: "3", label: <p onClick={() => logoutAcc()}>Выход</p> },
+	];
 
 	return (
 		<div className={styles.container}>
