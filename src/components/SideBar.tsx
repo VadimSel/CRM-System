@@ -16,8 +16,8 @@ export const SideBar = () => {
 	const pages: Record<string, string> = {
 		"/profile": "1",
 		"/tasks": "2",
-		"/": "3",
-		"/signUp": "4",
+		"/": "4",
+		"/signUp": "5",
 	};
 
 	const currentPage = pages[location.pathname];

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import { refreshToken } from "./api/authApi";
 import "./App.css";
 import styles from "./App.module.scss";
 import { MainPage } from "./components/MainPage";
@@ -10,13 +11,10 @@ import { Profile } from "./pages/Profile";
 import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
 import { logged, logout } from "./store/loginSlice";
-import { RootState } from "./store/store";
 import { accessTokenManager } from "./utils/accessTokenManager";
-import { refreshToken } from "./api/authApi";
 
 function App() {
 	const [isChecking, setIsChecking] = useState<boolean>(true);
-	const isLoggedIn = useSelector((state: RootState) => state.isLoggedIn.isLogged);
 	const dispatch = useDispatch();
 
 	const checkTokens = async () => {
@@ -46,18 +44,16 @@ function App() {
 		<div className={styles.container}>
 			<BrowserRouter>
 				<Routes>
-					{isLoggedIn ? (
-						<Route path="/" element={<PersonalLayout />}>
-							<Route index element={<Navigate to="tasks" />} />
-							<Route path="tasks" element={<MainPage />} />
-							<Route path="profile" element={<Profile />} />
-						</Route>
-					) : (
-						<Route path="/" element={<PublicLayout />}>
-							<Route index element={<SignIn />} />
-							<Route path="signUp" element={<SignUp />} />
-						</Route>
-					)}
+					<Route element={<PublicLayout />}>
+						<Route path="/" element={<SignIn />} />
+						<Route path="signUp" element={<SignUp />} />
+					</Route>
+
+					<Route element={<PersonalLayout />}>
+						<Route path="tasks" element={<MainPage />} />
+						<Route path="profile" element={<Profile />} />
+					</Route>
+
 					<Route path="*" element={<Navigate to="/" replace />} />
 				</Routes>
 			</BrowserRouter>
