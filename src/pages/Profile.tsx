@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { getProfile } from "../api";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import { ProfileType } from "../types";
+import { getProfile } from "../api/authApi";
 
 export const Profile = () => {
 	const [profile, setProfile] = useState<ProfileType>();

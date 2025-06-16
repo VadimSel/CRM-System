@@ -1,9 +1,9 @@
 import { Button, Form, Input } from "antd";
-import { createTask } from "../api";
 import { maxTaskNameLength, minTaskNameLength } from "../constants/constants";
 import { TodoRequest } from "../types";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import styles from "./AddTask.module.scss";
+import { createTask } from "../api/todoApi";
 
 interface AddTaskTypes {
 	fetchData: () => void;

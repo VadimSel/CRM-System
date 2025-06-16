@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
-import { refreshToken } from "./api";
 import "./App.css";
 import styles from "./App.module.scss";
 import { MainPage } from "./components/MainPage";
@@ -13,6 +12,7 @@ import { SignUp } from "./pages/SignUp";
 import { logged, logout } from "./store/loginSlice";
 import { RootState } from "./store/store";
 import { accessTokenManager } from "./utils/accessTokenManager";
+import { refreshToken } from "./api/authApi";
 
 function App() {
 	const [isChecking, setIsChecking] = useState<boolean>(true);

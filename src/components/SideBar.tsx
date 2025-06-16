@@ -1,11 +1,11 @@
 import { Menu } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router";
-import { logoutApi } from "../api";
 import { logout } from "../store/loginSlice";
 import { RootState } from "../store/store";
 import styles from "./SideBar.module.scss";
 import { accessTokenManager } from "../utils/accessTokenManager";
+import { logoutApi } from "../api/authApi";
 
 export const SideBar = () => {
 	const isLogged = useSelector((state: RootState) => state.isLoggedIn.isLogged);
@@ -13,20 +13,18 @@ export const SideBar = () => {
 
 	const location = useLocation();
 
-	const currentPage =
-		location.pathname === "/profile"
-			? "1"
-			: location.pathname === "/tasks"
-			? "2"
-			: location.pathname === "/"
-			? "4"
-			: location.pathname === "/signUp"
-			? "5"
-			: null;
+	const pages: Record<string, string> = {
+		"/profile": "1",
+		"/tasks": "2",
+		"/": "3",
+		"/signUp": "4",
+	};
+
+	const currentPage = pages[location.pathname];
 
 	const logoutAcc = async () => {
 		await logoutApi();
-		accessTokenManager.clearToken()
+		accessTokenManager.clearToken();
 		localStorage.removeItem("refreshToken");
 		dispatch(logout());
 	};
@@ -44,11 +42,7 @@ export const SideBar = () => {
 
 	return (
 		<div className={styles.container}>
-			<Menu
-				selectedKeys={[`${currentPage}`]}
-				className={styles.menu}
-				items={menuItems}
-			/>
+			<Menu selectedKeys={[`${currentPage}`]} className={styles.menu} items={menuItems} />
 		</div>
 	);
 };

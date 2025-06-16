@@ -4,9 +4,9 @@ import styles from "./TodoItem.module.scss";
 import { DeleteOutlined, EditOutlined, RollbackOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input } from "antd";
 import { useState } from "react";
-import { deleteTask, updateTask } from "../api";
 import { maxTaskNameLength, minTaskNameLength } from "../constants/constants";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
+import { deleteTask, updateTask } from "../api/todoApi";
 
 interface TodoItemTypes {
 	todo: Todo;

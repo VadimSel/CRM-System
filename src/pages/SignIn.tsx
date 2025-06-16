@@ -2,12 +2,12 @@ import { Button, Form, Input } from "antd";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
-import { signInApi } from "../api";
 import { logged } from "../store/loginSlice";
 import { SignInTypes } from "../types";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import { userLoginValidation } from "../constants/constants";
 import { accessTokenManager } from "../utils/accessTokenManager";
+import { signInApi } from "../api/authApi";
 
 export const SignIn = () => {
 	const [form] = Form.useForm();
