@@ -22,7 +22,7 @@ export const AddTask = ({ fetchData }: AddTaskTypes) => {
 			form.resetFields();
 			fetchData();
 		} catch (error) {
-			ApiErrorHandler(error);
+			ApiErrorHandler("createTask", error);
 		}
 	};
 

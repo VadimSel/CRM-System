@@ -24,7 +24,7 @@ export const SignIn = () => {
 			dispatch(logged());
 			navigate("tasks");
 		} catch (error) {
-			ApiErrorHandler(error);
+			ApiErrorHandler("signIn", error);
 		} finally {
 			setIsLoading(false);
 		}

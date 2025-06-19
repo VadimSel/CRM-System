@@ -20,14 +20,14 @@ export const MainPage = () => {
 				setFiltersInfo(data.info);
 			}
 		} catch (error) {
-			ApiErrorHandler(error)
+			ApiErrorHandler("getTasks", error);
 		}
 	}
 
 	useEffect(() => {
 		fetchData();
-		const getData = setInterval(() => fetchData(), 5000)
-		return () => clearInterval(getData)
+		const getData = setInterval(() => fetchData(), 5000);
+		return () => clearInterval(getData);
 	}, [status]);
 
 	return (

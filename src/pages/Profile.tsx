@@ -10,7 +10,7 @@ export const Profile = () => {
 		try {
 			setProfile(await getProfile());
 		} catch (error) {
-			ApiErrorHandler(error);
+			ApiErrorHandler("getProfile", error);
 		}
 	};
 
@@ -20,9 +20,9 @@ export const Profile = () => {
 
 	return (
 		<div>
-      <p>Имя пользователя: {profile?.username}</p>
-      <p>Почтовый адрес: {profile?.email}</p>
-      <p>Телефон: {profile?.phoneNumber}</p>
+			<p>Имя пользователя: {profile?.username}</p>
+			<p>Почтовый адрес: {profile?.email}</p>
+			<p>Телефон: {profile?.phoneNumber}</p>
 		</div>
 	);
 };

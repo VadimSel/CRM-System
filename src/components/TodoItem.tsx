@@ -1,7 +1,12 @@
 import { Todo, TodoRequest } from "../types";
 import styles from "./TodoItem.module.scss";
 
-import { DeleteOutlined, EditOutlined, RollbackOutlined, SaveOutlined } from '@ant-design/icons';
+import {
+	DeleteOutlined,
+	EditOutlined,
+	RollbackOutlined,
+	SaveOutlined,
+} from "@ant-design/icons";
 import { Button, Checkbox, Form, Input } from "antd";
 import { useState } from "react";
 import { maxTaskNameLength, minTaskNameLength } from "../constants/constants";
@@ -33,7 +38,7 @@ export const TodoItem = ({ todo, fetchData }: TodoItemTypes) => {
 			await updateTask(id, task);
 			fetchData();
 		} catch (error) {
-			ApiErrorHandler(error);
+			ApiErrorHandler("updateTask", error);
 		}
 	}
 
@@ -85,13 +90,10 @@ export const TodoItem = ({ todo, fetchData }: TodoItemTypes) => {
 				{taskIsEdit === true && (
 					<>
 						<Button htmlType="submit" className={styles.taskEditButton}>
-							<SaveOutlined className={styles.icon}/>
+							<SaveOutlined className={styles.icon} />
 						</Button>
-						<Button
-							onClick={() => cancelEdit()}
-							className={styles.taskDeleteButton}
-						>
-							<RollbackOutlined className={styles.icon}/>
+						<Button onClick={() => cancelEdit()} className={styles.taskDeleteButton}>
+							<RollbackOutlined className={styles.icon} />
 						</Button>
 					</>
 				)}
@@ -99,10 +101,10 @@ export const TodoItem = ({ todo, fetchData }: TodoItemTypes) => {
 			{taskIsEdit === false && (
 				<>
 					<Button onClick={() => taskEdit(todo.title)} className={styles.taskEditButton}>
-						<EditOutlined className={styles.icon}/>
+						<EditOutlined className={styles.icon} />
 					</Button>
 					<Button onClick={() => removeTask(todo.id)} className={styles.taskDeleteButton}>
-						<DeleteOutlined className={styles.icon}/>
+						<DeleteOutlined className={styles.icon} />
 					</Button>
 				</>
 			)}

@@ -2,8 +2,8 @@ import axios from "axios";
 import { logout } from "../store/loginSlice";
 import { store } from "../store/store";
 import { accessTokenManager } from "../utils/accessTokenManager";
-import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import { refreshToken } from "./authApi";
+import { notification } from "antd";
 
 const baseURL = "https://easydev.club/api/v1";
 
@@ -27,7 +27,10 @@ instance.interceptors.request.use(async (config) => {
 	try {
 		config.headers.Authorization = `Bearer ${accessToken}`;
 	} catch (error) {
-		ApiErrorHandler(error);
+		notification.error({
+			message: String(error),
+			placement: "top",
+		});
 	}
 	if (!refresh) {
 		store.dispatch(logout());
@@ -45,7 +48,7 @@ instance.interceptors.response.use(
 			error.config.headers.Authorization = `Bearer ${res.accessToken}`;
 			return instance(error.config);
 		} else {
-			ApiErrorHandler(error);
+			throw error
 		}
 	}
 );

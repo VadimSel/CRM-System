@@ -1,6 +1,8 @@
 import { Button, Form, Input, message, Modal } from "antd";
+import { isAxiosError } from "axios";
 import { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router";
+import { signUpApi } from "../api/authApi";
 import {
 	maxLoginLength,
 	maxPasswordLength,
@@ -14,7 +16,6 @@ import {
 } from "../constants/constants";
 import { SignUpTypes } from "../types";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
-import { signUpApi } from "../api/authApi";
 
 export const SignUp = () => {
 	const [form] = Form.useForm();
@@ -40,7 +41,9 @@ export const SignUp = () => {
 				},
 			});
 		} catch (error) {
-			ApiErrorHandler(error);
+			if (isAxiosError(error) && error.response) {
+				ApiErrorHandler("signUp", error);
+			}
 		} finally {
 			message.destroy();
 			setIsLoading(false);

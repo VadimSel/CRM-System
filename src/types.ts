@@ -80,3 +80,14 @@ export interface SignUpResponse {
 }
 
 export type PersonalOrPublic = "personal" | "public";
+
+export type RequestTypes =
+	| "signUp"
+	| "signIn"
+	| "refreshToken"
+	| "getProfile"
+	| "logout"
+	| "getTasks"
+	| "createTask"
+	| "updateTask"
+	| "deleteTask";
