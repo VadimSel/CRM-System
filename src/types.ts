@@ -24,7 +24,34 @@ export interface MetaResponse<T, N> {
 	};
 }
 
-export interface SignUpTypes {
+export interface Task {
+	created: string;
+	id: number;
+	isDone: boolean;
+	title: string;
+}
+
+export enum TodoFilterEnum {
+	all = "all",
+	inWork = "inWork",
+	completed = "completed",
+}
+
+export interface IsLoggedIn {
+	isLogged: boolean;
+}
+
+export interface SignInTypes {
+	login: string;
+	password: string;
+}
+
+export interface SignInResponse {
+	accessToken: string;
+	refreshToken: string;
+}
+
+export interface ProfileType {
 	date: string;
 	email: string;
 	id: number;
@@ -34,6 +61,33 @@ export interface SignUpTypes {
 	username: string;
 }
 
-export type SignInTypes = Record<"accessToken" | "refreshToken", string>
+export interface SignUpTypes {
+	email: string;
+	login: string;
+	password: string;
+	phoneNumber: string;
+	username: string;
+}
 
-export type StatusTypes = 1 | 2 | 3;
+export interface SignUpResponse {
+	date: string;
+	email: string;
+	id: number;
+	isAdmin: boolean;
+	isBlocked: boolean;
+	phoneNumber: string;
+	username: string;
+}
+
+export type PersonalOrPublic = "personal" | "public";
+
+export type RequestTypes =
+	| "signUp"
+	| "signIn"
+	| "refreshToken"
+	| "getProfile"
+	| "logout"
+	| "getTasks"
+	| "createTask"
+	| "updateTask"
+	| "deleteTask";
