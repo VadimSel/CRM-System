@@ -1,9 +1,9 @@
 import { Button, Form, Input } from "antd";
-import { createTask } from "../api";
-import { maxTaskNameChar, minTaskNameChar } from "../constants/constants";
+import { maxTaskNameLength, minTaskNameLength } from "../constants/constants";
 import { TodoRequest } from "../types";
-import { ErrorNotification } from "../utils/ErrorNotification";
+import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import styles from "./AddTask.module.scss";
+import { createTask } from "../api/todoApi";
 
 interface AddTaskTypes {
 	fetchData: () => void;
@@ -22,7 +22,7 @@ export const AddTask = ({ fetchData }: AddTaskTypes) => {
 			form.resetFields();
 			fetchData();
 		} catch (error) {
-			ErrorNotification(error)
+			ApiErrorHandler("createTask", error);
 		}
 	};
 
@@ -32,8 +32,8 @@ export const AddTask = ({ fetchData }: AddTaskTypes) => {
 				name="taskName"
 				rules={[
 					{ required: true, message: "Введите название" },
-					{ min: minTaskNameChar, message: `Минимум ${minTaskNameChar} символа` },
-					{ max: maxTaskNameChar, message: `Максимум ${maxTaskNameChar} символа` },
+					{ min: minTaskNameLength, message: `Минимум ${minTaskNameLength} символа` },
+					{ max: maxTaskNameLength, message: `Максимум ${maxTaskNameLength} символа` },
 				]}
 			>
 				<Input placeholder="Task To Be Done..." maxLength={64} />

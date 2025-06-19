@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { getTasks } from "../api";
 import { Todo, TodoFilterEnum, TodoInfo } from "../types";
 import { AddTask } from "./AddTask";
 import { ChangeList } from "./ChangeList";
 import styles from "./MainPage.module.scss";
 import { TodoItems } from "./TodoItems";
+import { ApiErrorHandler } from "../utils/ApiErrorHandler";
+import { getTasks } from "../api/todoApi";
 
 export const MainPage = () => {
 	const [tasksData, setTasksData] = useState<Todo[]>();
@@ -19,14 +20,14 @@ export const MainPage = () => {
 				setFiltersInfo(data.info);
 			}
 		} catch (error) {
-			window.alert(error)
+			ApiErrorHandler("getTasks", error);
 		}
 	}
 
 	useEffect(() => {
 		fetchData();
-		const getData = setInterval(() => fetchData(), 5000)
-		return () => clearInterval(getData)
+		const getData = setInterval(() => fetchData(), 5000);
+		return () => clearInterval(getData);
 	}, [status]);
 
 	return (

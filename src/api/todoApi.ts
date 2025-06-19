@@ -1,13 +1,6 @@
 /* eslint-disable no-useless-catch */
-import axios from "axios";
-import { MetaResponse, Todo, TodoFilterEnum, TodoInfo, TodoRequest } from "./types";
-
-export const instance = axios.create({
-	baseURL: "https://easydev.club/api/v1",
-	headers: {
-		"Content-Type": "application/json",
-	},
-});
+import { MetaResponse, Task, Todo, TodoFilterEnum, TodoInfo, TodoRequest } from "../types";
+import { instance } from "./axiosInstance";
 
 export async function getTasks(
 	tasksStatus: TodoFilterEnum
@@ -16,24 +9,25 @@ export async function getTasks(
 		const res = await instance.get("/todos", {
 			params: { filter: tasksStatus },
 		});
-
 		return res.data;
 	} catch (error) {
 		throw error;
 	}
 }
 
-export async function createTask(task: TodoRequest): Promise<void> {
+export async function createTask(task: TodoRequest): Promise<Task> {
 	try {
-		await instance.post("/todos", task);
+		const res = await instance.post("/todos", task);
+		return res.data;
 	} catch (error) {
 		throw error;
 	}
 }
 
-export async function updateTask(id: number, task: TodoRequest): Promise<void> {
+export async function updateTask(id: number, task: TodoRequest): Promise<Task> {
 	try {
-		await instance.put(`/todos/${id}`, task);
+		const res = await instance.put(`/todos/${id}`, task);
+		return res.data;
 	} catch (error) {
 		throw error;
 	}
