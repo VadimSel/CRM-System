@@ -14,8 +14,8 @@ import {
 	userLoginValidation,
 	userNameValidation,
 } from "../constants/constants";
-import { SignUpTypes } from "../types";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
+import { SignUpTypes } from "../types/authTypes";
 
 export const SignUp = () => {
 	const [form] = Form.useForm();

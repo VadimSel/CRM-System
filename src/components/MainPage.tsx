@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Todo, TodoFilterEnum, TodoInfo } from "../types";
 import { AddTask } from "./AddTask";
 import { ChangeList } from "./ChangeList";
 import styles from "./MainPage.module.scss";
 import { TodoItems } from "./TodoItems";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import { getTasks } from "../api/todoApi";
+import { Todo, TodoFilterEnum, TodoInfo } from "../types/todoTypes";
 
 export const MainPage = () => {
 	const [tasksData, setTasksData] = useState<Todo[]>();

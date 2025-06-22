@@ -3,11 +3,11 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { logged } from "../store/loginSlice";
-import { SignInTypes } from "../types";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import { userLoginValidation } from "../constants/constants";
 import { accessTokenManager } from "../utils/accessTokenManager";
 import { signInApi } from "../api/authApi";
+import { SignInTypes } from "../types/authTypes";
 
 export const SignIn = () => {
 	const [form] = Form.useForm();

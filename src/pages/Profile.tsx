@@ -1,7 +1,8 @@
+import { notification } from "antd";
+import { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
-import { ApiErrorHandler } from "../utils/ApiErrorHandler";
-import { ProfileType } from "../types";
 import { getProfile } from "../api/authApi";
+import { ProfileType } from "../types/authTypes";
 
 export const Profile = () => {
 	const [profile, setProfile] = useState<ProfileType>();
@@ -10,7 +11,12 @@ export const Profile = () => {
 		try {
 			setProfile(await getProfile());
 		} catch (error) {
-			ApiErrorHandler("getProfile", error);
+			if (isAxiosError(error) && error.response) {
+				notification.error({
+					message: error.response.status === 400 ? "Пользователя не существует" : String(error),
+					placement: "top",
+				});
+			}
 		}
 	};
 

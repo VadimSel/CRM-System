@@ -3,7 +3,6 @@ import { logout } from "../store/loginSlice";
 import { store } from "../store/store";
 import { accessTokenManager } from "../utils/accessTokenManager";
 import { refreshToken } from "./authApi";
-import { notification } from "antd";
 
 const baseURL = "https://easydev.club/api/v1";
 
@@ -21,17 +20,10 @@ export const tokensInstance = axios.create({
 	},
 });
 
-instance.interceptors.request.use(async (config) => {
+instance.interceptors.request.use((config) => {
 	const accessToken = accessTokenManager.getToken();
 	const refresh = localStorage.getItem("refreshToken");
-	try {
-		config.headers.Authorization = `Bearer ${accessToken}`;
-	} catch (error) {
-		notification.error({
-			message: String(error),
-			placement: "top",
-		});
-	}
+	config.headers.Authorization = `Bearer ${accessToken}`;
 	if (!refresh) {
 		store.dispatch(logout());
 	}
@@ -48,7 +40,7 @@ instance.interceptors.response.use(
 			error.config.headers.Authorization = `Bearer ${res.accessToken}`;
 			return instance(error.config);
 		} else {
-			throw error
+			throw error;
 		}
 	}
 );

@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-catch */
-import { MetaResponse, Task, Todo, TodoFilterEnum, TodoInfo, TodoRequest } from "../types";
+import { MetaResponse, Task, Todo, TodoFilterEnum, TodoInfo, TodoRequest } from "../types/todoTypes";
 import { instance } from "./axiosInstance";
 
 export async function getTasks(

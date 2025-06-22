@@ -1,6 +1,6 @@
 import { Button } from "antd";
-import { TodoFilterEnum, TodoInfo } from "../types";
 import styles from "./ChangeList.module.scss";
+import { TodoFilterEnum, TodoInfo } from "../types/todoTypes";
 
 interface ChangeListTypes {
 	status: TodoFilterEnum;

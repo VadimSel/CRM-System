@@ -1,5 +1,5 @@
-import { Todo } from "../types";
 
+import { Todo } from "../types/todoTypes";
 import { TodoItem } from "./TodoItem";
 
 interface TodoItemsTypes {

@@ -1,4 +1,3 @@
-import { Todo, TodoRequest } from "../types";
 import styles from "./TodoItem.module.scss";
 
 import {
@@ -12,6 +11,7 @@ import { useState } from "react";
 import { maxTaskNameLength, minTaskNameLength } from "../constants/constants";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import { deleteTask, updateTask } from "../api/todoApi";
+import { Todo, TodoRequest } from "../types/todoTypes";
 
 interface TodoItemTypes {
 	todo: Todo;
@@ -79,7 +79,7 @@ export const TodoItem = ({ todo, fetchData }: TodoItemTypes) => {
 						{ max: maxTaskNameLength, message: `Максимум ${maxTaskNameLength} символа` },
 					]}
 				>
-					{taskIsEdit === true ? (
+					{taskIsEdit ? (
 						<Input autoFocus={true} maxLength={64} />
 					) : (
 						<p className={todo.isDone === false ? styles.taskName : styles.taskIsDone}>
@@ -87,7 +87,7 @@ export const TodoItem = ({ todo, fetchData }: TodoItemTypes) => {
 						</p>
 					)}
 				</Form.Item>
-				{taskIsEdit === true && (
+				{taskIsEdit && (
 					<>
 						<Button htmlType="submit" className={styles.taskEditButton}>
 							<SaveOutlined className={styles.icon} />
@@ -98,7 +98,7 @@ export const TodoItem = ({ todo, fetchData }: TodoItemTypes) => {
 					</>
 				)}
 			</Form>
-			{taskIsEdit === false && (
+			{!taskIsEdit && (
 				<>
 					<Button onClick={() => taskEdit(todo.title)} className={styles.taskEditButton}>
 						<EditOutlined className={styles.icon} />

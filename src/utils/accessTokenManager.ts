@@ -1,13 +1,17 @@
-let accessToken = "";
+class AccessTokenManager {
+	private accessToken = "";
 
-export const accessTokenManager = {
 	setToken(token: string) {
-		accessToken = token;
-	},
+		this.accessToken = token;
+	}
+
 	getToken() {
-		return accessToken;
-	},
+		return this.accessToken;
+	}
+
 	clearToken() {
-		accessToken = "";
-	},
-};
+		this.accessToken = "";
+	}
+}
+
+export const accessTokenManager = new AccessTokenManager();

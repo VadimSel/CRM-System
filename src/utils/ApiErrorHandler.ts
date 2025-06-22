@@ -2,7 +2,7 @@ import { notification } from "antd";
 import axios from "axios";
 import { logout } from "../store/loginSlice";
 import { store } from "../store/store";
-import { RequestTypes } from "../types";
+import { RequestTypes } from "../types/commonTypes";
 
 const err: Record<string, Record<number, string>> = {
 	signUp: {
@@ -16,9 +16,6 @@ const err: Record<string, Record<number, string>> = {
 	refreshToken: {
 		400: "Ошибка при разборе JSON-запроса",
 		401: "Требуется повторная авторизация",
-	},
-	getProfile: {
-		400: "Пользователя не существует",
 	},
 	logout: {
 		401: "Данные пользователя для выхода не найдены или отсутствуют",
