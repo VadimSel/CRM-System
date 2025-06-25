@@ -1,27 +1,28 @@
-import { MetaResponse, StatusTypes, Todo, TodoInfo } from "../types";
-import styles from './ChangeList.module.scss'
+import { Button } from "antd";
+import styles from "./ChangeList.module.scss";
+import { TodoFilterEnum, TodoInfo } from "../types/todoTypes";
 
 interface ChangeListTypes {
-	status: StatusTypes
-	setStatus: (value: StatusTypes) => void;
-	tasks?: MetaResponse<Todo, TodoInfo>
-};
+	status: TodoFilterEnum;
+	setStatus: (value: TodoFilterEnum) => void;
+	filtersInfo?: TodoInfo;
+}
 
-export const ChangeList = ({ tasks, status, setStatus }: ChangeListTypes) => {
-	const filters: { id: number; value: keyof TodoInfo; status: string }[] = [
+export const ChangeList = ({ filtersInfo, status, setStatus }: ChangeListTypes) => {
+	const filters: { id: number; value: TodoFilterEnum; status: string }[] = [
 		{
 			id: 1,
-			value: "all",
+			value: TodoFilterEnum.all,
 			status: "Все",
 		},
 		{
 			id: 2,
-			value: "inWork",
+			value: TodoFilterEnum.inWork,
 			status: "в работе",
 		},
 		{
 			id: 3,
-			value: "completed",
+			value: TodoFilterEnum.completed,
 			status: "сделано",
 		},
 	];
@@ -29,15 +30,15 @@ export const ChangeList = ({ tasks, status, setStatus }: ChangeListTypes) => {
 	return (
 		<div className={styles.filters}>
 			{filters.map((el) => (
-				<button
+				<Button
 					key={el.id}
-					className={el.id === status ? styles.active : ""}
+					type={el.value === status ? "default" : "text"}
 					onClick={() => {
-						setStatus(el.id as StatusTypes);
+						setStatus(el.value);
 					}}
 				>
-					{el.status} ({tasks?.info && tasks.info[el.value]})
-				</button>
+					{el.status} ({filtersInfo && filtersInfo[el.value]})
+				</Button>
 			))}
 		</div>
 	);

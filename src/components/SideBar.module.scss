@@ -1,0 +1,18 @@
+.container {
+  border-right: 1px solid gray;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 150px;
+	gap: 10px;
+}
+
+.menu {
+	height: 100%;
+	width: 100%;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}

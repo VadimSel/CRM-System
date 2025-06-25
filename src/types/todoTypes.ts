@@ -24,16 +24,15 @@ export interface MetaResponse<T, N> {
 	};
 }
 
-export interface SignUpTypes {
-	date: string;
-	email: string;
+export interface Task {
+	created: string;
 	id: number;
-	isAdmin: boolean;
-	isBlocked: boolean;
-	phoneNumber: string;
-	username: string;
+	isDone: boolean;
+	title: string;
 }
 
-export type SignInTypes = Record<"accessToken" | "refreshToken", string>
-
-export type StatusTypes = 1 | 2 | 3;
+export enum TodoFilterEnum {
+	all = "all",
+	inWork = "inWork",
+	completed = "completed",
+}
