@@ -14,6 +14,7 @@ export const SideBar = () => {
 	const pages: Record<string, string> = {
 		"/profile": "1",
 		"/tasks": "2",
+		"/users": "3",
 	};
 
 	const currentPage = pages[location.pathname];
@@ -28,7 +29,8 @@ export const SideBar = () => {
 	const menuItems = [
 		{ key: "1", label: <Link to={"profile"}>Личный кабинет</Link> },
 		{ key: "2", label: <Link to={"tasks"}>Список Задач</Link> },
-		{ key: "3", label: <p onClick={() => logoutAcc()}>Выход</p> },
+		{ key: "3", label: <Link to={"users"}>Пользователи</Link> },
+		{ key: "4", label: <p onClick={() => logoutAcc()}>Выход</p> },
 	];
 
 	return (

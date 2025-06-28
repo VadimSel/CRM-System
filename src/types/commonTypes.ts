@@ -8,4 +8,7 @@ export type RequestTypes =
 	| "getTasks"
 	| "createTask"
 	| "updateTask"
-	| "deleteTask";
+	| "deleteTask"
+	| "adminGetUsers"
+	| "adminGetUserProfile"
+	| "adminUpdateUserProfile";

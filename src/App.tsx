@@ -12,6 +12,8 @@ import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
 import { logged, logout } from "./store/loginSlice";
 import { accessTokenManager } from "./utils/accessTokenManager";
+import { Users } from "./pages/Users";
+import { UserProfile } from "./pages/UserProfile";
 
 function App() {
 	const [isChecking, setIsChecking] = useState<boolean>(true);
@@ -50,8 +52,10 @@ function App() {
 					</Route>
 
 					<Route element={<PersonalLayout />}>
-						<Route path="tasks" element={<MainPage />} />
 						<Route path="profile" element={<Profile />} />
+						<Route path="tasks" element={<MainPage />} />
+						<Route path="users" element={<Users />} />
+						<Route path="userProfile/:id" element={<UserProfile />}></Route>
 					</Route>
 
 					<Route path="*" element={<Navigate to="/" replace />} />
