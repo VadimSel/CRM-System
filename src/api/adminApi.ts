@@ -13,9 +13,9 @@ export async function getUserProfile(id: number): Promise<User> {
 
 export async function updateUserInfo(
 	id: number,
-	email: string,
-	phoneNumber: string,
-	username: string
-) {
-	const res = await instance.put(`/admin/users/${id}`, { email, phoneNumber, username });
+	email?: string,
+	phoneNumber?: string,
+	username?: string
+): Promise<User> {
+	return await instance.put(`/admin/users/${id}`, { email, phoneNumber, username });
 }
