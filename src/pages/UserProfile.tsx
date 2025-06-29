@@ -1,6 +1,6 @@
 import { Button, Form, Input, notification } from "antd";
 import { ChangeEvent, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { getUserProfile, updateUserInfo } from "../api/adminApi";
 import {
 	maxUserNameLength,
@@ -12,6 +12,8 @@ import { User } from "../types/adminTypes";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 
 export const UserProfile = () => {
+	const navigate = useNavigate();
+
 	const [userInfo, setUserInfo] = useState<User>();
 	const [isDataEdit, setIsDataEdit] = useState<boolean>(false);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -159,6 +161,9 @@ export const UserProfile = () => {
 						Редактировать
 					</Button>
 				)}
+				<Button htmlType="button" onClick={() => navigate(-1)}>
+					Вернутся назад
+				</Button>
 			</Form>
 		</div>
 	);
