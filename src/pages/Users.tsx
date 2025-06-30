@@ -1,4 +1,4 @@
-import { Button, Modal, Table, TableProps } from "antd";
+import { Button, Modal, notification, Table, TableProps } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { getUsers, removeUser } from "../api/adminApi";
@@ -7,6 +7,7 @@ import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 
 export const Users = () => {
 	const [users, setUsers] = useState<User[]>([]);
+
 	const { confirm } = Modal;
 
 	const showDeleteConfirmation = (id: number) => {
@@ -14,19 +15,28 @@ export const Users = () => {
 			title: "Удалить пользователя?",
 			okText: "Удалить",
 			cancelText: "Отмена",
-			onOk() {
+			centered: true,
+			async onOk() {
 				deleteUser(id);
 			},
 		});
 	};
 
 	const deleteUser = async (id: number) => {
-		console.log(`Удалённ пользователь ${id}`);
 		try {
-			await removeUser(id);
+			console.log(`Удалён пользователь ${id}`);
+			notification.success({
+				message: "Success",
+				placement: "top",
+			});
 		} catch (error) {
-			ApiErrorHandler("adminDeleteUser", error);
+			console.log(error);
 		}
+		// try {
+		// 	await removeUser(id);
+		// } catch (error) {
+		// 	ApiErrorHandler("adminDeleteUser", error);
+		// }
 	};
 
 	const columns: TableProps<User>["columns"] = [
