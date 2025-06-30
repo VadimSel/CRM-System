@@ -11,4 +11,5 @@ export type RequestTypes =
 	| "deleteTask"
 	| "adminGetUsers"
 	| "adminGetUserProfile"
-	| "adminUpdateUserProfile";
+	| "adminUpdateUserProfile"
+	| "adminDeleteUser";

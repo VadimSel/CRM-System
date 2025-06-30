@@ -4,6 +4,13 @@ import { logout } from "../store/loginSlice";
 import { store } from "../store/store";
 import { RequestTypes } from "../types/commonTypes";
 
+const adminUserErrors = {
+	400: "Логин или email уже существует",
+	401: "Доступ запрещён. Токен отсутствует или недействителен",
+	403: "Недостаточно прав",
+	404: "Пользователь не найден",
+};
+
 const err: Record<string, Record<number, string>> = {
 	signUp: {
 		400: "Неверный ввод",
@@ -28,7 +35,7 @@ const err: Record<string, Record<number, string>> = {
 		401: "Таска не найдена",
 	},
 	deleteTask: {
-		400: "Неверный или отсутствующий ID задачи",
+		400: "Отсутствует или неверный ID задачи",
 		404: "Таска не найдена",
 	},
 	adminGetUsers: {
@@ -41,12 +48,8 @@ const err: Record<string, Record<number, string>> = {
 		403: "Недостаточно прав",
 		404: "Пользователь не найден",
 	},
-	adminUpdateUserProfile: {
-		400: "Логин или email уже существует",
-		401: "Доступ запрещён. Токен отсутствует или недействителен",
-		403: "Недостаточно прав",
-		404: "Пользователь не найден"
-	}
+	adminUpdateUserProfile: adminUserErrors,
+	adminDeleteUser: adminUserErrors,
 };
 
 export const ApiErrorHandler = async (request: RequestTypes, error: unknown) => {

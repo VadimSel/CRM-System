@@ -19,3 +19,7 @@ export async function updateUserInfo(
 ): Promise<User> {
 	return await instance.put(`/admin/users/${id}`, { email, phoneNumber, username });
 }
+
+export async function removeUser(id: number): Promise<void> {
+	await instance.delete(`/admin/users/${id}`);
+}
