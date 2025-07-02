@@ -1,8 +1,17 @@
-import { GetUsers, User } from "../types/adminTypes";
+import { GetUsers, User, UserFilters } from "../types/adminTypes";
 import { instance } from "./axiosInstance";
 
-export async function getUsers(): Promise<User[]> {
-	const res = await instance.get<GetUsers>("/admin/users");
+export async function getUsers({
+	search,
+	sortBy,
+	sortOrder,
+	isBlocked,
+	limit,
+	offset,
+}: UserFilters): Promise<User[]> {
+	const res = await instance.get<GetUsers>("/admin/users", {
+		params: { search, sortBy, sortOrder, isBlocked, limit, offset },
+	});
 	return res.data.data;
 }
 

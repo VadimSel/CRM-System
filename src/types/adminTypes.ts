@@ -1,5 +1,3 @@
-import { ProfileType } from "./authTypes";
-
 export interface GetUsers {
 	data: User[];
 	meta: {
@@ -11,7 +9,7 @@ export interface GetUsers {
 
 // Интерфейс запроса для фильтрации и сортировки пользователей
 
-interface UserFilters {
+export interface UserFilters {
 	search?: string;
 	sortBy?: string;
 	sortOrder?: "asc" | "desc";
