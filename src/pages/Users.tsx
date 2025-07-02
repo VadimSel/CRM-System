@@ -1,6 +1,5 @@
 import { Button, Modal, notification, Table, TableProps } from "antd";
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
 import { getUsers, removeUser } from "../api/adminApi";
 import { Roles, User } from "../types/adminTypes";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
@@ -25,18 +24,15 @@ export const Users = () => {
 	const deleteUser = async (id: number) => {
 		try {
 			console.log(`Удалён пользователь ${id}`);
+			await removeUser(id);
 			notification.success({
 				message: "Success",
 				placement: "top",
 			});
+			getAllUsers();
 		} catch (error) {
-			console.log(error);
+			ApiErrorHandler("adminDeleteUser", error);
 		}
-		// try {
-		// 	await removeUser(id);
-		// } catch (error) {
-		// 	ApiErrorHandler("adminDeleteUser", error);
-		// }
 	};
 
 	const columns: TableProps<User>["columns"] = [
@@ -78,7 +74,12 @@ export const Users = () => {
 	];
 
 	const getAllUsers = async () => {
-		setUsers(await getUsers());
+		try {
+			const res = await getUsers();
+			setUsers(res);
+		} catch (error) {
+			ApiErrorHandler("adminGetUsers", error);
+		}
 	};
 
 	useEffect(() => {
