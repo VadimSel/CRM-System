@@ -9,7 +9,9 @@ export const PersonalLayout = () => {
 
 	return (
 		<div className={styles.container}>
-			<SideBar />
+			<aside className={styles.sidebar}>
+				<SideBar />
+			</aside>
 			{isLoggedIn ? <Outlet /> : <Navigate to={"/"} />}
 		</div>
 	);
