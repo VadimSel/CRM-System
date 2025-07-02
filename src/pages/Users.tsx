@@ -1,9 +1,10 @@
-import { Button, Modal, notification, Table, TableProps } from "antd";
-import { useEffect, useState } from "react";
+import { Button, Form, Input, Modal, notification, Table, TableProps } from "antd";
+import { ChangeEvent, useEffect, useState } from "react";
 import { getUsers, removeUser } from "../api/adminApi";
 import { Roles, User, UserFilters } from "../types/adminTypes";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import { useNavigate } from "react-router";
+import styles from "./Users.module.scss";
 
 export const Users = () => {
 	const [users, setUsers] = useState<User[]>([]);
@@ -118,8 +119,16 @@ export const Users = () => {
 	}, []);
 
 	return (
-		<div style={{ width: "70vw", overflowX: "auto" }}>
+		<div>
+			<Form>
+				<></>
+				<Input
+					placeholder="Поиск"
+					onPressEnter={(e) => console.log(e.currentTarget.value)}
+				/>
+			</Form>
 			<Table
+				className={styles.table}
 				columns={columns}
 				dataSource={users}
 				rowKey="id"
