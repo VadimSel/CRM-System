@@ -1,9 +1,9 @@
 import { Button, Form, Input, Modal, notification, Table, TableProps } from "antd";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { getUsers, removeUser } from "../api/adminApi";
 import { Roles, User, UserFilters } from "../types/adminTypes";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
-import { useNavigate } from "react-router";
 import styles from "./Users.module.scss";
 
 export const Users = () => {
@@ -124,7 +124,7 @@ export const Users = () => {
 				<></>
 				<Input
 					placeholder="Поиск"
-					onPressEnter={(e) => console.log(e.currentTarget.value)}
+					onPressEnter={(e) => getAllUsers({ search: e.currentTarget.value })}
 				/>
 			</Form>
 			<Table
