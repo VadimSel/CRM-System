@@ -1,4 +1,4 @@
-import { GetUsers, User, UserFilters } from "../types/adminTypes";
+import { blockUnlockTypes, GetUsers, User, UserFilters } from "../types/adminTypes";
 import { instance } from "./axiosInstance";
 
 export async function getUsers({
@@ -31,4 +31,11 @@ export async function updateUserInfo(
 
 export async function removeUser(id: number): Promise<void> {
 	await instance.delete(`/admin/users/${id}`);
+}
+
+export async function blockUnlockUserApi(
+	id: number,
+	request: blockUnlockTypes
+): Promise<User> {
+	return await instance.post(`/admin/users/${id}/${request}`);
 }

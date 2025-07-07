@@ -28,6 +28,8 @@ export interface User {
 	roles: Roles[];
 	phoneNumber: string;
 }
+
+export type blockUnlockTypes = "block" | "unblock";
 // Интерфейс метаинформации
 
 interface MetaResponse<T> {

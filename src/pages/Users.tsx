@@ -1,8 +1,8 @@
 import { Button, Form, Input, Modal, notification, Table, TableProps } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { getUsers, removeUser } from "../api/adminApi";
-import { Roles, User, UserFilters } from "../types/adminTypes";
+import { blockUnlockUserApi, getUsers, removeUser } from "../api/adminApi";
+import { blockUnlockTypes, Roles, User, UserFilters } from "../types/adminTypes";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import styles from "./Users.module.scss";
 
@@ -33,6 +33,19 @@ export const Users = () => {
 			getAllUsers({});
 		} catch (error) {
 			ApiErrorHandler("adminDeleteUser", error);
+		}
+	};
+
+	const blockUnlockUser = async (id: number, request: blockUnlockTypes) => {
+		try {
+			await blockUnlockUserApi(id, request);
+			notification.success({
+				message: `Пользователь ${request === "block" ? "заблокирован" : "разблокирован"}`,
+				placement: "top",
+			});
+			getAllUsers({});
+		} catch (error) {
+			ApiErrorHandler("blockUnlockUser", error);
 		}
 	};
 
@@ -77,22 +90,42 @@ export const Users = () => {
 		},
 		{ title: "Номер телефона", dataIndex: "phoneNumber", key: "phoneNumber", width: 150 },
 		{
-			title: "Профиль",
 			dataIndex: "id",
 			key: "profile",
 			fixed: "right",
 			render: (id: number) => (
-				<Button onClick={() => navigate(`/userProfile/${id}`)}>Перейти к профилю</Button>
+				<Button onClick={() => navigate(`/userProfile/${id}`)}>Профиль</Button>
 			),
 		},
 		{
-			title: "Удалить",
 			dataIndex: "id",
 			key: "delete",
 			fixed: "right",
 			render: (id: number) => (
 				<Button danger onClick={() => showDeleteConfirmation(id)}>
 					Удалить
+				</Button>
+			),
+		},
+		{
+			dataIndex: "id",
+			key: "blockUnblock",
+			fixed: "right",
+			render: (id: number, record: User) => (
+				<Button
+					onClick={() => blockUnlockUser(id, record.isBlocked ? "unblock" : "block")}
+				>
+					{record.isBlocked ? "Разблокировать" : "Заблокировать"}
+				</Button>
+			),
+		},
+		{
+			dataIndex: "id",
+			key: "setAdmin",
+			fixed: "right",
+			render: (id: number, record: User) => (
+				<Button>
+					{record.roles.includes(Roles.ADMIN) ? "Забрать" : "Дать"} роль админа
 				</Button>
 			),
 		},
