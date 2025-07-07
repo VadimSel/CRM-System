@@ -54,6 +54,10 @@ const err: Record<string, Record<number, string>> = {
 		400: "Отсутствует или неверный ID",
 		404: "Пользователь не найден",
 	},
+	updatesUserRights: {
+		400: "Нет такого поля",
+		404: "Пользователь не найден"
+	}
 };
 
 export const ApiErrorHandler = async (request: RequestTypes, error: unknown) => {

@@ -13,4 +13,5 @@ export type RequestTypes =
 	| "adminGetUserProfile"
 	| "adminUpdateUserProfile"
 	| "adminDeleteUser"
-	| "blockUnlockUser";
+	| "blockUnlockUser"
+	| "updatesUserRights";

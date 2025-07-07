@@ -37,17 +37,31 @@ export const Users = () => {
 	};
 
 	const blockUnlockUser = async (id: number, request: blockUnlockTypes) => {
-		try {
-			await blockUnlockUserApi(id, request);
-			notification.success({
-				message: `Пользователь ${request === "block" ? "заблокирован" : "разблокирован"}`,
-				placement: "top",
-			});
-			getAllUsers({});
-		} catch (error) {
-			ApiErrorHandler("blockUnlockUser", error);
-		}
+		confirm({
+			title: `${request === "block" ? "Заблокировать" : "Разблокировать"} пользователя?`,
+			okText: "Да",
+			cancelText: "Отмена",
+			centered: true,
+			onOk: async () => {
+				try {
+					await blockUnlockUserApi(id, request);
+					notification.success({
+						message: `Пользователь ${
+							request === "block" ? "заблокирован" : "разблокирован"
+						}`,
+						placement: "top",
+					});
+					getAllUsers({});
+				} catch (error) {
+					ApiErrorHandler("blockUnlockUser", error);
+				}
+			},
+		});
 	};
+
+	const setAdminRights = async (id: number, roles: Roles) => {
+		
+	}
 
 	const onChange: TableProps<User>["onChange"] = async (
 		pagination,
@@ -124,7 +138,7 @@ export const Users = () => {
 			key: "setAdmin",
 			fixed: "right",
 			render: (id: number, record: User) => (
-				<Button>
+				<Button onClick={() => }>
 					{record.roles.includes(Roles.ADMIN) ? "Забрать" : "Дать"} роль админа
 				</Button>
 			),
