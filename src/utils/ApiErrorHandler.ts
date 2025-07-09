@@ -50,7 +50,7 @@ const err: Record<string, Record<number, string>> = {
 	},
 	adminUpdateUserProfile: adminUserErrors,
 	adminDeleteUser: adminUserErrors,
-	blockUnlockUser: {
+	blockUnblockUser: {
 		400: "Отсутствует или неверный ID",
 		404: "Пользователь не найден",
 	},

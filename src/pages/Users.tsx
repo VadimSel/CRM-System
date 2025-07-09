@@ -1,7 +1,12 @@
 import { Button, Form, Input, Modal, notification, Table, TableProps } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { blockUnlockUserApi, getUsers, removeUser } from "../api/adminApi";
+import {
+	blockUnblockUserApi,
+	getUsers,
+	removeUser,
+	updatesUserRights,
+} from "../api/adminApi";
 import { blockUnlockTypes, Roles, User, UserFilters } from "../types/adminTypes";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import styles from "./Users.module.scss";
@@ -23,6 +28,18 @@ export const Users = () => {
 		});
 	};
 
+	const showUpdateRightsConfirmation = (id: number, roles: Roles[]) => {
+		confirm({
+			title: `${roles.includes(Roles.ADMIN) ? "Забрать" : "Дать"} роль админинстратора?`,
+			okText: "Да",
+			cancelText: "Отмена",
+			centered: true,
+			async onOk() {
+				setAdminRights(id, roles);
+			},
+		});
+	};
+
 	const deleteUser = async (id: number) => {
 		try {
 			await removeUser(id);
@@ -36,7 +53,7 @@ export const Users = () => {
 		}
 	};
 
-	const blockUnlockUser = async (id: number, request: blockUnlockTypes) => {
+	const blockUnblockUser = async (id: number, request: blockUnlockTypes) => {
 		confirm({
 			title: `${request === "block" ? "Заблокировать" : "Разблокировать"} пользователя?`,
 			okText: "Да",
@@ -44,7 +61,7 @@ export const Users = () => {
 			centered: true,
 			onOk: async () => {
 				try {
-					await blockUnlockUserApi(id, request);
+					await blockUnblockUserApi(id, request);
 					notification.success({
 						message: `Пользователь ${
 							request === "block" ? "заблокирован" : "разблокирован"
@@ -53,15 +70,42 @@ export const Users = () => {
 					});
 					getAllUsers({});
 				} catch (error) {
-					ApiErrorHandler("blockUnlockUser", error);
+					ApiErrorHandler("blockUnblockUser", error);
 				}
 			},
 		});
 	};
 
-	const setAdminRights = async (id: number, roles: Roles) => {
-		
-	}
+	const setAdminRights = async (id: number, roles: Roles[]) => {
+		const userRights = [...roles];
+		if (!userRights.includes(Roles.ADMIN)) {
+			try {
+				userRights.push(Roles.ADMIN);
+				await updatesUserRights(id, { roles: userRights });
+				notification.success({
+					message: "Роль админинстратора добавлена",
+					placement: "top",
+				});
+				getAllUsers({});
+			} catch (error) {
+				ApiErrorHandler("updatesUserRights", error);
+			}
+		} else {
+			try {
+				const removeAdmin = userRights.filter((el) => {
+					return el !== Roles.ADMIN;
+				});
+				await updatesUserRights(id, { roles: removeAdmin });
+				notification.success({
+					message: "Роль админинстратора убрана",
+					placement: "top",
+				});
+				getAllUsers({});
+			} catch (error) {
+				ApiErrorHandler("updatesUserRights", error);
+			}
+		}
+	};
 
 	const onChange: TableProps<User>["onChange"] = async (
 		pagination,
@@ -127,7 +171,7 @@ export const Users = () => {
 			fixed: "right",
 			render: (id: number, record: User) => (
 				<Button
-					onClick={() => blockUnlockUser(id, record.isBlocked ? "unblock" : "block")}
+					onClick={() => blockUnblockUser(id, record.isBlocked ? "unblock" : "block")}
 				>
 					{record.isBlocked ? "Разблокировать" : "Заблокировать"}
 				</Button>
@@ -138,7 +182,7 @@ export const Users = () => {
 			key: "setAdmin",
 			fixed: "right",
 			render: (id: number, record: User) => (
-				<Button onClick={() => }>
+				<Button onClick={() => showUpdateRightsConfirmation(id, record.roles)}>
 					{record.roles.includes(Roles.ADMIN) ? "Забрать" : "Дать"} роль админа
 				</Button>
 			),

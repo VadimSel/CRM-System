@@ -41,7 +41,7 @@ interface MetaResponse<T> {
 	};
 }
 // Интерфейс для обновления прав пользователя
-interface UserRolesRequest {
+export interface UserRolesRequest {
 	roles: Roles[]; // при вызове этой апи роли будут обновлены к тому массиву который будет передан
 	// например если у вас была roles: ['ADMIN'] а вы хотите добавить ['MODERATOR'] то нужно передавать
 	// старые + новые - roles: ['ADMIN', 'MODERATOR']
