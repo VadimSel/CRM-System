@@ -215,7 +215,6 @@ export const Users = () => {
 	};
 
 	const changeUserFilter = async (value: string) => {
-		console.log(value);
 		const filterValue =
 			value === ONLYBLOCKEDUSERS ? true : value === ONLYACTIVEUSERS ? false : undefined;
 		setIsBlockedValue(filterValue);
