@@ -15,3 +15,9 @@ export type RequestTypes =
 	| "adminDeleteUser"
 	| "blockUnblockUser"
 	| "updatesUserRights";
+
+	export enum userFilters {
+		ALLUSERS = "Все пользователи",
+		ONLYBLOCKEDUSERS = "Только заблокированные пользователи",
+		ONLYACTIVEUSERS = "Только активные пользователи"
+	}

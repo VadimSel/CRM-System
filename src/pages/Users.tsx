@@ -1,4 +1,13 @@
-import { Button, Form, Input, Modal, notification, Table, TableProps } from "antd";
+import {
+	Button,
+	Form,
+	Input,
+	Modal,
+	notification,
+	Select,
+	Table,
+	TableProps,
+} from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import {
@@ -8,34 +17,34 @@ import {
 	updatesUserRights,
 } from "../api/adminApi";
 import { blockUnlockTypes, Roles, User, UserFilters } from "../types/adminTypes";
+import { userFilters } from "../types/commonTypes";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import styles from "./Users.module.scss";
 
 export const Users = () => {
 	const [users, setUsers] = useState<User[]>([]);
+	const [isBockedValue, setIsBlockedValue] = useState<boolean | undefined>(undefined);
 	const { confirm } = Modal;
 	const navigate = useNavigate();
 
-	const showDeleteConfirmation = (id: number) => {
-		confirm({
-			title: "Удалить пользователя?",
-			okText: "Удалить",
-			cancelText: "Отмена",
-			centered: true,
-			async onOk() {
-				await deleteUser(id);
-			},
-		});
-	};
+	const { ALLUSERS, ONLYBLOCKEDUSERS, ONLYACTIVEUSERS } = userFilters;
 
-	const showUpdateRightsConfirmation = (id: number, roles: Roles[]) => {
+	const showConfirmation = (id: number, roles?: Roles[]) => {
 		confirm({
-			title: `${roles.includes(Roles.ADMIN) ? "Забрать" : "Дать"} роль админинстратора?`,
+			title: `${
+				roles
+					? `${roles.includes(Roles.ADMIN) ? "Забрать" : "Дать"} роль админинстратора?`
+					: "Удалить пользователя?"
+			}`,
 			okText: "Да",
 			cancelText: "Отмена",
 			centered: true,
 			async onOk() {
-				setAdminRights(id, roles);
+				if (roles) {
+					await setAdminRights(id, roles);
+				} else {
+					await deleteUser(id);
+				}
 			},
 		});
 	};
@@ -116,7 +125,7 @@ export const Users = () => {
 		const ord = sorter.order;
 		const sortBy = sorter.field;
 		const sortOrder = ord !== undefined ? ord.replace("end", "") : undefined;
-		await getAllUsers({ sortOrder, sortBy });
+		await getAllUsers({ sortOrder, sortBy, isBlocked: isBockedValue });
 	};
 
 	const columns: TableProps<User>["columns"] = [
@@ -160,7 +169,7 @@ export const Users = () => {
 			key: "delete",
 			fixed: "right",
 			render: (id: number) => (
-				<Button danger onClick={() => showDeleteConfirmation(id)}>
+				<Button danger onClick={() => showConfirmation(id)}>
 					Удалить
 				</Button>
 			),
@@ -182,7 +191,7 @@ export const Users = () => {
 			key: "setAdmin",
 			fixed: "right",
 			render: (id: number, record: User) => (
-				<Button onClick={() => showUpdateRightsConfirmation(id, record.roles)}>
+				<Button onClick={() => showConfirmation(id, record.roles)}>
 					{record.roles.includes(Roles.ADMIN) ? "Забрать" : "Дать"} роль админа
 				</Button>
 			),
@@ -205,19 +214,42 @@ export const Users = () => {
 		}
 	};
 
+	const changeUserFilter = async (value: string) => {
+		console.log(value);
+		const filterValue =
+			value === ONLYBLOCKEDUSERS ? true : value === ONLYACTIVEUSERS ? false : undefined;
+		setIsBlockedValue(filterValue);
+		await getAllUsers({ isBlocked: filterValue });
+	};
+
 	useEffect(() => {
 		getAllUsers({});
 	}, []);
 
 	return (
 		<div>
-			<Form>
-				<></>
-				<Input
-					placeholder="Поиск"
-					onPressEnter={(e) => getAllUsers({ search: e.currentTarget.value })}
+			<div className={styles.searchAndFilters}>
+				<Form>
+					<></>
+					<Input
+						placeholder="Поиск"
+						onPressEnter={(e) => getAllUsers({ search: e.currentTarget.value })}
+					/>
+				</Form>
+				<Select
+					className={styles.select}
+					defaultValue={ALLUSERS}
+					onChange={changeUserFilter}
+					options={[
+						{ value: ALLUSERS, label: ALLUSERS },
+						{
+							value: ONLYBLOCKEDUSERS,
+							label: ONLYBLOCKEDUSERS,
+						},
+						{ value: ONLYACTIVEUSERS, label: ONLYACTIVEUSERS },
+					]}
 				/>
-			</Form>
+			</div>
 			<Table
 				className={styles.table}
 				columns={columns}

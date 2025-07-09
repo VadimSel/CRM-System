@@ -36,6 +36,7 @@ export const SignUp = () => {
 				title: "Регистрация успешна",
 				content: "Перейти на страницу авторизации для входа в систему?",
 				okText: "Перейти",
+				centered: true,
 				onOk() {
 					navigate("/");
 				},

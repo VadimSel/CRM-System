@@ -2,3 +2,13 @@
 	width: 70vw;
 	margin-top: 20px;
 }
+
+.searchAndFilters {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+
+	.select {
+		width: 300px;
+	}
+}
