@@ -1,13 +1,15 @@
 import { Menu } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router";
 import { logoutApi } from "../api/authApi";
 import { logout } from "../store/loginSlice";
 import { accessTokenManager } from "../utils/accessTokenManager";
 import styles from "./SideBar.module.scss";
+import { RootState } from "../store/store";
 
 export const SideBar = () => {
 	const dispatch = useDispatch();
+	const isUserAdmin = useSelector((state: RootState) => state.isLoggedIn.isAdmin);
 
 	const location = useLocation();
 
@@ -29,7 +31,7 @@ export const SideBar = () => {
 	const menuItems = [
 		{ key: "1", label: <Link to={"profile"}>Личный кабинет</Link> },
 		{ key: "2", label: <Link to={"tasks"}>Список Задач</Link> },
-		{ key: "3", label: <Link to={"users"}>Пользователи</Link> },
+		isUserAdmin ? { key: "3", label: <Link to={"users"}>Пользователи</Link> } : null,
 		{ key: "4", label: <p onClick={() => logoutAcc()}>Выход</p> },
 	];
 

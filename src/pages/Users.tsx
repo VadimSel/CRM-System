@@ -20,10 +20,13 @@ import { blockUnlockTypes, Roles, User, UserFilters } from "../types/adminTypes"
 import { userFilters } from "../types/commonTypes";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import styles from "./Users.module.scss";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 export const Users = () => {
 	const [users, setUsers] = useState<User[]>([]);
 	const [isBockedValue, setIsBlockedValue] = useState<boolean | undefined>(undefined);
+	const isUserAdmin = useSelector((state: RootState) => state.isLoggedIn.isAdmin);
 	const { confirm } = Modal;
 	const navigate = useNavigate();
 
@@ -222,6 +225,7 @@ export const Users = () => {
 	};
 
 	useEffect(() => {
+		if (!isUserAdmin) navigate(-1);
 		getAllUsers({});
 	}, []);
 

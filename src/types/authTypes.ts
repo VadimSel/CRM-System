@@ -1,5 +1,6 @@
 export interface IsLoggedIn {
 	isLogged: boolean;
+	isAdmin: boolean
 }
 
 export interface SignInTypes {

@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
-import { refreshToken } from "./api/authApi";
+import { getProfile, refreshToken } from "./api/authApi";
 import "./App.css";
 import styles from "./App.module.scss";
 import { MainPage } from "./components/MainPage";
-import { PersonalLayout } from "./layouts/PersonalLayout";
 import { AuthLayout } from "./layouts/AuthLayout";
+import { PersonalLayout } from "./layouts/PersonalLayout";
 import { Profile } from "./pages/Profile";
 import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
+import { UserProfile } from "./pages/UserProfile";
+import { Users } from "./pages/Users";
 import { logged, logout } from "./store/loginSlice";
 import { accessTokenManager } from "./utils/accessTokenManager";
-import { Users } from "./pages/Users";
-import { UserProfile } from "./pages/UserProfile";
+import { Roles } from "./types/adminTypes";
 
 function App() {
 	const [isChecking, setIsChecking] = useState<boolean>(true);
@@ -24,7 +25,8 @@ function App() {
 			const res = await refreshToken(String(localStorage.getItem("refreshToken")));
 			accessTokenManager.setToken(res.accessToken);
 			localStorage.setItem("refreshToken", res.refreshToken);
-			dispatch(logged());
+			const profile = await getProfile();
+			dispatch(logged({ isAdmin: profile.roles.includes(Roles.ADMIN) }));
 		} catch {
 			dispatch(logout());
 		} finally {

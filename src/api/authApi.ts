@@ -1,5 +1,6 @@
  
 
+import { User } from "../types/adminTypes";
 import {
 	ProfileType,
 	SignInResponse,
@@ -23,7 +24,7 @@ export async function refreshToken(refreshToken: string): Promise<SignInResponse
 	return res.data;
 }
 
-export async function getProfile(): Promise<ProfileType> {
+export async function getProfile(): Promise<User> {
 	const res = await instance.get("/user/profile");
 	return res.data;
 }
