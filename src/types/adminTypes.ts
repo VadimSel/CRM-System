@@ -23,35 +23,16 @@ export interface User {
 	id: number;
 	username: string;
 	email: string;
-	date: string; // ISO date string
+	date: string;
 	isBlocked: boolean;
 	roles: Roles[];
 	phoneNumber: string;
 }
 
 export type blockUnlockTypes = "block" | "unblock";
-// Интерфейс метаинформации
 
-interface MetaResponse<T> {
-	data: T[];
-	meta: {
-		totalAmount: number;
-		sortBy: string;
-		sortOrder: "asc" | "desc";
-	};
-}
-// Интерфейс для обновления прав пользователя
 export interface UserRolesRequest {
-	roles: Roles[]; // при вызове этой апи роли будут обновлены к тому массиву который будет передан
-	// например если у вас была roles: ['ADMIN'] а вы хотите добавить ['MODERATOR'] то нужно передавать
-	// старые + новые - roles: ['ADMIN', 'MODERATOR']
-}
-
-// Интерфейс для обновления данных пользователя
-interface UserRequest {
-	username?: string;
-	email?: string;
-	phoneNumber?: string;
+	roles: Roles[];
 }
 
 export enum Roles {

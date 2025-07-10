@@ -125,9 +125,10 @@ export const Users = () => {
 		sorter,
 		_extra
 	) => {
-		const ord = sorter.order;
-		const sortBy = sorter.field;
-		const sortOrder = ord !== undefined ? ord.replace("end", "") : undefined;
+		const sort = Array.isArray(sorter) ? sorter[0] : sorter;
+		const ord = sort?.order;
+		const sortBy = String(sort?.field);
+		const sortOrder = ord === "ascend" ? "asc" : "desc";
 		await getAllUsers({ sortOrder, sortBy, isBlocked: isBockedValue });
 	};
 
