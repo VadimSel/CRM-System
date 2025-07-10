@@ -120,10 +120,10 @@ export const Users = () => {
 	};
 
 	const onChange: TableProps<User>["onChange"] = async (
-		pagination,
-		filter,
+		_pagination,
+		_filter,
 		sorter,
-		extra
+		_extra
 	) => {
 		const ord = sorter.order;
 		const sortBy = sorter.field;
