@@ -17,7 +17,7 @@ import {
 	updatesUserRights,
 } from "../api/adminApi";
 import { blockUnlockTypes, Roles, User, UserFilters } from "../types/adminTypes";
-import { userFilters } from "../types/commonTypes";
+import { updateUserRigthsTypes, userFilters } from "../types/commonTypes";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import styles from "./Users.module.scss";
 import { useSelector } from "react-redux";
@@ -32,24 +32,58 @@ export const Users = () => {
 
 	const { ALLUSERS, ONLYBLOCKEDUSERS, ONLYACTIVEUSERS } = userFilters;
 
-	const showConfirmation = (id: number, roles?: Roles[]) => {
+	// const showConfirmation = (id: number, roles?: Roles[]) => {
+	// 	confirm({
+	// 		title: `${
+	// 			roles
+	// 				? `${roles.includes(Roles.ADMIN) ? "Забрать" : "Дать"} роль админинстратора?`
+	// 				: "Удалить пользователя?"
+	// 		}`,
+	// 		okText: "Да",
+	// 		cancelText: "Отмена",
+	// 		centered: true,
+	// 		async onOk() {
+	// 			if (roles) {
+	// 				await setUserRights(id, roles);
+	// 			} else {
+	// 				await deleteUser(id);
+	// 			}
+	// 		},
+	// 	});
+	// };
+	const showUpdateUserRightsConfirmation = (
+		id: number,
+		selectedRole: Roles,
+		roles: Roles[],
+		action: updateUserRigthsTypes
+	) => {
 		confirm({
-			title: `${
-				roles
-					? `${roles.includes(Roles.ADMIN) ? "Забрать" : "Дать"} роль админинстратора?`
-					: "Удалить пользователя?"
-			}`,
+			title: `${action === "add" ? "Дать" : "Забрать"} роль ${selectedRole}?`,
 			okText: "Да",
 			cancelText: "Отмена",
 			centered: true,
 			async onOk() {
-				if (roles) {
-					await setAdminRights(id, roles);
-				} else {
-					await deleteUser(id);
-				}
+				await setUserRights(id, selectedRole, roles, action);
 			},
 		});
+
+		// confirm({
+		// 	title: `${
+		// 		roles
+		// 			? `${roles.includes(Roles.ADMIN) ? "Забрать" : "Дать"} роль админинстратора?`
+		// 			: "Удалить пользователя?"
+		// 	}`,
+		// 	okText: "Да",
+		// 	cancelText: "Отмена",
+		// 	centered: true,
+		// 	async onOk() {
+		// 		if (roles) {
+		// 			await setUserRights(id, roles);
+		// 		} else {
+		// 			await deleteUser(id);
+		// 		}
+		// 	},
+		// });
 	};
 
 	const deleteUser = async (id: number) => {
@@ -88,14 +122,18 @@ export const Users = () => {
 		});
 	};
 
-	const setAdminRights = async (id: number, roles: Roles[]) => {
-		const userRights = [...roles];
-		if (!userRights.includes(Roles.ADMIN)) {
+	const setUserRights = async (
+		id: number,
+		selectedRole: Roles,
+		roles: Roles[],
+		action: updateUserRigthsTypes
+	) => {
+		const userRights = [...roles, selectedRole];
+		if (action === "add") {
 			try {
-				userRights.push(Roles.ADMIN);
 				await updatesUserRights(id, { roles: userRights });
 				notification.success({
-					message: "Роль админинстратора добавлена",
+					message: `Роль ${selectedRole} добавлена`,
 					placement: "top",
 				});
 				getAllUsers({});
@@ -104,12 +142,12 @@ export const Users = () => {
 			}
 		} else {
 			try {
-				const removeAdmin = userRights.filter((el) => {
-					return el !== Roles.ADMIN;
+				const removeRole = userRights.filter((el) => {
+					return el !== selectedRole;
 				});
-				await updatesUserRights(id, { roles: removeAdmin });
+				await updatesUserRights(id, { roles: removeRole });
 				notification.success({
-					message: "Роль админинстратора убрана",
+					message: `Роль ${selectedRole} убрана`,
 					placement: "top",
 				});
 				getAllUsers({});
@@ -117,7 +155,65 @@ export const Users = () => {
 				ApiErrorHandler("updatesUserRights", error);
 			}
 		}
+		// if (!userRights.includes(newRole)) {
+		// 	try {
+		// 		userRights.push(newRole);
+		// 		await updatesUserRights(id, { roles: userRights });
+		// 		notification.success({
+		// 			message: "Роль админинстратора добавлена",
+		// 			placement: "top",
+		// 		});
+		// 		getAllUsers({});
+		// 	} catch (error) {
+		// 		ApiErrorHandler("updatesUserRights", error);
+		// 	}
+		// } else {
+		// 	try {
+		// 		const removeAdmin = userRights.filter((el) => {
+		// 			return el !== Roles.ADMIN;
+		// 		});
+		// 		await updatesUserRights(id, { roles: removeAdmin });
+		// 		notification.success({
+		// 			message: "Роль админинстратора убрана",
+		// 			placement: "top",
+		// 		});
+		// 		getAllUsers({});
+		// 	} catch (error) {
+		// 		ApiErrorHandler("updatesUserRights", error);
+		// 	}
+		// }
 	};
+
+	// const setUserRights = async (id: number, roles: Roles[]) => {
+	// 	const userRights = [...roles];
+	// 	if (!userRights.includes(Roles.ADMIN)) {
+	// 		try {
+	// 			userRights.push(Roles.ADMIN);
+	// 			await updatesUserRights(id, { roles: userRights });
+	// 			notification.success({
+	// 				message: "Роль админинстратора добавлена",
+	// 				placement: "top",
+	// 			});
+	// 			getAllUsers({});
+	// 		} catch (error) {
+	// 			ApiErrorHandler("updatesUserRights", error);
+	// 		}
+	// 	} else {
+	// 		try {
+	// 			const removeAdmin = userRights.filter((el) => {
+	// 				return el !== Roles.ADMIN;
+	// 			});
+	// 			await updatesUserRights(id, { roles: removeAdmin });
+	// 			notification.success({
+	// 				message: "Роль админинстратора убрана",
+	// 				placement: "top",
+	// 			});
+	// 			getAllUsers({});
+	// 		} catch (error) {
+	// 			ApiErrorHandler("updatesUserRights", error);
+	// 		}
+	// 	}
+	// };
 
 	const onChange: TableProps<User>["onChange"] = async (
 		_pagination,
@@ -192,12 +288,28 @@ export const Users = () => {
 		},
 		{
 			dataIndex: "id",
-			key: "setAdmin",
+			key: "setRole",
 			fixed: "right",
 			render: (id: number, record: User) => (
-				<Button onClick={() => showConfirmation(id, record.roles)}>
-					{record.roles.includes(Roles.ADMIN) ? "Забрать" : "Дать"} роль админа
-				</Button>
+				<>
+					<Button onClick={() => changeUserRole(id, record.roles, "add")}>
+						Дать роль
+					</Button>
+					<Button onClick={() => changeUserRole(id, record.roles, "remove")}>
+						Забрать роль
+					</Button>
+				</>
+				// <Select
+				// 	defaultValue={Roles.ADMIN}
+				// 	onChange={changeUserRole}
+				// 	options={[
+				// 		{ value: Roles.ADMIN, label: Roles.ADMIN },
+				// 		{ value: Roles.MODERATOR, label: Roles.MODERATOR },
+				// 	]}
+				// ></Select>
+				// <Button onClick={() => showConfirmation(id, record.roles)}>
+				// 	{record.roles.includes(Roles.ADMIN) ? "Забрать" : "Дать"} роль админа
+				// </Button>
 			),
 		},
 	];
@@ -223,6 +335,40 @@ export const Users = () => {
 			value === ONLYBLOCKEDUSERS ? true : value === ONLYACTIVEUSERS ? false : undefined;
 		setIsBlockedValue(filterValue);
 		await getAllUsers({ isBlocked: filterValue });
+	};
+
+	const changeUserRole = (id: number, roles: Roles[], action: updateUserRigthsTypes) => {
+		let selectedRole: Roles;
+		confirm({
+			title: "Выберите роль",
+			centered: true,
+			content: (
+				<Select
+					onChange={(value) => (selectedRole = value)}
+					options={[
+						{
+							value: Roles.ADMIN,
+							label: Roles.ADMIN,
+							disabled:
+								action === "add"
+									? roles.includes(Roles.ADMIN)
+									: !roles.includes(Roles.ADMIN),
+						},
+						{
+							value: Roles.MODERATOR,
+							label: Roles.MODERATOR,
+							disabled:
+								action === "add"
+									? roles.includes(Roles.MODERATOR)
+									: !roles.includes(Roles.MODERATOR),
+						},
+					]}
+				/>
+			),
+			onOk() {
+				showUpdateUserRightsConfirmation(id, selectedRole, roles, action);
+			},
+		});
 	};
 
 	useEffect(() => {

@@ -16,8 +16,10 @@ export type RequestTypes =
 	| "blockUnblockUser"
 	| "updatesUserRights";
 
-	export enum userFilters {
-		ALLUSERS = "Все пользователи",
-		ONLYBLOCKEDUSERS = "Только заблокированные пользователи",
-		ONLYACTIVEUSERS = "Только активные пользователи"
-	}
+export enum userFilters {
+	ALLUSERS = "Все пользователи",
+	ONLYBLOCKEDUSERS = "Только заблокированные пользователи",
+	ONLYACTIVEUSERS = "Только активные пользователи",
+}
+
+export type updateUserRigthsTypes = "add" | "remove";
