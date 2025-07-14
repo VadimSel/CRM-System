@@ -1,5 +1,5 @@
 import { Button, Form, Input, notification } from "antd";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { getUserProfile, updateUserInfo } from "../api/adminApi";
 import {
@@ -67,10 +67,6 @@ export const UserProfile = () => {
 		}
 	};
 
-	const phoneNumberHandler = (e: string) => {
-		form.setFieldValue("phoneNumber", "+" + e.replace(/\D/g, ""));
-	};
-
 	useEffect(() => {
 		getUserInfo();
 	}, []);
@@ -136,17 +132,10 @@ export const UserProfile = () => {
 						<Form.Item
 							name="phoneNumber"
 							rules={[
-								{ required: true, message: "Введте номер телефона" },
-								{ min: phoneLength, message: "Введите номер телефона" },
+								{ min: phoneLength, message: "Введите номер телефона начиная с +" },
 							]}
 						>
-							<Input
-								placeholder="Номер телефона"
-								maxLength={phoneLength}
-								onChange={(e: ChangeEvent<HTMLInputElement>) => {
-									phoneNumberHandler(e.currentTarget.value);
-								}}
-							/>
+							<Input placeholder="Номер телефона" maxLength={phoneLength} />
 						</Form.Item>
 					) : (
 						<span>{userInfo?.phoneNumber}</span>

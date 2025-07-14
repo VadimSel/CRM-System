@@ -5,7 +5,7 @@ import { store } from "../store/store";
 import { RequestTypes } from "../types/commonTypes";
 
 const adminUserErrors = {
-	400: "Логин или email уже существует",
+	400: "Некорректные данные",
 	401: "Доступ запрещён. Токен отсутствует или недействителен",
 	403: "Недостаточно прав",
 	404: "Пользователь не найден",
@@ -56,8 +56,8 @@ const err: Record<string, Record<number, string>> = {
 	},
 	updatesUserRights: {
 		400: "Нет такого поля",
-		404: "Пользователь не найден"
-	}
+		404: "Пользователь не найден",
+	},
 };
 
 export const ApiErrorHandler = async (request: RequestTypes, error: unknown) => {
