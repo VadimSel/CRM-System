@@ -9,6 +9,7 @@ import {
 	TableProps,
 } from "antd";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import {
 	blockUnblockUserApi,
@@ -16,12 +17,11 @@ import {
 	removeUser,
 	updatesUserRights,
 } from "../api/adminApi";
+import { RootState } from "../store/store";
 import { blockUnlockTypes, Roles, User, UserFilters } from "../types/adminTypes";
 import { updateUserRigthsTypes, userFilters } from "../types/commonTypes";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import styles from "./Users.module.scss";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
 
 export const Users = () => {
 	const [users, setUsers] = useState<User[]>([]);
@@ -31,26 +31,6 @@ export const Users = () => {
 	const navigate = useNavigate();
 
 	const { ALLUSERS, ONLYBLOCKEDUSERS, ONLYACTIVEUSERS } = userFilters;
-
-	// const showConfirmation = (id: number, roles?: Roles[]) => {
-	// 	confirm({
-	// 		title: `${
-	// 			roles
-	// 				? `${roles.includes(Roles.ADMIN) ? "Забрать" : "Дать"} роль админинстратора?`
-	// 				: "Удалить пользователя?"
-	// 		}`,
-	// 		okText: "Да",
-	// 		cancelText: "Отмена",
-	// 		centered: true,
-	// 		async onOk() {
-	// 			if (roles) {
-	// 				await setUserRights(id, roles);
-	// 			} else {
-	// 				await deleteUser(id);
-	// 			}
-	// 		},
-	// 	});
-	// };
 	const showUpdateUserRightsConfirmation = (
 		id: number,
 		selectedRole: Roles,
@@ -66,24 +46,18 @@ export const Users = () => {
 				await setUserRights(id, selectedRole, roles, action);
 			},
 		});
+	};
 
-		// confirm({
-		// 	title: `${
-		// 		roles
-		// 			? `${roles.includes(Roles.ADMIN) ? "Забрать" : "Дать"} роль админинстратора?`
-		// 			: "Удалить пользователя?"
-		// 	}`,
-		// 	okText: "Да",
-		// 	cancelText: "Отмена",
-		// 	centered: true,
-		// 	async onOk() {
-		// 		if (roles) {
-		// 			await setUserRights(id, roles);
-		// 		} else {
-		// 			await deleteUser(id);
-		// 		}
-		// 	},
-		// });
+	const showDeleteUserConfirmation = (id: number) => {
+		confirm({
+			title: "Удалить пользователя?",
+			okText: "Да",
+			cancelText: "Отмена",
+			centered: true,
+			async onOk() {
+				await deleteUser(id);
+			},
+		});
 	};
 
 	const deleteUser = async (id: number) => {
@@ -155,65 +129,7 @@ export const Users = () => {
 				ApiErrorHandler("updatesUserRights", error);
 			}
 		}
-		// if (!userRights.includes(newRole)) {
-		// 	try {
-		// 		userRights.push(newRole);
-		// 		await updatesUserRights(id, { roles: userRights });
-		// 		notification.success({
-		// 			message: "Роль админинстратора добавлена",
-		// 			placement: "top",
-		// 		});
-		// 		getAllUsers({});
-		// 	} catch (error) {
-		// 		ApiErrorHandler("updatesUserRights", error);
-		// 	}
-		// } else {
-		// 	try {
-		// 		const removeAdmin = userRights.filter((el) => {
-		// 			return el !== Roles.ADMIN;
-		// 		});
-		// 		await updatesUserRights(id, { roles: removeAdmin });
-		// 		notification.success({
-		// 			message: "Роль админинстратора убрана",
-		// 			placement: "top",
-		// 		});
-		// 		getAllUsers({});
-		// 	} catch (error) {
-		// 		ApiErrorHandler("updatesUserRights", error);
-		// 	}
-		// }
 	};
-
-	// const setUserRights = async (id: number, roles: Roles[]) => {
-	// 	const userRights = [...roles];
-	// 	if (!userRights.includes(Roles.ADMIN)) {
-	// 		try {
-	// 			userRights.push(Roles.ADMIN);
-	// 			await updatesUserRights(id, { roles: userRights });
-	// 			notification.success({
-	// 				message: "Роль админинстратора добавлена",
-	// 				placement: "top",
-	// 			});
-	// 			getAllUsers({});
-	// 		} catch (error) {
-	// 			ApiErrorHandler("updatesUserRights", error);
-	// 		}
-	// 	} else {
-	// 		try {
-	// 			const removeAdmin = userRights.filter((el) => {
-	// 				return el !== Roles.ADMIN;
-	// 			});
-	// 			await updatesUserRights(id, { roles: removeAdmin });
-	// 			notification.success({
-	// 				message: "Роль админинстратора убрана",
-	// 				placement: "top",
-	// 			});
-	// 			getAllUsers({});
-	// 		} catch (error) {
-	// 			ApiErrorHandler("updatesUserRights", error);
-	// 		}
-	// 	}
-	// };
 
 	const onChange: TableProps<User>["onChange"] = async (
 		_pagination,
@@ -269,7 +185,7 @@ export const Users = () => {
 			key: "delete",
 			fixed: "right",
 			render: (id: number) => (
-				<Button danger onClick={() => showConfirmation(id)}>
+				<Button danger onClick={() => showDeleteUserConfirmation(id)}>
 					Удалить
 				</Button>
 			),
@@ -299,17 +215,6 @@ export const Users = () => {
 						Забрать роль
 					</Button>
 				</>
-				// <Select
-				// 	defaultValue={Roles.ADMIN}
-				// 	onChange={changeUserRole}
-				// 	options={[
-				// 		{ value: Roles.ADMIN, label: Roles.ADMIN },
-				// 		{ value: Roles.MODERATOR, label: Roles.MODERATOR },
-				// 	]}
-				// ></Select>
-				// <Button onClick={() => showConfirmation(id, record.roles)}>
-				// 	{record.roles.includes(Roles.ADMIN) ? "Забрать" : "Дать"} роль админа
-				// </Button>
 			),
 		},
 	];
