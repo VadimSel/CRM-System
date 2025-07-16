@@ -29,8 +29,10 @@ export const Users = () => {
 	const isUserAdmin = useSelector((state: RootState) => state.isLoggedIn.isAdmin);
 	const { confirm } = Modal;
 	const navigate = useNavigate();
-	const [params, setParams] = useSearchParams();
-	const [searchInputValue, setSearchInputValue] = useState(params.get("search") ?? "");
+	const [searchParams, setSearchParams] = useSearchParams();
+	const [searchInputValue, setSearchInputValue] = useState(
+		searchParams.get("search") ?? ""
+	);
 
 	const { ALLUSERS, ONLYBLOCKEDUSERS, ONLYACTIVEUSERS } = userFilters;
 	const showUpdateUserRightsConfirmation = (
@@ -144,6 +146,20 @@ export const Users = () => {
 		const sortBy = String(sort?.field);
 		const sortOrder = ord === "ascend" ? "asc" : "desc";
 		await getAllUsers({ sortOrder, sortBy, isBlocked: isBockedValue });
+		setSearchParams((prev) => {
+			const newParams = new URLSearchParams(prev);
+			if (sortBy) {
+				newParams.set("sortBy", sortBy);
+			} else {
+				newParams.delete("sortBy");
+			}
+			if (sortOrder) {
+				newParams.set("sortOrder", sortOrder);
+			} else {
+				newParams.delete("sortOrder");
+			}
+			return newParams;
+		});
 	};
 
 	const columns: TableProps<User>["columns"] = [
@@ -240,9 +256,19 @@ export const Users = () => {
 	const changeUserFilter = async (value: string) => {
 		const filterValue =
 			value === ONLYBLOCKEDUSERS ? true : value === ONLYACTIVEUSERS ? false : undefined;
-		setParams({});
-		setIsBlockedValue(filterValue);
-		await getAllUsers({ isBlocked: filterValue });
+		setSearchParams((prev) => {
+			const newParams = new URLSearchParams(prev);
+			if (filterValue?.valueOf) {
+				newParams.set("isBlocked", String(filterValue));
+			} else {
+				newParams.delete("isBlocked");
+			}
+			return newParams;
+		});
+		const isBlocked = searchParams.get("isBlocked");
+		setIsBlockedValue(
+			isBlocked === "true" ? true : isBlocked === "false" ? false : filterValue
+		);
 	};
 
 	const changeUserRole = (id: number, roles: Roles[], action: updateUserRigthsTypes) => {
@@ -281,17 +307,25 @@ export const Users = () => {
 
 	useEffect(() => {
 		if (!isUserAdmin) navigate(-1);
-		const filters: UserFilters = {};
-		const searchValue = params.get("search");
-		if (searchValue) {
-			filters.search = searchValue;
-		}
-		if (searchValue) {
-			getAllUsers({ search: searchValue });
-		} else {
-			getAllUsers({});
-		}
-	}, []);
+		const searchValue = searchParams.get("search") ?? undefined;
+		const isBlocked = searchParams.get("isBlocked");
+		const isBlockedValue =
+			isBlocked === "true" ? true : isBlocked === "false" ? false : undefined;
+		const sortBy = searchParams.get("sortBy") ?? undefined;
+		const sortOrder =
+			searchParams.get("sortOrder") === "asc"
+				? "asc"
+				: searchParams.get("sortOrder") === "desc"
+				? "desc"
+				: undefined;
+		const filters: UserFilters = {
+			search: searchValue,
+			isBlocked: isBlockedValue,
+			sortBy,
+			sortOrder,
+		};
+		getAllUsers(filters);
+	}, [searchParams]);
 
 	return (
 		<div>
@@ -306,16 +340,27 @@ export const Users = () => {
 						}
 						onPressEnter={(e) => {
 							const searchValue = e.currentTarget.value;
-							getAllUsers({
-								search: searchValue,
+							setSearchParams((prev) => {
+								const newParams = new URLSearchParams(prev);
+								if (searchValue) {
+									newParams.set("search", searchValue);
+								} else {
+									newParams.delete("search");
+								}
+								return newParams;
 							});
-							setParams({ search: e.currentTarget.value });
 						}}
 					/>
 				</Form>
 				<Select
 					className={styles.select}
-					defaultValue={ALLUSERS}
+					defaultValue={
+						searchParams.get("isBlocked") === "true"
+							? ONLYBLOCKEDUSERS
+							: searchParams.get("isBlocked") === "false"
+							? ONLYACTIVEUSERS
+							: ALLUSERS
+					}
 					onChange={changeUserFilter}
 					options={[
 						{ value: ALLUSERS, label: ALLUSERS },
