@@ -8,9 +8,9 @@ import {
 	Table,
 	TableProps,
 } from "antd";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import {
 	blockUnblockUserApi,
 	getUsers,
@@ -29,6 +29,8 @@ export const Users = () => {
 	const isUserAdmin = useSelector((state: RootState) => state.isLoggedIn.isAdmin);
 	const { confirm } = Modal;
 	const navigate = useNavigate();
+	const [params, setParams] = useSearchParams();
+	const [searchInputValue, setSearchInputValue] = useState(params.get("search"));
 
 	const { ALLUSERS, ONLYBLOCKEDUSERS, ONLYACTIVEUSERS } = userFilters;
 	const showUpdateUserRightsConfirmation = (
@@ -278,7 +280,16 @@ export const Users = () => {
 
 	useEffect(() => {
 		if (!isUserAdmin) navigate(-1);
-		getAllUsers({});
+		const filters: UserFilters = {};
+		const searchValue = params.get("search");
+		if (searchValue) {
+			filters.search = searchValue;
+		}
+		if (searchValue) {
+			getAllUsers({ search: searchValue });
+		} else {
+			getAllUsers({});
+		}
 	}, []);
 
 	return (
@@ -288,7 +299,17 @@ export const Users = () => {
 					<></>
 					<Input
 						placeholder="Поиск"
-						onPressEnter={(e) => getAllUsers({ search: e.currentTarget.value })}
+						value={String(searchInputValue)}
+						onChange={(e: ChangeEvent<HTMLInputElement>) =>
+							setSearchInputValue(e.currentTarget.value)
+						}
+						onPressEnter={(e) => {
+							const searchValue = e.currentTarget.value;
+							getAllUsers({
+								search: searchValue,
+							});
+							setParams({ search: e.currentTarget.value });
+						}}
 					/>
 				</Form>
 				<Select
