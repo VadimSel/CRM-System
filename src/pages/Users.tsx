@@ -30,7 +30,7 @@ export const Users = () => {
 	const { confirm } = Modal;
 	const navigate = useNavigate();
 	const [params, setParams] = useSearchParams();
-	const [searchInputValue, setSearchInputValue] = useState(params.get("search"));
+	const [searchInputValue, setSearchInputValue] = useState(params.get("search") ?? "");
 
 	const { ALLUSERS, ONLYBLOCKEDUSERS, ONLYACTIVEUSERS } = userFilters;
 	const showUpdateUserRightsConfirmation = (
@@ -240,6 +240,7 @@ export const Users = () => {
 	const changeUserFilter = async (value: string) => {
 		const filterValue =
 			value === ONLYBLOCKEDUSERS ? true : value === ONLYACTIVEUSERS ? false : undefined;
+		setParams({});
 		setIsBlockedValue(filterValue);
 		await getAllUsers({ isBlocked: filterValue });
 	};
