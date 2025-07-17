@@ -25,7 +25,6 @@ import styles from "./Users.module.scss";
 
 export const Users = () => {
 	const [users, setUsers] = useState<User[]>([]);
-	const [isBockedValue, setIsBlockedValue] = useState<boolean | undefined>(undefined);
 	const isUserAdmin = useSelector((state: RootState) => state.isLoggedIn.isAdmin);
 	const { confirm } = Modal;
 	const navigate = useNavigate();
@@ -135,21 +134,15 @@ export const Users = () => {
 		}
 	};
 
-	const onChange: TableProps<User>["onChange"] = async (
-		_pagination,
-		_filter,
-		sorter,
-		_extra
-	) => {
+	const onChange: TableProps<User>["onChange"] = async (_pagination, _filter, sorter) => {
 		const sort = Array.isArray(sorter) ? sorter[0] : sorter;
 		const ord = sort?.order;
-		const sortBy = String(sort?.field);
+		const sortBy = sort?.field;
 		const sortOrder = ord === "ascend" ? "asc" : "desc";
-		await getAllUsers({ sortOrder, sortBy, isBlocked: isBockedValue });
 		setSearchParams((prev) => {
 			const newParams = new URLSearchParams(prev);
 			if (sortBy) {
-				newParams.set("sortBy", sortBy);
+				newParams.set("sortBy", String(sortBy));
 			} else {
 				newParams.delete("sortBy");
 			}
@@ -265,10 +258,6 @@ export const Users = () => {
 			}
 			return newParams;
 		});
-		const isBlocked = searchParams.get("isBlocked");
-		setIsBlockedValue(
-			isBlocked === "true" ? true : isBlocked === "false" ? false : filterValue
-		);
 	};
 
 	const changeUserRole = (id: number, roles: Roles[], action: updateUserRigthsTypes) => {
