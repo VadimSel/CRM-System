@@ -33,6 +33,27 @@ export const Users = () => {
 		searchParams.get("search") ?? ""
 	);
 
+	const getFilters = () => {
+		const searchValue = searchParams.get("search") ?? undefined;
+		const isBlocked = searchParams.get("isBlocked");
+		const isBlockedValue =
+			isBlocked === "true" ? true : isBlocked === "false" ? false : undefined;
+		const sortBy = searchParams.get("sortBy") ?? undefined;
+		const sortOrder =
+			searchParams.get("sortOrder") === "asc"
+				? "asc"
+				: searchParams.get("sortOrder") === "desc"
+				? "desc"
+				: undefined;
+		const filters: UserFilters = {
+			search: searchValue,
+			isBlocked: isBlockedValue,
+			sortBy,
+			sortOrder,
+		};
+		return filters;
+	};
+
 	const { ALLUSERS, ONLYBLOCKEDUSERS, ONLYACTIVEUSERS } = userFilters;
 	const showUpdateUserRightsConfirmation = (
 		id: number,
@@ -91,7 +112,7 @@ export const Users = () => {
 						}`,
 						placement: "top",
 					});
-					getAllUsers({});
+					getAllUsers(getFilters());
 				} catch (error) {
 					ApiErrorHandler("blockUnblockUser", error);
 				}
@@ -296,24 +317,25 @@ export const Users = () => {
 
 	useEffect(() => {
 		if (!isUserAdmin) navigate(-1);
-		const searchValue = searchParams.get("search") ?? undefined;
-		const isBlocked = searchParams.get("isBlocked");
-		const isBlockedValue =
-			isBlocked === "true" ? true : isBlocked === "false" ? false : undefined;
-		const sortBy = searchParams.get("sortBy") ?? undefined;
-		const sortOrder =
-			searchParams.get("sortOrder") === "asc"
-				? "asc"
-				: searchParams.get("sortOrder") === "desc"
-				? "desc"
-				: undefined;
-		const filters: UserFilters = {
-			search: searchValue,
-			isBlocked: isBlockedValue,
-			sortBy,
-			sortOrder,
-		};
-		getAllUsers(filters);
+		// const searchValue = searchParams.get("search") ?? undefined;
+		// const isBlocked = searchParams.get("isBlocked");
+		// const isBlockedValue =
+		// 	isBlocked === "true" ? true : isBlocked === "false" ? false : undefined;
+		// const sortBy = searchParams.get("sortBy") ?? undefined;
+		// const sortOrder =
+		// 	searchParams.get("sortOrder") === "asc"
+		// 		? "asc"
+		// 		: searchParams.get("sortOrder") === "desc"
+		// 		? "desc"
+		// 		: undefined;
+		// const filters: UserFilters = {
+		// 	search: searchValue,
+		// 	isBlocked: isBlockedValue,
+		// 	sortBy,
+		// 	sortOrder,
+		// };
+		// getAllUsers(filters);
+		getAllUsers(getFilters());
 	}, [searchParams]);
 
 	return (
