@@ -91,7 +91,7 @@ export const Users = () => {
 				message: "Пользователь удалён",
 				placement: "top",
 			});
-			getAllUsers({});
+			getAllUsers(getFilters());
 		} catch (error) {
 			ApiErrorHandler("adminDeleteUser", error);
 		}
@@ -134,7 +134,7 @@ export const Users = () => {
 					message: `Роль ${selectedRole} добавлена`,
 					placement: "top",
 				});
-				getAllUsers({});
+				getAllUsers(getFilters());
 			} catch (error) {
 				ApiErrorHandler("updatesUserRights", error);
 			}
@@ -148,7 +148,7 @@ export const Users = () => {
 					message: `Роль ${selectedRole} убрана`,
 					placement: "top",
 				});
-				getAllUsers({});
+				getAllUsers(getFilters());
 			} catch (error) {
 				ApiErrorHandler("updatesUserRights", error);
 			}
@@ -288,6 +288,7 @@ export const Users = () => {
 			centered: true,
 			content: (
 				<Select
+					className={styles.changeUserRoleSelect}
 					onChange={(value) => (selectedRole = value)}
 					options={[
 						{
@@ -306,6 +307,14 @@ export const Users = () => {
 									? roles.includes(Roles.MODERATOR)
 									: !roles.includes(Roles.MODERATOR),
 						},
+						{
+							value: Roles.USER,
+							label: Roles.USER,
+							disabled:
+								action === "add"
+									? roles.includes(Roles.USER)
+									: !roles.includes(Roles.USER),
+						},
 					]}
 				/>
 			),
@@ -317,24 +326,6 @@ export const Users = () => {
 
 	useEffect(() => {
 		if (!isUserAdmin) navigate(-1);
-		// const searchValue = searchParams.get("search") ?? undefined;
-		// const isBlocked = searchParams.get("isBlocked");
-		// const isBlockedValue =
-		// 	isBlocked === "true" ? true : isBlocked === "false" ? false : undefined;
-		// const sortBy = searchParams.get("sortBy") ?? undefined;
-		// const sortOrder =
-		// 	searchParams.get("sortOrder") === "asc"
-		// 		? "asc"
-		// 		: searchParams.get("sortOrder") === "desc"
-		// 		? "desc"
-		// 		: undefined;
-		// const filters: UserFilters = {
-		// 	search: searchValue,
-		// 	isBlocked: isBlockedValue,
-		// 	sortBy,
-		// 	sortOrder,
-		// };
-		// getAllUsers(filters);
 		getAllUsers(getFilters());
 	}, [searchParams]);
 
