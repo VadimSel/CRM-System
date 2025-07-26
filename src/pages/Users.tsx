@@ -318,7 +318,14 @@ export const Users = () => {
 					]}
 				/>
 			),
-			onOk() {
+			async onOk() {
+				if (!selectedRole) {
+					notification.error({
+						message: "Выберите роль",
+						placement: "top",
+					});
+					return Promise.reject();
+				}
 				showUpdateUserRightsConfirmation(id, selectedRole, roles, action);
 			},
 		});
