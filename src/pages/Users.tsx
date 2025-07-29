@@ -29,7 +29,7 @@ export const Users = () => {
 	const { confirm } = Modal;
 	const navigate = useNavigate();
 	const [searchParams, setSearchParams] = useSearchParams();
-	const [searchInputValue, setSearchInputValue] = useState(
+	const [searchInputValue, setSearchInputValue] = useState<string>(
 		searchParams.get("search") ?? ""
 	);
 
@@ -332,8 +332,11 @@ export const Users = () => {
 	};
 
 	useEffect(() => {
-		if (!isUserAdmin) navigate(-1);
-		getAllUsers(getFilters());
+		if (!isUserAdmin) {
+			navigate(-1);
+		} else {
+			getAllUsers(getFilters());
+		}
 	}, [searchParams]);
 
 	return (
