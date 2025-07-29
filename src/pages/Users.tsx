@@ -343,7 +343,6 @@ export const Users = () => {
 		<div>
 			<div className={styles.searchAndFilters}>
 				<Form>
-					<></>
 					<Input
 						placeholder="Поиск"
 						value={String(searchInputValue)}
