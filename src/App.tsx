@@ -10,7 +10,7 @@ import { PersonalLayout } from "./layouts/PersonalLayout";
 import { Profile } from "./pages/Profile";
 import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
-import { UserProfile } from "./pages/UserProfile";
+import { UserProfilePage } from "./pages/UserProfilePage";
 import { Users } from "./pages/Users";
 import { logged, logout } from "./store/loginSlice";
 import { accessTokenManager } from "./utils/accessTokenManager";
@@ -57,7 +57,7 @@ function App() {
 						<Route path="profile" element={<Profile />} />
 						<Route path="tasks" element={<MainPage />} />
 						<Route path="users" element={<Users />} />
-						<Route path="userProfile/:id" element={<UserProfile />}></Route>
+						<Route path="userProfile/:id" element={<UserProfilePage />}></Route>
 					</Route>
 
 					<Route path="*" element={<Navigate to="/" replace />} />

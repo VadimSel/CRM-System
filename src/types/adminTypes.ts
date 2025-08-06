@@ -40,3 +40,9 @@ export enum Roles {
 	MODERATOR = "MODERATOR",
 	USER = "USER",
 }
+
+export interface userNewDataTypes {
+	email?: string;
+	phoneNumber?: string;
+	username?: string;
+}

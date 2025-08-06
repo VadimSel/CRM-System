@@ -3,6 +3,7 @@ import {
 	GetUsers,
 	User,
 	UserFilters,
+	userNewDataTypes,
 	UserRolesRequest,
 } from "../types/adminTypes";
 import { instance } from "./axiosInstance";
@@ -28,11 +29,9 @@ export async function getUserProfile(id: number): Promise<User> {
 
 export async function updateUserInfo(
 	id: number,
-	email?: string,
-	phoneNumber?: string,
-	username?: string
+	userNewData: userNewDataTypes
 ): Promise<User> {
-	return await instance.put(`/admin/users/${id}`, { email, phoneNumber, username });
+	return await instance.put(`/admin/users/${id}`, userNewData);
 }
 
 export async function removeUser(id: number): Promise<void> {

@@ -11,7 +11,7 @@ import {
 import { User } from "../types/adminTypes";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 
-export const UserProfile = () => {
+export const UserProfilePage = () => {
 	const navigate = useNavigate();
 
 	const [userInfo, setUserInfo] = useState<User>();
@@ -31,28 +31,30 @@ export const UserProfile = () => {
 		}
 	};
 
+	const comparUserData = (oldUserData: User, newUserData: Partial<User>) => {
+		const data: Record<string, unknown> = {};
+
+		Object.keys(newUserData).forEach((key) => {
+			const newValue = newUserData[key as keyof User];
+			const oldValue = oldUserData[key as keyof User];
+			if (newValue !== oldValue) {
+				data[key] = newValue;
+			} else {
+				return;
+			}
+		});
+		return data;
+	};
+
 	const saveUserNewInfo = async (newUserInfo: Partial<User>) => {
 		if (userInfo) {
-			const newData: Partial<User> = {};
+			let newData: Partial<User> = {};
 
-			if (newUserInfo.email !== userInfo.email) {
-				newData.email = newUserInfo.email;
-			}
-			if (newUserInfo.phoneNumber !== userInfo.phoneNumber) {
-				newData.phoneNumber = newUserInfo.phoneNumber;
-			}
-			if (newUserInfo.username !== userInfo.username) {
-				newData.username = newUserInfo.username;
-			}
+			newData = comparUserData(userInfo, newUserInfo);
 
 			try {
 				setIsLoading(true);
-				await updateUserInfo(
-					idValue,
-					newData.email,
-					newData.phoneNumber,
-					newData.username
-				);
+				await updateUserInfo(idValue, newData);
 				notification.success({
 					message: "Данные обновлены",
 					placement: "top",
