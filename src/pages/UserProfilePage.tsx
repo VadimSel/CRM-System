@@ -1,4 +1,4 @@
-import { Button, Form, Input, notification } from "antd";
+import { Button, Col, Form, Input, notification, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { getUserProfile, updateUserInfo } from "../api/adminApi";
@@ -13,6 +13,7 @@ import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 
 export const UserProfilePage = () => {
 	const navigate = useNavigate();
+	const { Text } = Typography;
 
 	const [userInfo, setUserInfo] = useState<User>();
 	const [isDataEdit, setIsDataEdit] = useState<boolean>(false);
@@ -73,89 +74,76 @@ export const UserProfilePage = () => {
 		getUserInfo();
 	}, []);
 
-	useEffect(() => {
-		if (userInfo) {
-			form.setFieldsValue({
-				username: userInfo.username,
-				email: userInfo.email,
-				phoneNumber: userInfo.phoneNumber,
-			});
-		}
-	}, [userInfo]);
-
 	return (
-		<div>
-			<Form form={form} onFinish={(value) => saveUserNewInfo(value)}>
-				<div>
-					<span>Имя пользователя: </span>
-					{isDataEdit ? (
-						<Form.Item
-							name="username"
-							rules={[
-								{ required: true, message: "Введите имя" },
-								{
-									min: minUserNameLength,
-									message: `Минимум ${minUserNameLength} символ`,
-									whitespace: true,
-								},
-								{
-									pattern: new RegExp(userNameValidation),
-									message: "Только русские/латинские символы",
-								},
-							]}
-						>
-							<Input placeholder="Имя пользователя" maxLength={maxUserNameLength} />
-						</Form.Item>
-					) : (
-						<span>{userInfo?.username}</span>
-					)}
-				</div>
-				<div>
-					<div>
-						<span>Email пользователя: </span>
-						{isDataEdit ? (
-							<Form.Item
-								name="email"
-								rules={[
-									{ required: true, message: "Введите email" },
-									{ type: "email", message: "Введите корректный email" },
-								]}
-							>
-								<Input placeholder="Email" />
-							</Form.Item>
-						) : (
-							<span>{userInfo?.email}</span>
-						)}
-					</div>
-				</div>
-				<div>
-					<span>Номер телефона: </span>
-					{isDataEdit ? (
-						<Form.Item
-							name="phoneNumber"
-							rules={[
-								{ min: phoneLength, message: "Введите номер телефона начиная с +" },
-							]}
-						>
-							<Input placeholder="Номер телефона" maxLength={phoneLength} />
-						</Form.Item>
-					) : (
-						<span>{userInfo?.phoneNumber}</span>
-					)}
-				</div>
+		<Form form={form} id="formSubmit" onFinish={saveUserNewInfo}>
+			<Col>
+				<Text>Имя пользователя: </Text>
 				{isDataEdit ? (
-					<Button onClick={() => form.submit()} loading={isLoading}>
-						Сохранить
-					</Button>
+					<Form.Item
+						name="username"
+						initialValue={userInfo?.username}
+						rules={[
+							{ required: true, message: "Введите имя" },
+							{
+								min: minUserNameLength,
+								message: `Минимум ${minUserNameLength} символ`,
+								whitespace: true,
+							},
+							{
+								pattern: new RegExp(userNameValidation),
+								message: "Только русские/латинские символы",
+							},
+						]}
+					>
+						<Input placeholder="Имя пользователя" maxLength={maxUserNameLength} />
+					</Form.Item>
 				) : (
-					<Button htmlType="button" onClick={() => setIsDataEdit(true)}>
-						Редактировать
-					</Button>
+					<Text>{userInfo?.username}</Text>
 				)}
-				<Button htmlType="button" onClick={() => navigate(-1)}>
-					Вернутся назад
+			</Col>
+			<Col>
+				<Text>Email пользователя: </Text>
+				{isDataEdit ? (
+					<Form.Item
+						name="email"
+						initialValue={userInfo?.email}
+						rules={[
+							{ required: true, message: "Введите email" },
+							{ type: "email", message: "Введите корректный email" },
+						]}
+					>
+						<Input placeholder="Email" />
+					</Form.Item>
+				) : (
+					<Text>{userInfo?.email}</Text>
+				)}
+			</Col>
+			<Col>
+				<Text>Номер телефона: </Text>
+				{isDataEdit ? (
+					<Form.Item
+						name="phoneNumber"
+						initialValue={userInfo?.phoneNumber}
+						rules={[{ min: phoneLength, message: "Введите номер телефона начиная с +" }]}
+					>
+						<Input placeholder="Номер телефона" maxLength={phoneLength} />
+					</Form.Item>
+				) : (
+					<Text>{userInfo?.phoneNumber}</Text>
+				)}
+			</Col>
+			{isDataEdit ? (
+				<Button onClick={() => form.submit()} form="formSubmit" loading={isLoading}>
+					Сохранить
 				</Button>
-			</Form>
-		</div>
+			) : (
+				<Button htmlType="button" onClick={() => setIsDataEdit(true)}>
+					Редактировать
+				</Button>
+			)}
+			<Button htmlType="button" onClick={() => navigate(-1)}>
+				Вернутся назад
+			</Button>
+		</Form>
 	);
 };

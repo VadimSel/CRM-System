@@ -22,6 +22,7 @@ import { blockUnlockTypes, Roles, User, UserFilters } from "../types/adminTypes"
 import { updateUserRigthsTypes, userFilters } from "../types/commonTypes";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import styles from "./Users.module.scss";
+import { format } from "date-fns";
 
 export const Users = () => {
 	const [users, setUsers] = useState<User[]>([]);
@@ -189,7 +190,7 @@ export const Users = () => {
 			title: "Дата регистрации",
 			dataIndex: "date",
 			key: "date",
-			render: (date: string) => new Date(date).toLocaleDateString(),
+			render: (date: string) => format(new Date(date), "dd/mm/yyyy"),
 		},
 		{
 			title: "Статус блокировки",
@@ -340,7 +341,7 @@ export const Users = () => {
 	}, [searchParams]);
 
 	return (
-		<div>
+		<div className={styles.container}>
 			<div className={styles.searchAndFilters}>
 				<Form>
 					<Input
