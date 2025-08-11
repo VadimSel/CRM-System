@@ -1,10 +1,12 @@
 import {
 	Button,
+	Dropdown,
 	Form,
 	Input,
 	Modal,
 	notification,
 	Select,
+	Space,
 	Table,
 	TableProps,
 } from "antd";
@@ -23,6 +25,7 @@ import { updateUserRigthsTypes, userFilters } from "../types/commonTypes";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import styles from "./Users.module.scss";
 import { format } from "date-fns";
+import { MoreOutlined } from "@ant-design/icons";
 
 export const Users = () => {
 	const [users, setUsers] = useState<User[]>([]);
@@ -205,6 +208,71 @@ export const Users = () => {
 			render: (roles: Roles[]) => roles.join(", "),
 		},
 		{ title: "Номер телефона", dataIndex: "phoneNumber", key: "phoneNumber", width: 150 },
+		// {
+		// 	dataIndex: "id",
+		// 	key: "profile",
+		// 	fixed: "right",
+		// 	render: (id: number) => (
+		// 		<Button onClick={() => navigate(`/userProfile/${id}`)}>Профиль</Button>
+		// 	),
+		// },
+		// {
+		// 	dataIndex: "id",
+		// 	key: "delete",
+		// 	fixed: "right",
+		// 	render: (id: number) => (
+		// 		<Button danger onClick={() => showDeleteUserConfirmation(id)}>
+		// 			Удалить
+		// 		</Button>
+		// 	),
+		// },
+		// {
+		// 	dataIndex: "id",
+		// 	key: "blockUnblock",
+		// 	fixed: "right",
+		// 	render: (id: number, record: User) => (
+		// 		<Button
+		// 			onClick={() => blockUnblockUser(id, record.isBlocked ? "unblock" : "block")}
+		// 		>
+		// 			{record.isBlocked ? "Разблокировать" : "Заблокировать"}
+		// 		</Button>
+		// 	),
+		// },
+		// {
+		// 	dataIndex: "id",
+		// 	key: "setRole",
+		// 	fixed: "right",
+		// 	render: (id: number, record: User) => (
+		// 		<>
+		// 			<Button onClick={() => changeUserRole(id, record.roles, "add")}>
+		// 				Дать роль
+		// 			</Button>
+		// 			<Button onClick={() => changeUserRole(id, record.roles, "remove")}>
+		// 				Забрать роль
+		// 			</Button>
+		// 		</>
+		// 	),
+		// },
+		{
+			dataIndex: "id",
+			key: "actions",
+			fixed: "right",
+			render: (id: number) => {
+				const items = [
+					{
+						key: "profile",
+						label: "Профиль",
+						onClick: () => navigate(`/userProfile/${id}`),
+					},
+				];
+
+				return (
+					<Dropdown trigger={["click"]} menu={{ items }}>
+						<Button icon={<MoreOutlined />} />
+					</Dropdown>
+				);
+			},
+		},
 		{
 			dataIndex: "id",
 			key: "profile",
