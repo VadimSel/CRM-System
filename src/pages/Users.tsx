@@ -330,21 +330,21 @@ export const Users = () => {
 		// 		</Button>
 		// 	),
 		// },
-		{
-			dataIndex: "id",
-			key: "setRole",
-			fixed: "right",
-			render: (id: number, record: User) => (
-				<>
-					<Button onClick={() => changeUserRole(id, record.roles, "add")}>
-						Дать роль
-					</Button>
-					<Button onClick={() => changeUserRole(id, record.roles, "remove")}>
-						Забрать роль
-					</Button>
-				</>
-			),
-		},
+		// {
+		// 	dataIndex: "id",
+		// 	key: "setRole",
+		// 	fixed: "right",
+		// 	render: (id: number, record: User) => (
+		// 		<>
+		// 			<Button onClick={() => changeUserRole(id, record.roles, "add")}>
+		// 				Дать роль
+		// 			</Button>
+		// 			<Button onClick={() => changeUserRole(id, record.roles, "remove")}>
+		// 				Забрать роль
+		// 			</Button>
+		// 		</>
+		// 	),
+		// },
 	];
 
 	const getAllUsers = async ({
