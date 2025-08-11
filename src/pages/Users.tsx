@@ -10,7 +10,7 @@ import {
 	Table,
 	TableProps,
 } from "antd";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, Children, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router";
 import {
@@ -257,12 +257,39 @@ export const Users = () => {
 			dataIndex: "id",
 			key: "actions",
 			fixed: "right",
-			render: (id: number) => {
+			render: (id: number, record: User) => {
 				const items = [
 					{
 						key: "profile",
 						label: "Профиль",
 						onClick: () => navigate(`/userProfile/${id}`),
+					},
+					{
+						key: "delete",
+						label: "Удалить",
+						danger: true,
+						onClick: () => showDeleteUserConfirmation(id),
+					},
+					{
+						key: "blockUnblock",
+						label: record.isBlocked ? "Разблокировать" : "Заблокировать",
+						onClick: () => blockUnblockUser(id, record.isBlocked ? "unblock" : "block"),
+					},
+					{
+						key: "setRole",
+						label: "Роль",
+						children: [
+							{
+								key: "giveRole",
+								label: "Дать роль",
+								onClick: () => changeUserRole(id, record.roles, "add"),
+							},
+							{
+								key: "takeRole",
+								label: "Забрать роль",
+								onClick: () => changeUserRole(id, record.roles, "remove"),
+							},
+						],
 					},
 				];
 
@@ -273,36 +300,36 @@ export const Users = () => {
 				);
 			},
 		},
-		{
-			dataIndex: "id",
-			key: "profile",
-			fixed: "right",
-			render: (id: number) => (
-				<Button onClick={() => navigate(`/userProfile/${id}`)}>Профиль</Button>
-			),
-		},
-		{
-			dataIndex: "id",
-			key: "delete",
-			fixed: "right",
-			render: (id: number) => (
-				<Button danger onClick={() => showDeleteUserConfirmation(id)}>
-					Удалить
-				</Button>
-			),
-		},
-		{
-			dataIndex: "id",
-			key: "blockUnblock",
-			fixed: "right",
-			render: (id: number, record: User) => (
-				<Button
-					onClick={() => blockUnblockUser(id, record.isBlocked ? "unblock" : "block")}
-				>
-					{record.isBlocked ? "Разблокировать" : "Заблокировать"}
-				</Button>
-			),
-		},
+		// {
+		// 	dataIndex: "id",
+		// 	key: "profile",
+		// 	fixed: "right",
+		// 	render: (id: number) => (
+		// 		<Button onClick={() => navigate(`/userProfile/${id}`)}>Профиль</Button>
+		// 	),
+		// },
+		// {
+		// 	dataIndex: "id",
+		// 	key: "delete",
+		// 	fixed: "right",
+		// 	render: (id: number) => (
+		// 		<Button danger onClick={() => showDeleteUserConfirmation(id)}>
+		// 			Удалить
+		// 		</Button>
+		// 	),
+		// },
+		// {
+		// 	dataIndex: "id",
+		// 	key: "blockUnblock",
+		// 	fixed: "right",
+		// 	render: (id: number, record: User) => (
+		// 		<Button
+		// 			onClick={() => blockUnblockUser(id, record.isBlocked ? "unblock" : "block")}
+		// 		>
+		// 			{record.isBlocked ? "Разблокировать" : "Заблокировать"}
+		// 		</Button>
+		// 	),
+		// },
 		{
 			dataIndex: "id",
 			key: "setRole",
