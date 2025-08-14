@@ -1,3 +1,4 @@
+import { MoreOutlined } from "@ant-design/icons";
 import {
 	Button,
 	Dropdown,
@@ -6,11 +7,11 @@ import {
 	Modal,
 	notification,
 	Select,
-	Space,
 	Table,
 	TableProps,
 } from "antd";
-import { ChangeEvent, Children, useEffect, useState } from "react";
+import { format } from "date-fns";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router";
 import {
@@ -24,8 +25,6 @@ import { blockUnlockTypes, Roles, User, UserFilters } from "../types/adminTypes"
 import { updateUserRigthsTypes, userFilters } from "../types/commonTypes";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import styles from "./Users.module.scss";
-import { format } from "date-fns";
-import { MoreOutlined } from "@ant-design/icons";
 
 export const Users = () => {
 	const [users, setUsers] = useState<User[]>([]);
@@ -36,6 +35,7 @@ export const Users = () => {
 	const [searchInputValue, setSearchInputValue] = useState<string>(
 		searchParams.get("search") ?? ""
 	);
+	const debounceTimer = useRef<number | undefined>(undefined);
 
 	const getFilters = () => {
 		const searchValue = searchParams.get("search") ?? undefined;
@@ -208,51 +208,6 @@ export const Users = () => {
 			render: (roles: Roles[]) => roles.join(", "),
 		},
 		{ title: "Номер телефона", dataIndex: "phoneNumber", key: "phoneNumber", width: 150 },
-		// {
-		// 	dataIndex: "id",
-		// 	key: "profile",
-		// 	fixed: "right",
-		// 	render: (id: number) => (
-		// 		<Button onClick={() => navigate(`/userProfile/${id}`)}>Профиль</Button>
-		// 	),
-		// },
-		// {
-		// 	dataIndex: "id",
-		// 	key: "delete",
-		// 	fixed: "right",
-		// 	render: (id: number) => (
-		// 		<Button danger onClick={() => showDeleteUserConfirmation(id)}>
-		// 			Удалить
-		// 		</Button>
-		// 	),
-		// },
-		// {
-		// 	dataIndex: "id",
-		// 	key: "blockUnblock",
-		// 	fixed: "right",
-		// 	render: (id: number, record: User) => (
-		// 		<Button
-		// 			onClick={() => blockUnblockUser(id, record.isBlocked ? "unblock" : "block")}
-		// 		>
-		// 			{record.isBlocked ? "Разблокировать" : "Заблокировать"}
-		// 		</Button>
-		// 	),
-		// },
-		// {
-		// 	dataIndex: "id",
-		// 	key: "setRole",
-		// 	fixed: "right",
-		// 	render: (id: number, record: User) => (
-		// 		<>
-		// 			<Button onClick={() => changeUserRole(id, record.roles, "add")}>
-		// 				Дать роль
-		// 			</Button>
-		// 			<Button onClick={() => changeUserRole(id, record.roles, "remove")}>
-		// 				Забрать роль
-		// 			</Button>
-		// 		</>
-		// 	),
-		// },
 		{
 			dataIndex: "id",
 			key: "actions",
@@ -300,51 +255,6 @@ export const Users = () => {
 				);
 			},
 		},
-		// {
-		// 	dataIndex: "id",
-		// 	key: "profile",
-		// 	fixed: "right",
-		// 	render: (id: number) => (
-		// 		<Button onClick={() => navigate(`/userProfile/${id}`)}>Профиль</Button>
-		// 	),
-		// },
-		// {
-		// 	dataIndex: "id",
-		// 	key: "delete",
-		// 	fixed: "right",
-		// 	render: (id: number) => (
-		// 		<Button danger onClick={() => showDeleteUserConfirmation(id)}>
-		// 			Удалить
-		// 		</Button>
-		// 	),
-		// },
-		// {
-		// 	dataIndex: "id",
-		// 	key: "blockUnblock",
-		// 	fixed: "right",
-		// 	render: (id: number, record: User) => (
-		// 		<Button
-		// 			onClick={() => blockUnblockUser(id, record.isBlocked ? "unblock" : "block")}
-		// 		>
-		// 			{record.isBlocked ? "Разблокировать" : "Заблокировать"}
-		// 		</Button>
-		// 	),
-		// },
-		// {
-		// 	dataIndex: "id",
-		// 	key: "setRole",
-		// 	fixed: "right",
-		// 	render: (id: number, record: User) => (
-		// 		<>
-		// 			<Button onClick={() => changeUserRole(id, record.roles, "add")}>
-		// 				Дать роль
-		// 			</Button>
-		// 			<Button onClick={() => changeUserRole(id, record.roles, "remove")}>
-		// 				Забрать роль
-		// 			</Button>
-		// 		</>
-		// 	),
-		// },
 	];
 
 	const getAllUsers = async ({
@@ -442,20 +352,21 @@ export const Users = () => {
 					<Input
 						placeholder="Поиск"
 						value={String(searchInputValue)}
-						onChange={(e: ChangeEvent<HTMLInputElement>) =>
-							setSearchInputValue(e.currentTarget.value)
-						}
-						onPressEnter={(e) => {
-							const searchValue = e.currentTarget.value;
-							setSearchParams((prev) => {
-								const newParams = new URLSearchParams(prev);
-								if (searchValue) {
-									newParams.set("search", searchValue);
-								} else {
-									newParams.delete("search");
-								}
-								return newParams;
-							});
+						onChange={(e: ChangeEvent<HTMLInputElement>) => {
+							setSearchInputValue(e.currentTarget.value);
+							clearTimeout(debounceTimer.current);
+							debounceTimer.current = setTimeout(() => {
+								const searchValue = e.currentTarget.value;
+								setSearchParams((prev) => {
+									const newParams = new URLSearchParams(prev);
+									if (searchValue) {
+										newParams.set("search", searchValue);
+									} else {
+										newParams.delete("search");
+									}
+									return newParams;
+								});
+							}, 500);
 						}}
 					/>
 				</Form>
