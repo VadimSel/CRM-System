@@ -217,7 +217,7 @@ export const Users = () => {
 					{
 						key: "profile",
 						label: "Профиль",
-						onClick: () => navigate(`/userProfile/${id}`),
+						onClick: () => navigate(`/users/${id}`),
 					},
 					{
 						key: "delete",

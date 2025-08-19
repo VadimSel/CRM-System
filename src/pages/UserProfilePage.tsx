@@ -11,7 +11,7 @@ import {
 import { User } from "../types/adminTypes";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 
-export const UserProfilePage = () => {
+export const UserPage = () => {
 	const navigate = useNavigate();
 	const { Text } = Typography;
 
@@ -32,20 +32,20 @@ export const UserProfilePage = () => {
 		}
 	};
 
-	const comparUserData = (oldUserData: User, newUserData: Partial<User>) => {
-		const data: Record<string, unknown> = {};
+	function comparUserData<T>(oldUserData: T, newUserData: Partial<T>): Partial<User> {
+		const data: Partial<T> = {};
 
 		Object.keys(newUserData).forEach((key) => {
-			const newValue = newUserData[key as keyof User];
-			const oldValue = oldUserData[key as keyof User];
+			const newValue = newUserData[key as keyof T];
+			const oldValue = oldUserData[key as keyof T];
 			if (newValue !== oldValue) {
-				data[key] = newValue;
+				data[key as keyof T] = newValue;
 			} else {
 				return;
 			}
 		});
 		return data;
-	};
+	}
 
 	const saveUserNewInfo = async (newUserInfo: Partial<User>) => {
 		if (userInfo) {

@@ -10,11 +10,11 @@ import { PersonalLayout } from "./layouts/PersonalLayout";
 import { Profile } from "./pages/Profile";
 import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
-import { UserProfilePage } from "./pages/UserProfilePage";
+import { UserPage } from "./pages/UserProfilePage";
 import { Users } from "./pages/Users";
 import { logged, logout } from "./store/loginSlice";
-import { accessTokenManager } from "./utils/accessTokenManager";
 import { Roles } from "./types/adminTypes";
+import { accessTokenManager } from "./utils/accessTokenManager";
 
 function App() {
 	const [isChecking, setIsChecking] = useState<boolean>(true);
@@ -57,7 +57,7 @@ function App() {
 						<Route path="profile" element={<Profile />} />
 						<Route path="tasks" element={<MainPage />} />
 						<Route path="users" element={<Users />} />
-						<Route path="userProfile/:id" element={<UserProfilePage />}></Route>
+						<Route path="users/:id" element={<UserPage />}></Route>
 					</Route>
 
 					<Route path="*" element={<Navigate to="/" replace />} />
