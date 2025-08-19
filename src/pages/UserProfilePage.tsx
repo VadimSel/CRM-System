@@ -32,7 +32,7 @@ export const UserPage = () => {
 		}
 	};
 
-	function comparUserData<T>(oldUserData: T, newUserData: Partial<T>): Partial<User> {
+	function comparUserData<T>(oldUserData: T, newUserData: Partial<T>): Partial<T> {
 		const data: Partial<T> = {};
 
 		Object.keys(newUserData).forEach((key) => {
