@@ -52,6 +52,10 @@ export const UserPage = () => {
 			let newData: Partial<User> = {};
 
 			newData = comparUserData(userInfo, newUserInfo);
+			if (!Object.keys(newData).length) {
+				setIsDataEdit(false);
+				return;
+			}
 
 			try {
 				setIsLoading(true);
@@ -75,75 +79,79 @@ export const UserPage = () => {
 	}, []);
 
 	return (
-		<Form form={form} id="formSubmit" onFinish={saveUserNewInfo}>
-			<Col>
-				<Text>Имя пользователя: </Text>
+		<>
+			<Form form={form} id="formSubmit" onFinish={saveUserNewInfo}>
+				<Col>
+					<Text>Имя пользователя: </Text>
+					{isDataEdit ? (
+						<Form.Item
+							name="username"
+							initialValue={userInfo?.username}
+							rules={[
+								{ required: true, message: "Введите имя" },
+								{
+									min: minUserNameLength,
+									message: `Минимум ${minUserNameLength} символ`,
+									whitespace: true,
+								},
+								{
+									pattern: new RegExp(userNameValidation),
+									message: "Только русские/латинские символы",
+								},
+							]}
+						>
+							<Input placeholder="Имя пользователя" maxLength={maxUserNameLength} />
+						</Form.Item>
+					) : (
+						<Text>{userInfo?.username}</Text>
+					)}
+				</Col>
+				<Col>
+					<Text>Email пользователя: </Text>
+					{isDataEdit ? (
+						<Form.Item
+							name="email"
+							initialValue={userInfo?.email}
+							rules={[
+								{ required: true, message: "Введите email" },
+								{ type: "email", message: "Введите корректный email" },
+							]}
+						>
+							<Input placeholder="Email" />
+						</Form.Item>
+					) : (
+						<Text>{userInfo?.email}</Text>
+					)}
+				</Col>
+				<Col>
+					<Text>Номер телефона: </Text>
+					{isDataEdit ? (
+						<Form.Item
+							name="phoneNumber"
+							initialValue={userInfo?.phoneNumber}
+							rules={[
+								{ min: phoneLength, message: "Введите номер телефона начиная с +" },
+							]}
+						>
+							<Input placeholder="Номер телефона" maxLength={phoneLength} />
+						</Form.Item>
+					) : (
+						<Text>{userInfo?.phoneNumber}</Text>
+					)}
+				</Col>
 				{isDataEdit ? (
-					<Form.Item
-						name="username"
-						initialValue={userInfo?.username}
-						rules={[
-							{ required: true, message: "Введите имя" },
-							{
-								min: minUserNameLength,
-								message: `Минимум ${minUserNameLength} символ`,
-								whitespace: true,
-							},
-							{
-								pattern: new RegExp(userNameValidation),
-								message: "Только русские/латинские символы",
-							},
-						]}
-					>
-						<Input placeholder="Имя пользователя" maxLength={maxUserNameLength} />
-					</Form.Item>
+					<Button key="save" htmlType="submit" form="formSubmit" loading={isLoading}>
+						Сохранить
+					</Button>
 				) : (
-					<Text>{userInfo?.username}</Text>
+					<Button key="edit" htmlType="button" onClick={() => setIsDataEdit(true)}>
+						Редактировать
+					</Button>
 				)}
-			</Col>
-			<Col>
-				<Text>Email пользователя: </Text>
-				{isDataEdit ? (
-					<Form.Item
-						name="email"
-						initialValue={userInfo?.email}
-						rules={[
-							{ required: true, message: "Введите email" },
-							{ type: "email", message: "Введите корректный email" },
-						]}
-					>
-						<Input placeholder="Email" />
-					</Form.Item>
-				) : (
-					<Text>{userInfo?.email}</Text>
-				)}
-			</Col>
-			<Col>
-				<Text>Номер телефона: </Text>
-				{isDataEdit ? (
-					<Form.Item
-						name="phoneNumber"
-						initialValue={userInfo?.phoneNumber}
-						rules={[{ min: phoneLength, message: "Введите номер телефона начиная с +" }]}
-					>
-						<Input placeholder="Номер телефона" maxLength={phoneLength} />
-					</Form.Item>
-				) : (
-					<Text>{userInfo?.phoneNumber}</Text>
-				)}
-			</Col>
-			{isDataEdit ? (
-				<Button onClick={() => form.submit()} form="formSubmit" loading={isLoading}>
-					Сохранить
+				<Button htmlType="button" onClick={() => navigate(-1)}>
+					Вернутся назад
 				</Button>
-			) : (
-				<Button htmlType="button" onClick={() => setIsDataEdit(true)}>
-					Редактировать
-				</Button>
-			)}
-			<Button htmlType="button" onClick={() => navigate(-1)}>
-				Вернутся назад
-			</Button>
-		</Form>
+			</Form>
+		</>
 	);
 };
