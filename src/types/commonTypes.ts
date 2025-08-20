@@ -8,4 +8,18 @@ export type RequestTypes =
 	| "getTasks"
 	| "createTask"
 	| "updateTask"
-	| "deleteTask";
+	| "deleteTask"
+	| "adminGetUsers"
+	| "adminGetUserProfile"
+	| "adminUpdateUserProfile"
+	| "adminDeleteUser"
+	| "blockUnblockUser"
+	| "updatesUserRights";
+
+export enum userFilters {
+	ALLUSERS = "Все пользователи",
+	ONLYBLOCKEDUSERS = "Только заблокированные пользователи",
+	ONLYACTIVEUSERS = "Только активные пользователи",
+}
+
+export type updateUserRigthsTypes = "add" | "remove";

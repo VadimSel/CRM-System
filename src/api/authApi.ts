@@ -1,14 +1,8 @@
- 
-
-import {
-	ProfileType,
-	SignInResponse,
-	SignInTypes,
-	SignUpTypes,
-} from "../types/authTypes";
+import { User } from "../types/adminTypes";
+import { SignInResponse, SignInTypes, SignUpTypes } from "../types/authTypes";
 import { instance, tokensInstance } from "./axiosInstance";
 
-export async function signUpApi(userData: SignUpTypes): Promise<ProfileType> {
+export async function signUpApi(userData: SignUpTypes): Promise<User> {
 	const res = await instance.post("/auth/signup", userData);
 	return res.data;
 }
@@ -23,7 +17,7 @@ export async function refreshToken(refreshToken: string): Promise<SignInResponse
 	return res.data;
 }
 
-export async function getProfile(): Promise<ProfileType> {
+export async function getProfile(): Promise<User> {
 	const res = await instance.get("/user/profile");
 	return res.data;
 }

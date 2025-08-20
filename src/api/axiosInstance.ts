@@ -34,11 +34,15 @@ instance.interceptors.response.use(
 	(res) => res,
 	async (error) => {
 		if (error.response.data.trim() === "Invalid token") {
-			const res = await refreshToken(String(accessTokenManager.getToken()));
-			accessTokenManager.setToken(res.accessToken);
-			localStorage.setItem("refreshToken", res.refreshToken);
-			error.config.headers.Authorization = `Bearer ${res.accessToken}`;
-			return instance(error.config);
+			try {
+				const res = await refreshToken(String(accessTokenManager.getToken()));
+				accessTokenManager.setToken(res.accessToken);
+				localStorage.setItem("refreshToken", res.refreshToken);
+				error.config.headers.Authorization = `Bearer ${res.accessToken}`;
+				return instance(error.config);
+			} catch {
+				store.dispatch(logout());
+			}
 		} else {
 			throw error;
 		}

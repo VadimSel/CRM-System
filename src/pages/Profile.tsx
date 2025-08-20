@@ -2,10 +2,10 @@ import { notification } from "antd";
 import { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { getProfile } from "../api/authApi";
-import { ProfileType } from "../types/authTypes";
+import { User } from "../types/adminTypes";
 
 export const Profile = () => {
-	const [profile, setProfile] = useState<ProfileType>();
+	const [profile, setProfile] = useState<User>();
 
 	const getProfileInfo = async () => {
 		try {

@@ -4,6 +4,13 @@ import { logout } from "../store/loginSlice";
 import { store } from "../store/store";
 import { RequestTypes } from "../types/commonTypes";
 
+const adminUserErrors = {
+	400: "Некорректные данные",
+	401: "Доступ запрещён. Токен отсутствует или недействителен",
+	403: "Недостаточно прав",
+	404: "Пользователь не найден",
+};
+
 const err: Record<string, Record<number, string>> = {
 	signUp: {
 		400: "Неверный ввод",
@@ -28,8 +35,28 @@ const err: Record<string, Record<number, string>> = {
 		401: "Таска не найдена",
 	},
 	deleteTask: {
-		400: "Неверный или отсутствующий ID задачи",
+		400: "Отсутствует или неверный ID задачи",
 		404: "Таска не найдена",
+	},
+	adminGetUsers: {
+		401: "Доступ запрещён. Токен отсутствует или недействителен",
+		403: "Недостаточно прав",
+	},
+	adminGetUserProfile: {
+		400: "Отсутствует или неверный ID",
+		401: "Доступ запрещён. Отсутствует или неверный ID",
+		403: "Недостаточно прав",
+		404: "Пользователь не найден",
+	},
+	adminUpdateUserProfile: adminUserErrors,
+	adminDeleteUser: adminUserErrors,
+	blockUnblockUser: {
+		400: "Отсутствует или неверный ID",
+		404: "Пользователь не найден",
+	},
+	updatesUserRights: {
+		400: "Нет такого поля",
+		404: "Пользователь не найден",
 	},
 };
 

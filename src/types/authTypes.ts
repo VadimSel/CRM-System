@@ -1,5 +1,6 @@
 export interface IsLoggedIn {
 	isLogged: boolean;
+	isAdmin: boolean;
 }
 
 export interface SignInTypes {
@@ -10,16 +11,6 @@ export interface SignInTypes {
 export interface SignInResponse {
 	accessToken: string;
 	refreshToken: string;
-}
-
-export interface ProfileType {
-	date: string;
-	email: string;
-	id: number;
-	isAdmin: boolean;
-	isBlocked: boolean;
-	phoneNumber: string;
-	username: string;
 }
 
 export interface SignUpTypes {

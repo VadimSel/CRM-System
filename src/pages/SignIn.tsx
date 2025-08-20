@@ -6,8 +6,9 @@ import { logged } from "../store/loginSlice";
 import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import { userLoginValidation } from "../constants/constants";
 import { accessTokenManager } from "../utils/accessTokenManager";
-import { signInApi } from "../api/authApi";
+import { getProfile, signInApi } from "../api/authApi";
 import { SignInTypes } from "../types/authTypes";
+import { Roles } from "../types/adminTypes";
 
 export const SignIn = () => {
 	const [form] = Form.useForm();
@@ -21,7 +22,8 @@ export const SignIn = () => {
 			const tokens = await signInApi(userData);
 			accessTokenManager.setToken(tokens.accessToken);
 			localStorage.setItem("refreshToken", tokens.refreshToken);
-			dispatch(logged());
+			const profile = await getProfile();
+			dispatch(logged({ isAdmin: profile.roles.includes(Roles.ADMIN) }));
 			navigate("tasks");
 		} catch (error) {
 			ApiErrorHandler("signIn", error);

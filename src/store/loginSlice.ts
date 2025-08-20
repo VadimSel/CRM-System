@@ -4,14 +4,16 @@ import { IsLoggedIn } from "../types/authTypes";
 
 const initialState: IsLoggedIn = {
 	isLogged: false,
+  isAdmin: false
 };
 
 export const loginSlice = createSlice({
 	name: "login",
 	initialState,
   reducers: {
-    logged: (state) => {
+    logged: (state, action) => {
       state.isLogged = true
+      state.isAdmin = action.payload.isAdmin
     },
     logout: (state) => {
       state.isLogged = false

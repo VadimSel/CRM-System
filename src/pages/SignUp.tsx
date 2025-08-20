@@ -1,6 +1,6 @@
 import { Button, Form, Input, message, Modal } from "antd";
 import { isAxiosError } from "axios";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { signUpApi } from "../api/authApi";
 import {
@@ -14,18 +14,14 @@ import {
 	userLoginValidation,
 	userNameValidation,
 } from "../constants/constants";
-import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 import { SignUpTypes } from "../types/authTypes";
+import { ApiErrorHandler } from "../utils/ApiErrorHandler";
 
 export const SignUp = () => {
 	const [form] = Form.useForm();
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const navigate = useNavigate();
-
-	const phoneNumberHandler = (e: string) => {
-		form.setFieldValue("phone", "+" + e.replace(/\D/g, ""));
-	};
 
 	const formSubmitHandler = async (userData: SignUpTypes) => {
 		try {
@@ -36,6 +32,7 @@ export const SignUp = () => {
 				title: "Регистрация успешна",
 				content: "Перейти на страницу авторизации для входа в систему?",
 				okText: "Перейти",
+				centered: true,
 				onOk() {
 					navigate("/");
 				},
@@ -127,18 +124,12 @@ export const SignUp = () => {
 			</Form.Item>
 			<Form.Item
 				name="phone"
-				rules={[
-					{ required: false, message: "Введите номер телефона" },
-					{ min: phoneLength, message: "Введите номер телефона" },
-				]}
+				rules={[{ min: phoneLength, message: "Введите номер телефона начиная с +" }]}
 			>
 				<Input
 					placeholder="Phone number"
 					maxLength={phoneLength}
 					value={form.getFieldValue("phone")}
-					onChange={(e: ChangeEvent<HTMLInputElement>) =>
-						phoneNumberHandler(e.currentTarget.value)
-					}
 				/>
 			</Form.Item>
 			<Button htmlType="submit" loading={isLoading}>
