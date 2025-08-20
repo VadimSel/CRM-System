@@ -10,7 +10,7 @@ import { PersonalLayout } from "./layouts/PersonalLayout";
 import { Profile } from "./pages/Profile";
 import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
-import { UserPage } from "./pages/UserProfilePage";
+import { UserPage } from "./pages/UserPage";
 import { Users } from "./pages/Users";
 import { logged, logout } from "./store/loginSlice";
 import { Roles } from "./types/adminTypes";
