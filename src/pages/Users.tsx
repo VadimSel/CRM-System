@@ -337,6 +337,23 @@ export const Users = () => {
 		});
 	};
 
+	const searchUserHandler = (e: ChangeEvent<HTMLInputElement>) => {
+		const searchValue = e.currentTarget.value;
+		setSearchInputValue(searchValue);
+		clearTimeout(debounceTimer.current);
+		debounceTimer.current = setTimeout(() => {
+			setSearchParams((prev) => {
+				const newParams = new URLSearchParams(prev);
+				if (searchValue) {
+					newParams.set("search", searchValue);
+				} else {
+					newParams.delete("search");
+				}
+				return newParams;
+			});
+		}, 500);
+	};
+
 	useEffect(() => {
 		if (!isUserAdmin) {
 			navigate(-1);
@@ -352,22 +369,7 @@ export const Users = () => {
 					<Input
 						placeholder="Поиск"
 						value={String(searchInputValue)}
-						onChange={(e: ChangeEvent<HTMLInputElement>) => {
-							setSearchInputValue(e.currentTarget.value);
-							clearTimeout(debounceTimer.current);
-							debounceTimer.current = setTimeout(() => {
-								const searchValue = e.currentTarget.value;
-								setSearchParams((prev) => {
-									const newParams = new URLSearchParams(prev);
-									if (searchValue) {
-										newParams.set("search", searchValue);
-									} else {
-										newParams.delete("search");
-									}
-									return newParams;
-								});
-							}, 500);
-						}}
+						onChange={(e: ChangeEvent<HTMLInputElement>) => searchUserHandler(e)}
 					/>
 				</Form>
 				<Select
